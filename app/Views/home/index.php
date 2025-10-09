@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GlobeNight - Votre plateforme de location</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js"></script>
+</head>
+<body>
+    <header>
+        <h1>GlobeNight</h1>
+        <nav>
+            <ul>
+                <li><a href="/home">Accueil</a></li>
+                <li><a href="/register">Inscription</a></li>
+                <li><a href="/login">Connexion</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <section class="hero">
+            <h2>Trouvez votre logement idéal</h2>
+            <form action="/home/search" method="GET" class="search-bar">
+                <input type="text" id="commune_search" name="q" placeholder="Rechercher par région..." value="<?php echo htmlspecialchars($searchTerm ?? 
+'
+'); ?>">
+                <button type="submit">Rechercher</button>
+            </form>
+        </section>
+
+        <section class="biens-par-type">
+            <h2>Nos biens par type</h2>
+            <div class="type-list">
+                <?php foreach ($typesBiens as $type): ?>
+                    <div class="type-item">
+                        <h3><?php echo htmlspecialchars($type["desc_type_bien"]); ?></h3>
+                        <!-- Ici, on pourrait ajouter un lien pour filtrer par ce type -->
+                    </div>
+                <?php endforeach; ?>
+            </div>
+        </section>
+
+        <section class="liste-biens">
+            <h2>Tous nos biens</h2>
+            <div class="biens-grid">
+                <?php if (!empty($biens)): ?>
+                    <?php foreach ($biens as $bien): ?>
+                        <div class="bien-card">
+                            <h3><?php echo htmlspecialchars($bien["designation_bien"]); ?></h3>
+                            <p>Type: <?php echo htmlspecialchars($bien["type_bien_nom"]); ?></p>
+                            <p>Commune: <?php echo htmlspecialchars($bien["commune_nom"]); ?></p>
+                            <p>Superficie: <?php echo htmlspecialchars($bien["superficie_biens"]); ?> m²</p>
+                            <p>Couchages: <?php echo htmlspecialchars($bien["nb_couchage"]); ?></p>
+                            <p><?php echo htmlspecialchars(substr($bien["description_biens"], 0, 100)); ?>...</p>
+                            <a href="/bien/<?php echo htmlspecialchars($bien["id_biens"]); ?>">Voir les détails</a>
+                        </div>
+                    <?php endforeach; ?>
+                <?php else: ?>
+                    <p>Aucun bien trouvé pour votre recherche.</p>
+                <?php endif; ?>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; <?php echo date("Y"); ?> GlobeNight. Tous droits réservés.</p>
+    </footer>
+
+    <script src="/js/autocomplete.js"></script>
+</body>
+</html>
