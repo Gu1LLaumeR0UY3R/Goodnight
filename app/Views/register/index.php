@@ -21,9 +21,12 @@
 
     <main>
         <h2>Créez votre compte</h2>
-        <?php if (isset($error)): ?>
-            <p class="error"><?php echo htmlspecialchars($error); ?></p>
-        <?php endif; ?>
+        <?php
+        if (isset($_SESSION['error'])) {
+            echo '<p class="error">' . htmlspecialchars($_SESSION['error']) . '</p>';
+            unset($_SESSION['error']);
+        }
+        ?>
 
         <form action="/register/process" method="POST">
             <div>
@@ -53,6 +56,9 @@
 
             <label for="password">Mot de passe :</label>
             <input type="password" id="password" name="password" required>
+
+            <label for="confirm_password">Confirmer le mot de passe :</label>
+            <input type="password" id="confirm_password" name="confirm_password" required>
 
             <label for="tel">Téléphone :</label>
             <input type="tel" id="tel" name="tel" value="<?php echo htmlspecialchars($old_data['tel'] ?? ''); ?>">

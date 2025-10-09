@@ -17,13 +17,15 @@ class LoginController extends BaseController {
             return;
         }
 
-        $this->render("login/index");
+        $old_email = $_SESSION["old_email"] ?? "";
+        unset($_SESSION["old_email"]);
+        $this->render("login/index", ["old_email" => $old_email]);
     }
 
     public function login() {
         if ($_SERVER["REQUEST_METHOD"] === "POST") {
-            $email = $_POST["email_locataire"] ?? "";
-            $password = $_POST["password_locataire"] ?? "";
+            $email = $_POST["email"] ?? "";
+            $password = $_POST["password"] ?? "";
 
             // Récupérer l'utilisateur par email
             $user = $this->userModel->getUserByEmail($email);
@@ -44,6 +46,7 @@ class LoginController extends BaseController {
             } else {
                 // Échec de la connexion
                 $_SESSION["error"] = "Email ou mot de passe incorrect.";
+                $_SESSION["old_email"] = $email;
                 $this->redirect("/login");
             }
         }

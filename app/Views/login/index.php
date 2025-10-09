@@ -20,9 +20,16 @@
 
     <main>
         <h2>Connectez-vous à votre compte</h2>
-        <?php if (isset($error)): ?>
-            <p class="error"><?php echo htmlspecialchars($error); ?></p>
-        <?php endif; ?>
+        <?php
+        if (isset($_SESSION['error'])) {
+            echo '<p class="error">' . htmlspecialchars($_SESSION['error']) . '</p>';
+            unset($_SESSION['error']);
+        }
+        if (isset($_SESSION['success'])) {
+            echo '<p class="success">' . htmlspecialchars($_SESSION['success']) . '</p>';
+            unset($_SESSION['success']);
+        }
+        ?>
         <?php if (isset($_GET['success']) && $_GET['success'] === 'registered'): ?>
             <p class="success">Votre compte a été créé avec succès. Vous pouvez maintenant vous connecter.</p>
         <?php endif; ?>

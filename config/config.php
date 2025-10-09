@@ -15,3 +15,4 @@ define("ROLE_PROPRIETAIRE", 2);
 define("ROLE_LOCATAIRE", 3);
 
 ?>
+

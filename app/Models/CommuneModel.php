@@ -10,18 +10,14 @@ class CommuneModel extends Model {
     }
 
     public function create($data) {
-        // La table commune est généralement pré-remplie, donc la création directe n'est pas typique.
-        // Cette méthode peut être adaptée si nécessaire pour ajouter de nouvelles communes manuellement.
         throw new Exception("La création de communes n'est pas supportée directement via ce modèle.");
     }
 
     public function update($id, $data) {
-        // Similaire à create, la mise à jour directe n'est pas typique.
         throw new Exception("La mise à jour de communes n'est pas supportée directement via ce modèle.");
     }
 
     public function delete($id) {
-        // Similaire à create, la suppression directe n'est pas typique.
         throw new Exception("La suppression de communes n'est pas supportée directement via ce modèle.");
     }
 

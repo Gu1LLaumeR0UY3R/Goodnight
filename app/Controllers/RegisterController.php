@@ -15,7 +15,9 @@ class RegisterController extends BaseController {
 
     public function index() {
         $communes = $this->communeModel->getAll();
-        $this->render("register/index", ["communes" => $communes]);
+        $old_data = $_SESSION["old_data"] ?? [];
+        unset($_SESSION["old_data"]);
+        $this->render("register/index", ["communes" => $communes, "old_data" => $old_data]);
     }
 
     public function register() {
@@ -28,6 +30,7 @@ class RegisterController extends BaseController {
             // Vérifier que les mots de passe correspondent
             if ($password !== $confirmPassword) {
                 $_SESSION["error"] = "Les mots de passe ne correspondent pas.";
+                $_SESSION["old_data"] = $_POST;
                 $this->redirect("/register");
                 return;
             }
@@ -36,6 +39,7 @@ class RegisterController extends BaseController {
             $existingUser = $this->userModel->getUserByEmail($email);
             if ($existingUser) {
                 $_SESSION["error"] = "Un compte existe déjà avec cet email.";
+                $_SESSION["old_data"] = $_POST;
                 $this->redirect("/register");
                 return;
             }
@@ -50,8 +54,8 @@ class RegisterController extends BaseController {
                 'tel_locataire' => $_POST["tel"] ?? null,
                 'rue_locataire' => $_POST["rue"] ?? null,
                 'complement_locataire' => $_POST["complement"] ?? null,
-                'RaisonSociale' => $_POST["raison_sociale"] ?? null,
-                'Siret' => $_POST["siret"] ?? null,
+                'RaisonSociale' => empty($_POST["RaisonSociale"]) ? null : $_POST["RaisonSociale"],
+                'Siret' => empty($_POST["Siret"]) ? null : $_POST["Siret"],
                 'id_commune' => $_POST["id_commune"] ?? null
             ];
 
@@ -70,7 +74,8 @@ class RegisterController extends BaseController {
                 $_SESSION["success"] = "Inscription réussie ! Vous pouvez maintenant vous connecter.";
                 $this->redirect("/login");
             } else {
-                $_SESSION["error"] = "Une erreur est survenue lors de l'inscription.";
+                $_SESSION["error"] = "Une erreur est survenue lors de l\'inscription.";
+                $_SESSION["old_data"] = $_POST;
                 $this->redirect("/register");
             }
         }
