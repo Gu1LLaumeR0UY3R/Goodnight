@@ -4,6 +4,7 @@ require_once __DIR__ . "/Model.php";
 
 class TypeBienModel extends Model {
     protected $table = 'Type_Bien';
+    protected $primaryKey = 'id_typebien';
 
     public function __construct() {
         parent::__construct();
