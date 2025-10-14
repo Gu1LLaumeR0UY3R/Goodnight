@@ -13,10 +13,6 @@
         <nav>
             <ul>
                 <li><a href="/admin">Tableau de bord</a></li>
-                <li><a href="/admin/users">Utilisateurs</a></li>
-                <li><a href="/admin/roles">Rôles</a></li>
-                <li><a href="/admin/communes">Communes</a></li>
-                <li><a href="/admin/typesBiens">Types de biens</a></li>
                 <li><a href="/logout">Déconnexion</a></li>
             </ul>
         </nav>
