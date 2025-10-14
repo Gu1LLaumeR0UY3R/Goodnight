@@ -48,6 +48,7 @@ $routes = [
     "admin/editTypeBien/([0-9]+)" => ["controller" => "AdminController", "action" => "editTypeBien"],
     "admin/deleteTypeBien/([0-9]+)" => ["controller" => "AdminController", "action" => "deleteTypeBien"],
     "admin/users" => ["controller" => "AdminController", "action" => "users"],
+    "admin/addUser" => ["controller" => "AdminController", "action" => "addUser"],
     "admin/editUser/([0-9]+)" => ["controller" => "AdminController", "action" => "editUser"],
     "admin/deleteUser/([0-9]+)" => ["controller" => "AdminController", "action" => "deleteUser"],
 
