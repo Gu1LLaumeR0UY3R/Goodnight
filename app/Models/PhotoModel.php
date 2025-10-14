@@ -5,6 +5,7 @@ require_once __DIR__ . "/Model.php";
 class PhotoModel extends Model {
     protected $table = 'Photos';
 
+    protected $primaryKey = 'id_photo';
     public function __construct() {
         parent::__construct();
     }
