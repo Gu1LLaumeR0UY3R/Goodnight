@@ -24,25 +24,25 @@
     <main>
         <h2>Modifier l'utilisateur : <?php echo htmlspecialchars($user["email_locataire"]); ?></h2>
         <form action="/admin/editUser/<?php echo htmlspecialchars($user["id_locataire"]); ?>" method="POST">
-            <?php if (!$user["is_moral"]): ?>
+            <?php if (empty($user["Siret"]) || empty($user["RaisonSociale"])): ?>
                 <label for="nom_locataire">Nom :</label>
-                <input type="text" id="nom_locataire" name="nom_locataire" value="<?php echo htmlspecialchars($user["nom_locataire"]); ?>">
+                <input type="text" id="nom_locataire" name="nom_locataire" value="<?php echo htmlspecialchars($user["nom_locataire"] ?? ''); ?>">
 
                 <label for="prenom_locataire">Prénom :</label>
-                <input type="text" id="prenom_locataire" name="prenom_locataire" value="<?php echo htmlspecialchars($user["prenom_locataire"]); ?>">
+                <input type="text" id="prenom_locataire" name="prenom_locataire" value="<?php echo htmlspecialchars($user["prenom_locataire"] ?? ''); ?>">
             <?php else: ?>
                 <label for="RaisonSociale">Raison Sociale :</label>
-                <input type="text" id="RaisonSociale" name="RaisonSociale" value="<?php echo htmlspecialchars($user["RaisonSociale"]); ?>">
+                <input type="text" id="RaisonSociale" name="RaisonSociale" value="<?php echo htmlspecialchars($user["RaisonSociale"] ?? ''); ?>">
 
                 <label for="Siret">SIRET :</label>
-                <input type="text" id="Siret" name="Siret" value="<?php echo htmlspecialchars($user["Siret"]); ?>">
+                <input type="text" id="Siret" name="Siret" value="<?php echo htmlspecialchars($user["Siret"] ?? ''); ?>">
             <?php endif; ?>
 
             <label for="email_locataire">Email :</label>
             <input type="email" id="email_locataire" name="email_locataire" value="<?php echo htmlspecialchars($user["email_locataire"]); ?>" required>
 
             <label for="tel_locataire">Téléphone :</label>
-            <input type="tel" id="tel_locataire" name="tel_locataire" value="<?php echo htmlspecialchars($user["tel_locataire"]); ?>">
+            <input type="tel" id="tel_locataire" name="tel_locataire" value="<?php echo htmlspecialchars($user["tel_locataire"] ?? ''); ?>">
 
             <label for="id_commune">Commune :</label>
             <select id="id_commune" name="id_commune">
@@ -55,9 +55,9 @@
             </select>
 
             <h3>Rôles de l'utilisateur :</h3>
-            <?php foreach ($allRoles as $role): ?>
+            <?php foreach ($roles as $role): ?>
                 <input type="checkbox" id="role_<?php echo htmlspecialchars($role["id_roles"]); ?>" name="roles[]" value="<?php echo htmlspecialchars($role["id_roles"]); ?>"
-                    <?php echo in_array($role["nom_roles"], $userRoles) ? "checked" : ""; ?>>
+                    <?php echo in_array($role["id_roles"], $userRoleIds) ? "checked" : ""; ?>>
                 <label for="role_<?php echo htmlspecialchars($role["id_roles"]); ?>"><?php echo htmlspecialchars($role["nom_roles"]); ?></label><br>
             <?php endforeach; ?>
 

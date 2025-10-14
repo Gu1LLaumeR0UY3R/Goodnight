@@ -23,6 +23,7 @@
 
     <main>
         <h2>Gestion des Utilisateurs</h2>
+        <a href="/admin/addUser" class="button">Ajouter un nouvel utilisateur</a>
         <table>
             <thead>
                 <tr>
@@ -41,7 +42,7 @@
                         <td><?php echo htmlspecialchars($user["id_locataire"]); ?></td>
                         <td>
                             <?php 
-                                if ($user["is_moral"]) {
+                                if (!empty($user["Siret"]) && !empty($user["RaisonSociale"])) {
                                     echo htmlspecialchars($user["RaisonSociale"]);
                                 } else {
                                     echo htmlspecialchars($user["nom_locataire"] . " " . $user["prenom_locataire"]);
@@ -49,17 +50,18 @@
                             ?>
                         </td>
                         <td><?php echo htmlspecialchars($user["email_locataire"]); ?></td>
-                        <td><?php echo htmlspecialchars($user["tel_locataire"]); ?></td>
-                        <td><?php echo $user["is_moral"] ? "Morale" : "Physique"; ?></td>
+                        <td><?php echo htmlspecialchars($user["tel_locataire"] ?? ''); ?></td>
                         <td>
                             <?php 
-                                $userRoles = $this->userModel->getUserRoles($user["id_locataire"]);
-                                echo implode(", ", array_map("htmlspecialchars", $userRoles));
+                                echo (!empty($user["Siret"]) && !empty($user["RaisonSociale"])) ? "Morale" : "Physique"; 
                             ?>
                         </td>
                         <td>
+                            <?php echo htmlspecialchars($user["roles"] ?? 'Aucun rôle'); ?>
+                        </td>
+                        <td>
                             <a href="/admin/editUser/<?php echo htmlspecialchars($user["id_locataire"]); ?>">Modifier</a>
-                            <a href="/admin/deleteUser/<?php echo htmlspecialchars($user["id_locataire"]); ?>" onclick="return confirm(\'Êtes-vous sûr de vouloir supprimer cet utilisateur ?\');">Supprimer</a>
+                            <a href="/admin/deleteUser/<?php echo htmlspecialchars($user["id_locataire"]); ?>" onclick="return confirm('Êtes-vous sûr de vouloir supprimer cet utilisateur ?');">Supprimer</a>
                         </td>
                     </tr>
                 <?php endforeach; ?>
