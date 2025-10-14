@@ -4,6 +4,7 @@ require_once __DIR__ . "/Model.php";
 
 class RoleModel extends Model {
     protected $table = 'Roles';
+    protected $primaryKey = 'id_roles';
 
     public function __construct() {
         parent::__construct();
