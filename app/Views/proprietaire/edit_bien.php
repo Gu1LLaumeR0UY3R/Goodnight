@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Modifier un Bien - Propriétaire</title>
     <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
 </head>
 <body>
     <header>
@@ -53,13 +54,8 @@
             </select>
 
             <label for="id_commune">Commune :</label>
-            <select id="id_commune" name="id_commune" required>
-                <?php foreach ($communes as $commune): ?>
-                    <option value="<?php echo htmlspecialchars($commune["id_commune"]); ?>" <?php echo ($bien["id_commune"] == $commune["id_commune"]) ? "selected" : ""; ?>>
-                        <?php echo htmlspecialchars($commune["ville_nom"]); ?>
-                    </option>
-                <?php endforeach; ?>
-            </select>
+            <input type="text" id="commune_search_register" name="commune_nom" value="<?php echo htmlspecialchars($old_data['commune_nom'] ?? ''); ?>">
+            <input type="hidden" id="id_commune" name="id_commune" value="<?php echo htmlspecialchars($old_data['id_commune'] ?? ''); ?>">
 
             <h3>Photos actuelles :</h3>
             <div class="photos-grid">
@@ -85,5 +81,10 @@
     <footer>
         <p>&copy; <?php echo date("Y"); ?> GlobeNight. Tous droits réservés.</p>
     </footer>
+ 
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js"></script>
+    <script src="/js/autocomplete.js"></script>
+    <script src="/js/register.js"></script>
 </body>
 </html>

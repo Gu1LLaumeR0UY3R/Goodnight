@@ -30,9 +30,11 @@
 
         <form action="/register/process" method="POST">
             <div>
-                <label>Type de compte :</label>
-                <input type="radio" name="type_personne" value="physique" id="physique" checked> <label for="physique">Personne physique</label>
-                <input type="radio" name="type_personne" value="morale" id="morale"> <label for="morale">Personne morale</label>
+                <div class="type-account-buttons">
+                    <label>Type de compte :</label>
+                    <input type="radio" name="type_personne" value="physique" id="physique" checked> <label for="physique" class="btn-radio">Personne physique</label>
+                    <input type="radio" name="type_personne" value="morale" id="morale"> <label for="morale" class="btn-radio">Personne morale</label>
+                </div>
             </div>
 
             <div id="form-physique">
@@ -48,7 +50,7 @@
                 <label for="raison_sociale">Raison Sociale :</label>
                 <input type="text" id="raison_sociale" name="raison_sociale" value="<?php echo htmlspecialchars($old_data['raison_sociale'] ?? ''); ?>">
                 <label for="siret">SIRET :</label>
-                <input type="text" id="siret" name="siret" value="<?php echo htmlspecialchars($old_data['siret'] ?? ''); ?>">
+                <input type="text" id="siret" name="siret" value="<?php echo htmlspecialchars($old_data["siret"] ?? ""); ?>" maxlength="14">
             </div>
 
             <label for="email">Email :</label>
@@ -73,10 +75,10 @@
             <input type="text" id="commune_search_register" name="commune_nom" value="<?php echo htmlspecialchars($old_data['commune_nom'] ?? ''); ?>">
             <input type="hidden" id="id_commune" name="id_commune" value="<?php echo htmlspecialchars($old_data['id_commune'] ?? ''); ?>">
 
-            <div>
-                <label>Je suis :</label>
-                <input type="radio" name="role_choice" value="proprietaire" id="proprietaire" checked> <label for="proprietaire">Propriétaire</label>
-                <input type="radio" name="role_choice" value="locataire" id="locataire"> <label for="locataire">Locataire</label>
+            <div class="role-choice-buttons">
+                <label>Je souhaite m'inscrire en tant que :</label>
+                <input type="radio" name="role_choice" value="proprietaire" id="proprietaire" checked> <label for="proprietaire" class="btn-radio">Propriétaire</label>
+                <input type="radio" name="role_choice" value="locataire" id="locataire"> <label for="locataire" class="btn-radio">Locataire</label>
             </div>
 
             <button type="submit">S'inscrire</button>

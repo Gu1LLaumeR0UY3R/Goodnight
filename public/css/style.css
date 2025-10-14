@@ -462,3 +462,96 @@ header nav ul li a.active {
         padding: 12px 20px;
     }
 }
+
+
+/* Styles pour les boutons de choix de rôle */
+.role-choice-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.role-choice-buttons label {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px 20px;
+    border: 2px solid #2DBDB4;
+    border-radius: 25px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-weight: normal;
+    color: #2DBDB4;
+    background-color: white;
+}
+
+.role-choice-buttons input[type="radio"] {
+    display: none;
+}
+
+.role-choice-buttons input[type="radio"]:checked + label {
+    background-color: #2DBDB4;
+    color: white;
+    box-shadow: 0 4px 8px rgba(45, 189, 180, 0.3);
+}
+
+.role-choice-buttons label:hover {
+    background-color: #C0F0EE;
+    color: #2DBDB4;
+}
+
+
+
+/* Styles pour les boutons de choix de type de compte */
+.type-account-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.type-account-buttons label {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px 20px;
+    border: 2px solid #FE9D15; /* Couleur orange du thème */
+    border-radius: 25px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-weight: normal;
+    color: #FE9D15;
+    background-color: white;
+}
+
+.type-account-buttons input[type="radio"] {
+    display: none;
+}
+
+.type-account-buttons input[type="radio"]:checked + label {
+    background-color: #FE9D15; /* Couleur orange du thème */
+    color: white;
+    box-shadow: 0 4px 8px rgba(254, 157, 21, 0.3);
+}
+
+.type-account-buttons label:hover {
+    background-color: #FEBB5F; /* Orange clair du thème */
+    color: white;
+}
+
+.role-choice-buttons label {
+    border: 2px solid #2DBDB4; /* Couleur teal du thème */
+    color: #2DBDB4;
+}
+
+.role-choice-buttons input[type="radio"]:checked + label {
+    background-color: #2DBDB4; /* Couleur teal du thème */
+    box-shadow: 0 4px 8px rgba(45, 189, 180, 0.3);
+}
+
+.role-choice-buttons label:hover {
+    background-color: #C0F0EE; /* Bleu clair du thème */
+    color: #2DBDB4;
+}
+

@@ -21,8 +21,15 @@ class RegisterController extends BaseController {
     }
 
     public function register() {
-        if ($_SERVER["REQUEST_METHOD"] === "POST") {
-            // Validation des données
+       if ($_SERVER["REQUEST_METHOD"] === "POST") {
+                // Validation des données
+                $siret = $_POST["siret"] ?? "";
+                if (!empty($siret) && (!ctype_digit($siret) || strlen($siret) !== 14)) {
+                    $_SESSION["error"] = "Le numéro SIRET doit contenir exactement 14 chiffres.";
+                    $_SESSION["old_data"] = $_POST;
+                    $this->redirect("/register");
+                    return;
+                }
             $email = $_POST["email"] ?? "";
             $password = $_POST["password"] ?? "";
             $confirmPassword = $_POST["confirm_password"] ?? "";
@@ -54,8 +61,8 @@ class RegisterController extends BaseController {
                 'tel_locataire' => $_POST["tel"] ?? null,
                 'rue_locataire' => $_POST["rue"] ?? null,
                 'complement_locataire' => $_POST["complement"] ?? null,
-                'RaisonSociale' => empty($_POST["RaisonSociale"]) ? null : $_POST["RaisonSociale"],
-                'Siret' => empty($_POST["Siret"]) ? null : $_POST["Siret"],
+                'RaisonSociale' => empty($_POST["raison_sociale"]) ? null : $_POST["raison_sociale"],
+                'Siret' => empty($_POST["siret"]) ? null : $_POST["siret"],
                 'id_commune' => $_POST["id_commune"] ?? null
             ];
 
@@ -64,13 +71,11 @@ class RegisterController extends BaseController {
 
             if ($userId) {
                 // Assigner les rôles.
-                // Par défaut, tout nouvel utilisateur est un locataire.
-                $this->userModel->assignRole($userId, 3); // ID 3 = Locataire
-
-                // Si l'utilisateur a également choisi d'être propriétaire, on ajoute ce rôle.
                 $roleChoice = $_POST["role_choice"] ?? "locataire";
                 if ($roleChoice === "proprietaire") {
                     $this->userModel->assignRole($userId, 2); // ID 2 = Propriétaire
+                } else {
+                    $this->userModel->assignRole($userId, 3); // ID 3 = Locataire
                 }
 
                 $_SESSION["success"] = "Inscription réussie ! Vous pouvez maintenant vous connecter.";
@@ -83,5 +88,3 @@ class RegisterController extends BaseController {
         }
     }
 }
-
-?>
