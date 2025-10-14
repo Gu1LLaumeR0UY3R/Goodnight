@@ -22,12 +22,12 @@ class ReservationModel extends Model {
     }
 
     public function update($id, $data) {
-        $sql = "UPDATE " . $this->table . " SET date_debut = :date_debut, date_fin = :date_fin, id_users = :id_users, id_biens = :id_biens, id_tarif = :id_tarif WHERE id_reservation = :id_reservation";
+        $sql = "UPDATE " . $this->table . " SET date_debut = :date_debut, date_fin = :date_fin, id_locataire = :id_locataire, id_biens = :id_biens, id_tarif = :id_tarif WHERE id_reservation = :id_reservation";
         $stmt = $this->db->prepare($sql);
         $stmt->execute([
             'date_debut' => $data['date_debut'],
             'date_fin' => $data['date_fin'],
-            'id_users' => $data['id_users'],
+            'id_locataire' => $data['id_locataire'],
             'id_biens' => $data['id_biens'],
             'id_tarif' => $data['id_tarif'],
             'id_reservation' => $id
@@ -42,8 +42,8 @@ class ReservationModel extends Model {
     }
 
     public function getReservationsByUser($userId) {
-        $stmt = $this->db->prepare("SELECT r.*, b.designation_bien, b.rue_biens, c.ville_nom FROM Reservations r JOIN Biens b ON r.id_biens = b.id_biens JOIN commune c ON b.id_commune = c.id_commune WHERE r.id_users = :id_users");
-        $stmt->execute(['id_users' => $userId]);
+        $stmt = $this->db->prepare("SELECT r.*, b.designation_bien, b.rue_biens, c.ville_nom FROM Reservations r JOIN Biens b ON r.id_biens = b.id_biens JOIN commune c ON b.id_commune = c.id_commune WHERE r.id_locataire = :id_locataire");
+        $stmt->execute(['id_locataire' => $userId]);
         return $stmt->fetchAll();
     }
 

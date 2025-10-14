@@ -58,12 +58,16 @@ class LoginController extends BaseController {
     }
 
     private function redirectByRole() {
-        if (in_array("Administrateur", $_SESSION["user_roles"])) {
-            $this->redirect("/admin");
-        } elseif (in_array("Propriétaire", $_SESSION["user_roles"])) {
-            $this->redirect("/proprietaire");
-        } elseif (in_array("Locataire", $_SESSION["user_roles"])) {
-            $this->redirect("/locataire");
+        if (isset($_SESSION["user_roles"]) && is_array($_SESSION["user_roles"])) {
+            if (in_array("Administrateur", $_SESSION["user_roles"])) {
+                $this->redirect("/admin");
+            } elseif (in_array("Propriétaire", $_SESSION["user_roles"])) {
+                $this->redirect("/proprietaire");
+            } elseif (in_array("Locataire", $_SESSION["user_roles"])) {
+                $this->redirect("/locataire");
+            } else {
+                $this->redirect("/home");
+            }
         } else {
             $this->redirect("/home");
         }

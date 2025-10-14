@@ -63,12 +63,14 @@ class RegisterController extends BaseController {
             $userId = $this->userModel->create($data);
 
             if ($userId) {
-                // Assigner le rôle par défaut "Locataire" (id_roles = 3)
-                $this->userModel->assignRole($userId, 3);
+                // Assigner les rôles.
+                // Par défaut, tout nouvel utilisateur est un locataire.
+                $this->userModel->assignRole($userId, 3); // ID 3 = Locataire
 
-                // Si l'utilisateur a fourni une raison sociale, lui assigner aussi le rôle "Propriétaire" (id_roles = 2)
-                if (!empty($_POST["RaisonSociale"])) {
-                    $this->userModel->assignRole($userId, 2);
+                // Si l'utilisateur a également choisi d'être propriétaire, on ajoute ce rôle.
+                $roleChoice = $_POST["role_choice"] ?? "locataire";
+                if ($roleChoice === "proprietaire") {
+                    $this->userModel->assignRole($userId, 2); // ID 2 = Propriétaire
                 }
 
                 $_SESSION["success"] = "Inscription réussie ! Vous pouvez maintenant vous connecter.";
