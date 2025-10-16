@@ -37,11 +37,11 @@
                 </div>
             </div>
 
-            <div id="form-physique">
-                <label for="nom">Nom :</label>
-                <input type="text" id="nom" name="nom" value="<?php echo htmlspecialchars($old_data['nom'] ?? ''); ?>">
-                <label for="prenom">Prénom :</label>
-                <input type="text" id="prenom" name="prenom" value="<?php echo htmlspecialchars($old_data['prenom'] ?? ''); ?>">
+            <label for="nom">Nom :</label>
+            <input type="text" id="nom" name="nom" value="<?php echo htmlspecialchars($old_data['nom'] ?? ''); ?>">
+            <label for="prenom">Prénom :</label>
+            <input type="text" id="prenom" name="prenom" value="<?php echo htmlspecialchars($old_data['prenom'] ?? ''); ?>">
+            <div id="date_naissance_group">
                 <label for="date_naissance">Date de naissance :</label>
                 <input type="date" id="date_naissance" name="date_naissance" value="<?php echo htmlspecialchars($old_data['date_naissance'] ?? ''); ?>">
             </div>

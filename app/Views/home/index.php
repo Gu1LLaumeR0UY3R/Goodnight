@@ -31,22 +31,6 @@
             </form>
         </section>
 
-        <section class="biens-par-type">
-            <h2>Nos biens par type</h2>
-            <div class="type-list">
-                <?php if (!empty($typesBiens)): ?>
-                    <?php foreach ($typesBiens as $type): ?>
-                        <div class="type-item">
-                            <h3><?php echo htmlspecialchars($type["desc_type_bien"]); ?></h3>
-                            <!-- Ici, on pourrait ajouter un lien pour filtrer par ce type -->
-                        </div>
-                    <?php endforeach; ?>
-                <?php else: ?>
-                    <p>Aucun type de bien trouvé.</p>
-                <?php endif; ?>
-            </div>
-        </section>
-
         <section class="liste-biens">
             <h2>Tous nos biens</h2>
             <div class="biens-grid">

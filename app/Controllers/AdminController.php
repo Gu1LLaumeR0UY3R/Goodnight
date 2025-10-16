@@ -7,6 +7,7 @@ require_once __DIR__ . "/../Models/CommuneModel.php";
 require_once __DIR__ . "/../Models/TypeBienModel.php";
 require_once __DIR__ . "/../Models/SaisonModel.php";
 require_once __DIR__ . "/../Models/BienModel.php";
+require_once __DIR__ . "/../Models/TarifModel.php";
 
 class AdminController extends BaseController {
     private $userModel;
@@ -15,6 +16,7 @@ class AdminController extends BaseController {
     private $typeBienModel;
     private $saisonModel;
     private $bienModel;
+    private $tarifModel;
 
     public function __construct() {
         // Vérifier si l\'utilisateur est connecté et a le rôle d\'administrateur
@@ -26,6 +28,7 @@ class AdminController extends BaseController {
         $this->typeBienModel = new TypeBienModel();
         $this->saisonModel = new SaisonModel();
         $this->bienModel = new BienModel();
+        $this->tarifModel = new TarifModel();
 
     }
 
@@ -206,7 +209,13 @@ class AdminController extends BaseController {
         }
 
         $personnesPhysiques = $this->userModel->getUsersByRole(2, 'physique');
-        $personnesMorales = $this->userModel->getUsersByRole(2, 'morale');
+        $saisons = $this->saisonModel->getAll();
+        $tarifs = $this->tarifModel->getTarifsByBien($id);
+
+        $tarifsMapped = [];
+        foreach ($tarifs as $tarif) {
+            $tarifsMapped[$tarif['id_saison'] . '_' . $tarif['annee']] = $tarif['prix_semaine'];
+        }
 
         // Passer les données à la vue
         $this->render("admin/edit_bien", [
@@ -214,8 +223,8 @@ class AdminController extends BaseController {
             "typesBiens" => $typesBiens,
             "communeNom" => $communeNom,
             "proprietaireNom" => $proprietaireNom,
-            "personnesPhysiques" => $personnesPhysiques,
-            "personnesMorales" => $personnesMorales
+            "saisons" => $saisons,
+            "tarifsMapped" => $tarifsMapped
         ]);
     }
 
@@ -312,8 +321,8 @@ class AdminController extends BaseController {
     public function searchUsers() {
         header("Content-Type: application/json");
         $term = $_GET["term"] ?? "";
-        $role = $_GET["role"] ?? null;
-        $users = $this->userModel->searchUsersByRoleAndName($term, $role);
+        $id_roles = $_GET["id_roles"] ?? null;
+        $users = $this->userModel->searchUsersByIdRoleAndName($term, $id_roles);
         echo json_encode($users);
     }
 
