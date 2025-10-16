@@ -28,7 +28,6 @@ class TarifModel extends Model {
     }
 
     public function update($id, $data) {
-        // Implémentation pour satisfaire l'interface abstraite
         $sql = "UPDATE " . $this->table . " SET prix_semaine = :prix_semaine, annee = :annee, id_saison = :id_saison WHERE id_tarif = :id_tarif";
         $stmt = $this->db->prepare($sql);
         $stmt->execute([
@@ -41,10 +40,27 @@ class TarifModel extends Model {
     }
 
     public function delete($id) {
-        // Implémentation pour satisfaire l'interface abstraite
         $stmt = $this->db->prepare("DELETE FROM " . $this->table . " WHERE id_tarif = :id_tarif");
         $stmt->execute(['id_tarif' => $id]);
         return $stmt->rowCount();
+    }
+
+    /**
+     * Récupère un tarif spécifique pour un bien, une saison et une année donnés.
+     *
+     * @param int $bienId L'ID du bien.
+     * @param int $saisonId L'ID de la saison.
+     * @param int $annee L'année du tarif.
+     * @return array|false Le tarif trouvé ou false si aucun tarif correspondant.
+     */
+    public function getTarifByBienSaisonAnnee($bienId, $saisonId, $annee) {
+        $stmt = $this->db->prepare("SELECT * FROM " . $this->table . " WHERE id_biens = :id_biens AND id_saison = :id_saison AND annee = :annee");
+        $stmt->execute([
+            'id_biens' => $bienId,
+            'id_saison' => $saisonId,
+            'annee' => $annee
+        ]);
+        return $stmt->fetch();
     }
 
     /**
@@ -79,4 +95,5 @@ class TarifModel extends Model {
         return $stmt->rowCount();
     }
 }
+
 ?>

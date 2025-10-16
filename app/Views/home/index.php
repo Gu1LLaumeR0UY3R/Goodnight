@@ -1,3 +1,4 @@
+<!-- app/Views/home/index.php -->
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -25,9 +26,7 @@
         <section class="hero">
             <h2>Trouvez votre logement idéal</h2>
             <form action="/home/search" method="GET" class="search-bar">
-                <input type="text" id="commune_search" name="q" placeholder="Rechercher par région..." value="<?php echo htmlspecialchars($searchTerm ?? 
-'
-'); ?>">
+                <input type="text" id="commune_search" name="q" placeholder="Rechercher par région..." value="<?php echo htmlspecialchars($searchTerm ?? ''); ?>">
                 <button type="submit">Rechercher</button>
             </form>
         </section>
@@ -35,12 +34,16 @@
         <section class="biens-par-type">
             <h2>Nos biens par type</h2>
             <div class="type-list">
-                <?php foreach ($typesBiens as $type): ?>
-                    <div class="type-item">
-                        <h3><?php echo htmlspecialchars($type["desc_type_bien"]); ?></h3>
-                        <!-- Ici, on pourrait ajouter un lien pour filtrer par ce type -->
-                    </div>
-                <?php endforeach; ?>
+                <?php if (!empty($typesBiens)): ?>
+                    <?php foreach ($typesBiens as $type): ?>
+                        <div class="type-item">
+                            <h3><?php echo htmlspecialchars($type["desc_type_bien"]); ?></h3>
+                            <!-- Ici, on pourrait ajouter un lien pour filtrer par ce type -->
+                        </div>
+                    <?php endforeach; ?>
+                <?php else: ?>
+                    <p>Aucun type de bien trouvé.</p>
+                <?php endif; ?>
             </div>
         </section>
 
