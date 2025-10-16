@@ -13,6 +13,7 @@ class AdminController extends BaseController {
     private $communeModel;
     private $typeBienModel;
     private $saisonModel;
+    private $bienModel;
 
     public function __construct() {
         // Vérifier si l'utilisateur est connecté et a le rôle d'administrateur
@@ -23,6 +24,8 @@ class AdminController extends BaseController {
         $this->communeModel = new CommuneModel();
         $this->typeBienModel = new TypeBienModel();
         $this->saisonModel = new SaisonModel();
+        $this->bienModel = new BienModel();
+
     }
 
     public function index() {
@@ -118,6 +121,87 @@ class AdminController extends BaseController {
         $this->saisonModel->delete($id);
         $this->redirect("/admin/saisons");
     }
+
+
+    // --- Gestion des Biens ---
+    public function biens() {
+        $biens = $this->bienModel->getBiensWithProprietaireDetails();
+        $this->render("admin/biens", ["biens" => $biens]);
+    }
+
+    public function addBien() {
+        if ($_SERVER["REQUEST_METHOD"] === "POST") {
+            $data = [
+                'designation_bien' => $_POST["designation_bien"],
+                'rue_biens' => $_POST["rue_biens"],
+                'complement_biens' => $_POST["complement_biens"] ?? null,
+                'superficie_biens' => $_POST["superficie_biens"],
+                'description_biens' => $_POST["description_biens"] ?? null,
+                'animaux_biens' => $_POST["animaux_biens"] ?? 0,
+                'nb_couchage' => $_POST["nb_couchage"],
+                'id_TypeBien' => $_POST["id_TypeBien"],
+                'id_commune' => $_POST["id_commune"],
+                'id_locataire' => $_POST["id_locataire"] // Le propriétaire
+            ];
+            $this->bienModel->create($data);
+            $this->redirect("/admin/biens");
+        }
+
+        // Récupérer les données nécessaires pour le formulaire
+        $typesBiens = $this->typeBienModel->getAll();
+        $communes = $this->communeModel->getAll();
+        $personnesPhysiques = $this->bienModel->getBienWithPPRole();
+        $personnesMorales = $this->bienModel->getBienWithPMRole();
+
+        // Passer les données à la vue
+        $this->render("admin/add_bien", [
+            "typesBiens" => $typesBiens,
+            "communes" => $communes,
+            "personnesPhysiques" => $personnesPhysiques,
+            "personnesMorales" => $personnesMorales
+        ]);
+    }
+
+    public function editBien($id) {
+        if ($_SERVER["REQUEST_METHOD"] === "POST") {
+            $data = [
+                'designation_bien' => $_POST["designation_bien"],
+                'rue_biens' => $_POST["rue_biens"],
+                'complement_biens' => $_POST["complement_biens"] ?? null,
+                'superficie_biens' => $_POST["superficie_biens"],
+                'description_biens' => $_POST["description_biens"] ?? null,
+                'animaux_biens' => isset($_POST["animaux_biens"]) ? 1 : 0, // Gestion de la case à cocher
+                'nb_couchage' => $_POST["nb_couchage"],
+                'id_TypeBien' => $_POST["id_TypeBien"],
+                'id_commune' => $_POST["id_commune"],
+                'id_locataire' => $_POST["id_locataire"]
+            ];
+            $this->bienModel->update($id, $data);
+            $this->redirect("/admin/biens");
+        }
+
+        // Récupérer les données nécessaires pour la vue
+        $bien = $this->bienModel->getById($id);
+        $typesBiens = $this->typeBienModel->getAll();
+        $communes = $this->communeModel->getAll();
+        $personnesPhysiques = $this->bienModel->getBienWithPPRole();
+        $personnesMorales = $this->bienModel->getBienWithPMRole();
+
+        // Passer les données à la vue
+        $this->render("admin/edit_bien", [
+            "bien" => $bien,
+            "typesBiens" => $typesBiens,
+            "communes" => $communes,
+            "personnesPhysiques" => $personnesPhysiques,
+            "personnesMorales" => $personnesMorales
+        ]);
+    }
+
+    public function deleteBien($id) {
+        $this->bienModel->delete($id);
+        $this->redirect("/admin/biens");
+    }
+
 
 
     // --- Gestion des Utilisateurs ---

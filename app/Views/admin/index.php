@@ -27,6 +27,7 @@
             <div class="div3"><iframe src="/admin/communes" frameborder="0"></iframe></div>
             <div class="div4"><iframe src="/admin/users" frameborder="0"></iframe></div>
             <div class="div5"><iframe src="/admin/saisons" frameborder="0"></iframe></div>
+            <div class="div6"><iframe src="/admin/biens" frameborder="0"></iframe></div>
         </div>
     </main>
 

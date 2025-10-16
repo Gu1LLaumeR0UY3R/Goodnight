@@ -35,11 +35,23 @@ class UserModel extends Model {
     }
 
     public function update($id, $data) {
-        $sql = "UPDATE " . $this->table . " SET nom_locataire = :nom_locataire, prenom_locataire = :prenom_locataire, dateNaissance_locataire = :dateNaissance_locataire, email_locataire = :email_locataire, tel_locataire = :tel_locataire, rue_locataire = :rue_locataire, complement_locataire = :complement_locataire, RaisonSociale = :RaisonSociale, Siret = :Siret, id_commune = :id_commune WHERE id_locataire = :id_locataire";
+        $sql = "UPDATE " . $this->table . " 
+            SET 
+                nom_locataire = :nom_locataire, 
+                prenom_locataire = :prenom_locataire, 
+                dateNaissance_locataire = :dateNaissance_locataire, 
+                email_locataire = :email_locataire, 
+                tel_locataire = :tel_locataire, 
+                rue_locataire = :rue_locataire, 
+                complement_locataire = :complement_locataire, 
+                RaisonSociale = :RaisonSociale, 
+                Siret = :Siret, 
+                id_commune = :id_commune 
+            WHERE id_locataire = :id_locataire";
         $stmt = $this->db->prepare($sql);
         $stmt->execute([
-            'nom_locataire' => $data['nom_locataire'],
-            'prenom_locataire' => $data['prenom_locataire'],
+            'nom_locataire' => $data['nom_locataire'] ?? null,
+            'prenom_locataire' => $data['prenom_locataire'] ?? null,
             'dateNaissance_locataire' => $data['dateNaissance_locataire'] ?? null,
             'email_locataire' => $data['email_locataire'],
             'tel_locataire' => $data['tel_locataire'] ?? null,
