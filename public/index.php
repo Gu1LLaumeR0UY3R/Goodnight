@@ -54,6 +54,12 @@ $routes = [
     "admin/editSaison/([0-9]+)" => ["controller" => "AdminController", "action" => "editSaison"],
     "admin/deleteSaison/([0-9]+)" => ["controller" => "AdminController", "action" => "deleteSaison"],
 
+    // Partie Biens
+    "admin/biens" => ["controller" => "AdminController", "action" => "biens"],
+    "admin/addBien" => ["controller" => "AdminController", "action" => "addBien"],
+    "admin/editBien/([0-9]+)" => ["controller" => "AdminController", "action" => "editBien"],
+    "admin/deleteBien/([0-9]+)" => ["controller" => "AdminController", "action" => "deleteBien"],
+
     "admin/users" => ["controller" => "AdminController", "action" => "users"],
     "admin/addUser" => ["controller" => "AdminController", "action" => "addUser"],
     "admin/editUser/([0-9]+)" => ["controller" => "AdminController", "action" => "editUser"],

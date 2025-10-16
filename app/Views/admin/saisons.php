@@ -26,7 +26,7 @@
                         <td><?php echo htmlspecialchars($saison["lib_saison"]); ?></td>
                         <td>
                             <a href="/admin/editSaison/<?php echo htmlspecialchars($saison["id_saison"]); ?>">Modifier</a>
-                            <a href="/admin/deleteSaison/<?php echo htmlspecialchars($saison["id_saison"]); ?>" onclick="return confirm(\'Êtes-vous sûr de vouloir supprimer ce type de bien ?\');">Supprimer</a>
+                            <a href="/admin/deleteSaison/<?php echo htmlspecialchars($saison["id_saison"]); ?>" onclick="return confirm(\'Êtes-vous sûr de vouloir supprimer cette saison ?\');">Supprimer</a>
                         </td>
                     </tr>
                 <?php endforeach; ?>
