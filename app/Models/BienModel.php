@@ -55,7 +55,7 @@ class BienModel extends Model {
             'nb_couchage' => $data['nb_couchage'],
             'id_TypeBien' => $data['id_TypeBien'],
             'id_commune' => $data['id_commune'],
-            'id_locataire' => $data['id_locataire'],
+            'id_locataire' => $data['id_locataire'], // S'assurer que id_locataire est toujours mis à jour avec la valeur fournie, et non null par défaut
             'id_biens' => $id
         ]);
         return $stmt->rowCount();

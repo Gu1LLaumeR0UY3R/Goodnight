@@ -36,8 +36,14 @@ class CommuneModel extends Model {
 
     public function getCommuneByName($name) {
         $stmt = $this->db->prepare("SELECT * FROM " . $this->table . " WHERE ville_nom = :ville_nom");
-        $stmt->execute(['ville_nom' => $name]);
+        $stmt->execute(["ville_nom" => $name]);
         return $stmt->fetch();
+    }
+
+    public function search($term) {
+        $stmt = $this->db->prepare("SELECT * FROM " . $this->table . " WHERE nom_commune LIKE :term OR code_postal LIKE :term");
+        $stmt->execute([":term" => "%" . $term . "%"]);
+        return $stmt->fetchAll();
     }
 }
 
