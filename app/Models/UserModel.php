@@ -31,23 +31,11 @@ class UserModel extends Model {
             error_log("Erreur d'enregistrement de l'utilisateur : " . $e->getMessage());
             return false;
         }
-
+        return $this->db->lastInsertId();
     }
 
     public function update($id, $data) {
-        $sql = "UPDATE " . $this->table . " 
-            SET 
-                nom_locataire = :nom_locataire, 
-                prenom_locataire = :prenom_locataire, 
-                dateNaissance_locataire = :dateNaissance_locataire, 
-                email_locataire = :email_locataire, 
-                tel_locataire = :tel_locataire, 
-                rue_locataire = :rue_locataire, 
-                complement_locataire = :complement_locataire, 
-                RaisonSociale = :RaisonSociale, 
-                Siret = :Siret, 
-                id_commune = :id_commune 
-            WHERE id_locataire = :id_locataire";
+        $sql = "UPDATE " . $this->table . " \n            SET \n                nom_locataire = :nom_locataire, \n                prenom_locataire = :prenom_locataire, \n                dateNaissance_locataire = :dateNaissance_locataire, \n                email_locataire = :email_locataire, \n                tel_locataire = :tel_locataire, \n                rue_locataire = :rue_locataire, \n                complement_locataire = :complement_locataire, \n                RaisonSociale = :RaisonSociale, \n                Siret = :Siret, \n                id_commune = :id_commune \n            WHERE id_locataire = :id_locataire";
         $stmt = $this->db->prepare($sql);
         $stmt->execute([
             'nom_locataire' => $data['nom_locataire'] ?? null,
@@ -78,30 +66,13 @@ class UserModel extends Model {
     }
 
     public function getUserWithRoles($userId) {
-        $stmt = $this->db->prepare("
-            SELECT 
-                u.*,
-                GROUP_CONCAT(r.nom_roles) as roles
-            FROM locataire u
-            LEFT JOIN User_role ur ON u.id_locataire = ur.id_locataire
-            LEFT JOIN Roles r ON ur.id_roles = r.id_roles
-            WHERE u.id_locataire = :id_locataire
-            GROUP BY u.id_locataire
-        ");
+        $stmt = $this->db->prepare("\n            SELECT \n                u.*,\n                GROUP_CONCAT(r.nom_roles) as roles\n            FROM locataire u\n            LEFT JOIN User_role ur ON u.id_locataire = ur.id_locataire\n            LEFT JOIN Roles r ON ur.id_roles = r.id_roles\n            WHERE u.id_locataire = :id_locataire\n            GROUP BY u.id_locataire\n        ");
         $stmt->execute(['id_locataire' => $userId]);
         return $stmt->fetch();
     }
 
     public function getAllUsersWithRoles() {
-        $stmt = $this->db->query("
-            SELECT 
-                u.*,
-                GROUP_CONCAT(r.nom_roles SEPARATOR ', ') as roles
-            FROM locataire u
-            LEFT JOIN User_role ur ON u.id_locataire = ur.id_locataire
-            LEFT JOIN Roles r ON ur.id_roles = r.id_roles
-            GROUP BY u.id_locataire
-        ");
+        $stmt = $this->db->query("\n            SELECT \n                u.*,\n                GROUP_CONCAT(r.nom_roles SEPARATOR ', ') as roles\n            FROM locataire u\n            LEFT JOIN User_role ur ON u.id_locataire = ur.id_locataire\n            LEFT JOIN Roles r ON ur.id_roles = r.id_roles\n            GROUP BY u.id_locataire\n        ");
         return $stmt->fetchAll();
     }
 
@@ -124,33 +95,22 @@ class UserModel extends Model {
     }
 
     public function getUserRoles($userId) {
-        $stmt = $this->db->prepare("
-            SELECT r.* 
-            FROM Roles r
-            INNER JOIN User_role ur ON r.id_roles = ur.id_roles
-            WHERE ur.id_locataire = :id_locataire
-        ");
+        $stmt = $this->db->prepare("\n            SELECT r.* \n            FROM Roles r\n            INNER JOIN User_role ur ON r.id_roles = ur.id_roles\n            WHERE ur.id_locataire = :id_locataire\n        ");
         $stmt->execute(['id_locataire' => $userId]);
         return $stmt->fetchAll();
     }
 
-    public function searchUsersByRoleAndName($term, $role = null) {
-        $query = "
-            SELECT DISTINCT l.id_locataire, l.nom_locataire, l.prenom_locataire, l.RaisonSociale, l.Siret, l.type_locataire
-            FROM locataire l
-            LEFT JOIN user_role ur ON l.id_locataire = ur.id_locataire
-            LEFT JOIN roles r ON ur.id_roles = r.id_roles
-            WHERE (l.nom_locataire LIKE :term_nom OR l.prenom_locataire LIKE :term_prenom OR l.RaisonSociale LIKE :term_raison)
-        ";
+    public function searchUsersByIdRoleAndName($term, $id_roles = null) {
+        $query = "\n            SELECT DISTINCT l.id_locataire, l.nom_locataire, l.prenom_locataire, l.RaisonSociale, l.Siret, l.type_locataire\n            FROM locataire l\n            LEFT JOIN User_role ur ON l.id_locataire = ur.id_locataire\n            WHERE (l.nom_locataire LIKE :term_nom OR l.prenom_locataire LIKE :term_prenom OR l.RaisonSociale LIKE :term_raison)\n        ";
         $params = [
             ":term_nom" => "%" . $term . "%",
             ":term_prenom" => "%" . $term . "%",
             ":term_raison" => "%" . $term . "%"
         ];
 
-        if ($role) {
-            $query .= " AND r.nom_roles = :role_name";
-            $params[":role_name"] = $role;
+        if ($id_roles) {
+            $query .= " AND ur.id_roles = :id_roles";
+            $params[":id_roles"] = $id_roles;
         }
 
         $stmt = $this->db->prepare($query);
@@ -159,12 +119,7 @@ class UserModel extends Model {
     }
 
     public function getUsersByRole($roleId, $type = null) {
-        $query = "
-            SELECT l.*
-            FROM locataire l
-            JOIN user_role ur ON l.id_locataire = ur.id_locataire
-            WHERE ur.id_roles = :roleId
-        ";
+        $query = "\n            SELECT l.*\n            FROM locataire l\n            JOIN user_role ur ON l.id_locataire = ur.id_locataire\n            WHERE ur.id_roles = :roleId\n        ";
         $params = [':roleId' => $roleId];
 
         if ($type === 'physique') {

@@ -69,12 +69,22 @@ class RegisterController extends BaseController {
             // Créer l'utilisateur
             $userId = $this->userModel->create($data);
 
+            if (!$userId) {
+                $_SESSION["error"] = "Une erreur est survenue lors de l\"inscription.";
+                $_SESSION["old_data"] = $_POST;
+                $this->redirect("/register");
+                return;
+            }
+
             if ($userId) {
                 // Assigner les rôles.
                 $roleChoice = $_POST["role_choice"] ?? "locataire";
                 if ($roleChoice === "proprietaire") {
                     $this->userModel->assignRole($userId, 2); // ID 2 = Propriétaire
+                } else if ($roleChoice === "locataire") {
+                    $this->userModel->assignRole($userId, 3); // ID 3 = Locataire
                 } else {
+                    // Gérer le cas où le rôle n'est ni propriétaire ni locataire, par défaut locataire
                     $this->userModel->assignRole($userId, 3); // ID 3 = Locataire
                 }
 
