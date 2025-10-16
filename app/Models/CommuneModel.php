@@ -41,7 +41,7 @@ class CommuneModel extends Model {
     }
 
     public function search($term) {
-        $stmt = $this->db->prepare("SELECT * FROM " . $this->table . " WHERE nom_commune LIKE :term OR code_postal LIKE :term");
+        $stmt = $this->db->prepare("SELECT * FROM " . $this->table . " WHERE ville_nom LIKE :term OR ville_code_postal LIKE :term");
         $stmt->execute([":term" => "%" . $term . "%"]);
         return $stmt->fetchAll();
     }
