@@ -3,11 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GlobeNight - Votre plateforme de location</title>
+    <title>Inscription - GlobeNight</title>
     <link rel="stylesheet" href="/css/style.css">
     <link rel="stylesheet" href="//code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js"></script>
 </head>
 <body>
     <header>
@@ -22,56 +20,78 @@
     </header>
 
     <main>
-        <section class="hero">
-            <h2>Trouvez votre logement idéal</h2>
-            <form action="/home/search" method="GET" class="search-bar">
-                <input type="text" id="commune_search" name="q" placeholder="Rechercher par région..." value="<?php echo htmlspecialchars($searchTerm ?? 
-'
-'); ?>">
-                <button type="submit">Rechercher</button>
-            </form>
-        </section>
+        <h2>Créez votre compte</h2>
+        <?php
+        if (isset($_SESSION['error'])) {
+            echo '<p class="error">' . htmlspecialchars($_SESSION['error']) . '</p>';
+            unset($_SESSION['error']);
+        }
+        ?>
 
-        <section class="biens-par-type">
-            <h2>Nos biens par type</h2>
-            <div class="type-list">
-                <?php foreach ($typesBiens as $type): ?>
-                    <div class="type-item">
-                        <h3><?php echo htmlspecialchars($type["desc_type_bien"]); ?></h3>
-                        <!-- Ici, on pourrait ajouter un lien pour filtrer par ce type -->
-                    </div>
-                <?php endforeach; ?>
+        <form action="/register/process" method="POST">
+            <div>
+                <div class="type-account-buttons">
+                    <label>Type de compte :</label>
+                    <input type="radio" name="type_personne" value="physique" id="physique" checked> <label for="physique" class="btn-radio">Personne physique</label>
+                    <input type="radio" name="type_personne" value="morale" id="morale"> <label for="morale" class="btn-radio">Personne morale</label>
+                </div>
             </div>
-        </section>
 
-        <section class="liste-biens">
-            <h2>Tous nos biens</h2>
-            <div class="biens-grid">
-                <?php if (!empty($biens)): ?>
-                    <?php foreach ($biens as $bien): ?>
-                        <div class="bien-card">
-                            <img src="<?php echo htmlspecialchars($bien["premiere_photo"] ?? '/images/default.jpg'); ?>" alt="Photo de <?php echo htmlspecialchars($bien["designation_bien"]); ?>">
-                            <h3><?php echo htmlspecialchars($bien["designation_bien"]); ?></h3>
-                            <p>Type: <?php echo htmlspecialchars($bien["type_bien_nom"]); ?></p>
-                            <p>Commune: <?php echo htmlspecialchars($bien["commune_nom"]); ?></p>
-                            <p>Superficie: <?php echo htmlspecialchars($bien["superficie_biens"]); ?> m²</p>
-                            <p>Couchages: <?php echo htmlspecialchars($bien["nb_couchage"]); ?></p>
-                            <p><?php echo htmlspecialchars(substr($bien["description_biens"], 0, 100)); ?>...</p>
-                            <p class="prix">Prix semaine: <?php echo htmlspecialchars($bien["prix_semaine"] ? number_format($bien["prix_semaine"], 2, ',', ' ') . ' €' : 'Non renseigné'); ?></p>
-                            <a href="/bien/<?php echo htmlspecialchars($bien["id_biens"]); ?>">Voir les détails</a>
-                        </div>
-                    <?php endforeach; ?>
-                <?php else: ?>
-                    <p>Aucun bien trouvé pour votre recherche.</p>
-                <?php endif; ?>
+            <div id="form-physique">
+                <label for="nom">Nom :</label>
+                <input type="text" id="nom" name="nom" value="<?php echo htmlspecialchars($old_data['nom'] ?? ''); ?>">
+                <label for="prenom">Prénom :</label>
+                <input type="text" id="prenom" name="prenom" value="<?php echo htmlspecialchars($old_data['prenom'] ?? ''); ?>">
+                <label for="date_naissance">Date de naissance :</label>
+                <input type="date" id="date_naissance" name="date_naissance" value="<?php echo htmlspecialchars($old_data['date_naissance'] ?? ''); ?>">
             </div>
-        </section>
+
+            <div id="form-morale" style="display:none;">
+                <label for="raison_sociale">Raison Sociale :</label>
+                <input type="text" id="raison_sociale" name="raison_sociale" value="<?php echo htmlspecialchars($old_data['raison_sociale'] ?? ''); ?>">
+                <label for="siret">SIRET :</label>
+                <input type="text" id="siret" name="siret" value="<?php echo htmlspecialchars($old_data["siret"] ?? ""); ?>" maxlength="14">
+            </div>
+
+            <label for="email">Email :</label>
+            <input type="email" id="email" name="email" required value="<?php echo htmlspecialchars($old_data['email'] ?? ''); ?>">
+
+            <label for="password">Mot de passe :</label>
+            <input type="password" id="password" name="password" required>
+
+            <label for="confirm_password">Confirmer le mot de passe :</label>
+            <input type="password" id="confirm_password" name="confirm_password" required>
+
+            <label for="tel">Téléphone :</label>
+            <input type="tel" id="tel" name="tel" value="<?php echo htmlspecialchars($old_data['tel'] ?? ''); ?>">
+
+            <label for="rue">Rue :</label>
+            <input type="text" id="rue" name="rue" value="<?php echo htmlspecialchars($old_data['rue'] ?? ''); ?>">
+
+            <label for="complement">Complément d'adresse :</label>
+            <input type="text" id="complement" name="complement" value="<?php echo htmlspecialchars($old_data['complement'] ?? ''); ?>">
+
+            <label for="id_commune">Commune :</label>
+            <input type="text" id="commune_search_register" name="commune_nom" value="<?php echo htmlspecialchars($old_data['commune_nom'] ?? ''); ?>">
+            <input type="hidden" id="id_commune" name="id_commune" value="<?php echo htmlspecialchars($old_data['id_commune'] ?? ''); ?>">
+
+            <div class="role-choice-buttons">
+                <label>Je souhaite m'inscrire en tant que :</label>
+                <input type="radio" name="role_choice" value="proprietaire" id="proprietaire" checked> <label for="proprietaire" class="btn-radio">Propriétaire</label>
+                <input type="radio" name="role_choice" value="locataire" id="locataire"> <label for="locataire" class="btn-radio">Locataire</label>
+            </div>
+
+            <button type="submit">S'inscrire</button>
+        </form>
     </main>
 
     <footer>
         <p>&copy; <?php echo date("Y"); ?> GlobeNight. Tous droits réservés.</p>
     </footer>
 
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js"></script>
     <script src="/js/autocomplete.js"></script>
+    <script src="/js/register.js"></script>
 </body>
 </html>

@@ -5,7 +5,7 @@ require_once __DIR__ . "/../../lib/Database.php";
 abstract class Model {
     protected $db;
     protected $table;
-    protected $primaryKey = 'id'; // Clé primaire par défaut
+    protected $primaryKey;
 
     public function __construct() {
         $this->db = Database::getInstance()->getConnection();
