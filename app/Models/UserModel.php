@@ -26,7 +26,7 @@ class UserModel extends Model {
                 'Siret' => $data['Siret'] ?? null,
                 'id_commune' => $data['id_commune'] ?? null
             ]);
-    
+            return $this->db->lastInsertId();
         } catch (PDOException $e) {
             error_log("Erreur d'enregistrement de l'utilisateur : " . $e->getMessage());
             return false;

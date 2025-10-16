@@ -248,9 +248,9 @@ class AdminController extends BaseController {
                 'id_commune' => $_POST["id_commune"] ?? null
             ];
             $userId = $this->userModel->create($data);
-            
-            // Assigner les rôles sélectionnés
-            if (isset($_POST["roles"]) && is_array($_POST["roles"])) {
+
+            // Assigner les rôles sélectionnés seulement si l'utilisateur a été créé avec succès
+            if ($userId && isset($_POST["roles"]) && is_array($_POST["roles"])) {
                 foreach ($_POST["roles"] as $roleId) {
                     $this->userModel->assignRole($userId, $roleId);
                 }

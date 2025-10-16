@@ -1,4 +1,3 @@
-<!-- app/Views/home/index.php -->
 <!DOCTYPE html>
 <html lang="fr">
 <head>

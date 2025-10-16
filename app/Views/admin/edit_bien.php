@@ -9,20 +9,6 @@
 
 </head>
 <body>
-    <header>
-        <h1>Tableau de bord Admin</h1>
-        <nav>
-            <ul>
-                <li><a href="/admin">Accueil Admin</a></li>
-                <li><a href="/admin/users">Gérer les Utilisateurs</a></li>
-                <li><a href="/admin/biens">Gérer les Biens</a></li>
-                <li><a href="/admin/typesBiens">Gérer les Types de Biens</a></li>
-                <li><a href="/admin/saisons">Gérer les Saisons</a></li>
-                <li><a href="/admin/communes">Gérer les Communes</a></li>
-                <li><a href="/logout">Déconnexion</a></li>
-            </ul>
-        </nav>
-    </header>
 
     <main>
         <h2>Modifier le Bien : <?php echo htmlspecialchars($bien["designation_bien"]); ?></h2>
@@ -173,8 +159,5 @@
         });
     </script>
 
-<footer>
-        <p>&copy; <?php echo date("Y"); ?> GlobeNight. Tous droits réservés.</p>
-    </footer>
 </body>
 </html>
