@@ -6,6 +6,8 @@ require_once __DIR__ . "/../Models/TypeBienModel.php";
 require_once __DIR__ . "/../Models/CommuneModel.php";
 require_once __DIR__ . "/../Models/ReservationModel.php";
 require_once __DIR__ . "/../Models/PhotoModel.php";
+require_once __DIR__ . "/../Models/SaisonModel.php";
+require_once __DIR__ . "/../Models/TarifModel.php";
 
 class ProprietaireController extends BaseController {
     private $bienModel;
@@ -13,6 +15,8 @@ class ProprietaireController extends BaseController {
     private $communeModel;
     private $reservationModel;
     private $photoModel;
+    private $saisonModel;
+    private $tarifModel;
 
     public function __construct() {
         AuthMiddleware::requireRole("Propriétaire");
@@ -22,6 +26,8 @@ class ProprietaireController extends BaseController {
         $this->communeModel = new CommuneModel();
         $this->reservationModel = new ReservationModel();
         $this->photoModel = new PhotoModel();
+        $this->saisonModel = new SaisonModel();
+        $this->tarifModel = new TarifModel();
     }
 
     public function index() {
@@ -51,8 +57,25 @@ class ProprietaireController extends BaseController {
             $bienId = $this->bienModel->create($data);
             
             // Gérer l'upload de photos si nécessaire
-            if ($bienId && isset($_FILES["photos"]) && !empty($_FILES["photos"]["name"][0])) {
-                $this->handlePhotoUpload($bienId, $_FILES["photos"]);
+            if ($bienId) {
+                // Gérer l'upload de photos si nécessaire
+                if (isset($_FILES["photos"]) && !empty($_FILES["photos"]["name"][0])) {
+                    $this->handlePhotoUpload($bienId, $_FILES["photos"]);
+                }
+
+                // Gérer l'ajout des tarifs
+                if (isset($_POST["tarifs"]) && is_array($_POST["tarifs"])) {
+                    foreach ($_POST["tarifs"] as $tarif) {
+                        if (!empty($tarif["prix_semaine"]) && !empty($tarif["annee"]) && !empty($tarif["id_saison"])) {
+                            $this->tarifModel->create([
+                                "prix_semaine" => $tarif["prix_semaine"],
+                                "annee" => $tarif["annee"],
+                                "id_biens" => $bienId,
+                                "id_saison" => $tarif["id_saison"]
+                            ]);
+                        }
+                    }
+                }
             }
             
             $this->redirect("/proprietaire/myBiens");
@@ -60,7 +83,8 @@ class ProprietaireController extends BaseController {
         
         $typesBiens = $this->typeBienModel->getAll();
         $communes = $this->communeModel->getAll();
-        $this->render("proprietaire/add_bien", ["typesBiens" => $typesBiens, "communes" => $communes]);
+        $saisons = $this->saisonModel->getAll();
+        $this->render("proprietaire/add_bien", ["typesBiens" => $typesBiens, "communes" => $communes, "saisons" => $saisons]);
     }
 
     public function editBien($id) {

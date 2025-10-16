@@ -50,13 +50,14 @@
                 <?php if (!empty($biens)): ?>
                     <?php foreach ($biens as $bien): ?>
                         <div class="bien-card">
-                            <img src="<?php echo htmlspecialchars($photo["lien_photo"]); ?>" alt="">
+                            <img src="<?php echo htmlspecialchars($bien["premiere_photo"] ?? '/images/default.jpg'); ?>" alt="Photo de <?php echo htmlspecialchars($bien["designation_bien"]); ?>">
                             <h3><?php echo htmlspecialchars($bien["designation_bien"]); ?></h3>
                             <p>Type: <?php echo htmlspecialchars($bien["type_bien_nom"]); ?></p>
                             <p>Commune: <?php echo htmlspecialchars($bien["commune_nom"]); ?></p>
                             <p>Superficie: <?php echo htmlspecialchars($bien["superficie_biens"]); ?> m²</p>
                             <p>Couchages: <?php echo htmlspecialchars($bien["nb_couchage"]); ?></p>
                             <p><?php echo htmlspecialchars(substr($bien["description_biens"], 0, 100)); ?>...</p>
+                            <p class="prix">Prix semaine: <?php echo htmlspecialchars(($bien["prix_semaine"] ?? null) ? number_format($bien["prix_semaine"], 2, ',', ' ') . ' €' : 'Non renseigné'); ?></p>
                             <a href="/bien/<?php echo htmlspecialchars($bien["id_biens"]); ?>">Voir les détails</a>
                         </div>
                     <?php endforeach; ?>
