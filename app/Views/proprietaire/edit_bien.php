@@ -63,7 +63,7 @@
                     <?php foreach ($photos as $photo): ?>
                         <div class="photo-item">
                             <img src="<?php echo htmlspecialchars($photo["lien_photo"]); ?>" alt="<?php echo htmlspecialchars($photo["nom_photo"]); ?>" width="100">
-                            <a href="/proprietaire/deletePhoto/<?php echo htmlspecialchars($photo["id_photo"]); ?>" onclick="return confirm(\'Êtes-vous sûr de vouloir supprimer cette photo ?\');">Supprimer</a>
+                            <a href="/proprietaire/deletePhoto/<?php echo htmlspecialchars($photo["id_photo"]); ?>" onclick="return confirm(&quot;Êtes-vous sûr de vouloir supprimer cette photo ?&quot;);">Supprimer</a>
                         </div>
                     <?php endforeach; ?>
                 <?php else: ?>
