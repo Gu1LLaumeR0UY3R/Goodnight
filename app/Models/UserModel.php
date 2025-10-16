@@ -133,6 +133,50 @@ class UserModel extends Model {
         $stmt->execute(['id_locataire' => $userId]);
         return $stmt->fetchAll();
     }
+
+    public function searchUsersByRoleAndName($term, $role = null) {
+        $query = "
+            SELECT DISTINCT l.id_locataire, l.nom_locataire, l.prenom_locataire, l.RaisonSociale, l.Siret, l.type_locataire
+            FROM locataire l
+            LEFT JOIN user_role ur ON l.id_locataire = ur.id_locataire
+            LEFT JOIN roles r ON ur.id_roles = r.id_roles
+            WHERE (l.nom_locataire LIKE :term_nom OR l.prenom_locataire LIKE :term_prenom OR l.RaisonSociale LIKE :term_raison)
+        ";
+        $params = [
+            ":term_nom" => "%" . $term . "%",
+            ":term_prenom" => "%" . $term . "%",
+            ":term_raison" => "%" . $term . "%"
+        ];
+
+        if ($role) {
+            $query .= " AND r.nom_roles = :role_name";
+            $params[":role_name"] = $role;
+        }
+
+        $stmt = $this->db->prepare($query);
+        $stmt->execute($params);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function getUsersByRole($roleId, $type = null) {
+        $query = "
+            SELECT l.*
+            FROM locataire l
+            JOIN user_role ur ON l.id_locataire = ur.id_locataire
+            WHERE ur.id_roles = :roleId
+        ";
+        $params = [':roleId' => $roleId];
+
+        if ($type === 'physique') {
+            $query .= " AND l.nom_locataire IS NOT NULL AND l.prenom_locataire IS NOT NULL";
+        } elseif ($type === 'morale') {
+            $query .= " AND l.RaisonSociale IS NOT NULL AND l.Siret IS NOT NULL";
+        }
+
+        $stmt = $this->db->prepare($query);
+        $stmt->execute($params);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
 }
 
 ?>

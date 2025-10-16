@@ -112,7 +112,8 @@ class ProprietaireController extends BaseController {
                 "animaux_biens" => isset($_POST["animaux_biens"]) ? 1 : 0,
                 "nb_couchage" => $_POST["nb_couchage"],
                 "id_TypeBien" => $_POST["id_TypeBien"],
-                "id_commune" => $_POST["id_commune"]
+                "id_commune" => $_POST["id_commune"],
+                "id_locataire" => $_SESSION["user_id"] // S'assurer que l'ID du propriétaire est toujours inclus
             ];
             $this->bienModel->update($id, $data);
 

@@ -9,10 +9,25 @@
 
 </head>
 <body>
+    <header>
+        <h1>Tableau de bord Admin</h1>
+        <nav>
+            <ul>
+                <li><a href="/admin">Accueil Admin</a></li>
+                <li><a href="/admin/users">Gérer les Utilisateurs</a></li>
+                <li><a href="/admin/biens">Gérer les Biens</a></li>
+                <li><a href="/admin/typesBiens">Gérer les Types de Biens</a></li>
+                <li><a href="/admin/saisons">Gérer les Saisons</a></li>
+                <li><a href="/admin/communes">Gérer les Communes</a></li>
+                <li><a href="/logout">Déconnexion</a></li>
+            </ul>
+        </nav>
+    </header>
 
     <main>
+        <h2>Modifier le Bien : <?php echo htmlspecialchars($bien["designation_bien"]); ?></h2>
         <h2>Modifier le Bien</h2>
-        <form action="/admin/editBien/<?php echo htmlspecialchars($bien["id_biens"]); ?>" method="POST">
+        <form action="/admin/editBien/<?php echo htmlspecialchars($bien["id_biens"]); ?>" method="POST" enctype="multipart/form-data">
             <label for="designation_bien">Nom du bien :</label>
             <input type="text" id="designation_bien" name="designation_bien" value="<?php echo htmlspecialchars($bien["designation_bien"]); ?>" required>
             <label for="rue_biens">Rue :</label>
@@ -36,34 +51,37 @@
                 <?php endforeach; ?>
             </select>
 
-            <label for="id_locataire">Propriétaire :</label>
-            <select id="id_locataire" name="id_locataire" required>
-                <option value="">Sélectionnez un propriétaire</option>
+            <label for="proprietaire_search">Propriétaire :</label>
+            <input type="text" id="proprietaire_search" name="proprietaire_nom" value="<?php echo htmlspecialchars($proprietaireNom); ?>" required>
+            <input type="h<input type="hidden" id="id_locataire" name="id_locataire" value="<?php echo htmlspecialchars($bien["id_locataire"]); ?>">            <input type="hidden" id="initial_id_locataire" value="<?php echo htmlspecialchars($bien["id_locataire"]); ?>">
 
-                <!-- Groupe des personnes physiques -->
-                <optgroup label="Personnes physiques">
-                    <?php foreach ($personnesPhysiques as $pp): ?>
-                        <option value="<?php echo htmlspecialchars($pp['id_locataire']); ?>" 
-                            <?php if ($pp['id_locataire'] == $bien['id_locataire']) echo 'selected'; ?>>
-                            <?php echo htmlspecialchars($pp['prenom_locataire'] . ' ' . $pp['nom_locataire']); ?>
-                        </option>
+            <h3>Photos actuelles :</h3>
+            <div class="photos-grid">
+                <?php if (!empty($photos)): ?>
+                    <?php foreach ($photos as $photo): ?>
+                        <div class="photo-item">
+                            <img src="<?php echo htmlspecialchars($photo["lien_photo"]); ?>" alt="<?php echo htmlspecialchars($photo["nom_photo"]); ?>" width="100">
+                            <a href="/admin/deletePhoto/<?php echo htmlspecialchars($photo["id_photo"]); ?>" onclick="return confirm(&quot;Êtes-vous sûr de vouloir supprimer cette photo ?&quot;);">Supprimer</a>
+                        </div>
                     <?php endforeach; ?>
-                </optgroup>
+                <?php else: ?>
+                    <p>Aucune photo pour ce bien.</p>
+                <?php endif; ?>
+            </div>
 
-                <!-- Groupe des personnes morales -->
-                <optgroup label="Personnes morales">
-                    <?php foreach ($personnesMorales as $pm): ?>
-                        <option value="<?php echo htmlspecialchars($pm['id_locataire']); ?>" 
-                            <?php if ($pm['id_locataire'] == $bien['id_locataire']) echo 'selected'; ?>>
-                            <?php echo htmlspecialchars($pm['RaisonSociale'] . ' (Siret : ' . $pm['Siret'] . ')'); ?>
-                        </option>
-                    <?php endforeach; ?>
-                </optgroup>
-            </select>
+            <h3>Ajouter de nouvelles photos :</h3>
+            <div class="photo-drop-zone">
+                <div class="drop-zone-text">
+                    <strong>Glissez-déposez vos photos ici ou cliquez pour sélectionner des fichiers</strong><br>
+                </div>
+                <input type="file" id="photos" name="photos[]" multiple accept="image/*">
+                <div class="photo-preview-container"></div>
+            </div>
 
             <label for="id_commune">Commune :</label>
-            <input type="text" id="commune_search_register" name="commune_nom" value="<?php echo htmlspecialchars($old_data['commune_nom'] ?? ''); ?>">
-            <input type="hidden" id="id_commune" name="id_commune" value="<?php echo htmlspecialchars($old_data['id_commune'] ?? ''); ?>">
+            <input type="text" id="commune_search_register" name="commune_nom" value="<?php echo htmlspecialchars($communeNom); ?>" required>
+            <input type="hidden" id="id_commune_hidden" name="id_commune" value="<?php echo htmlspecialchars($bien["id_commune"]); ?>">
+            <input type="hidden" id="initial_id_commune" value="<?php echo htmlspecialchars($bien["id_commune"]); ?>">
 
             <button type="submit">Mettre à jour le bien</button>
         </form>
@@ -73,6 +91,90 @@
     <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js"></script>
     <script src="/js/autocomplete.js"></script>
     <script src="/js/register.js"></script>
+    <script src="/js/photo-upload.js"></script>
+    <script>
+        $(function() {
+            // Autocomplétion pour les propriétaires
+            $("#proprietaire_search").autocomplete({
+                source: function(request, response) {
+                    $.ajax({
+                        url: "/admin/api/users/search", // Assurez-vous que cette route existe et renvoie les utilisateurs
+                        dataType: "json",
+                        data: {
+                            term: request.term,
+                            role: "Proprietaire" // Filtrer par rôle si nécessaire
+                        },
+                        success: function(data) {
+                            response($.map(data, function(item) {
+                                let label = '';
+                                if (item.type_locataire === 'physique') {
+                                    label = item.prenom_locataire + ' ' + item.nom_locataire;
+                                } else if (item.type_locataire === 'morale') {
+                                    label = item.RaisonSociale + ' (Siret: ' + item.Siret + ')';
+                                }
+                                return {
+                                    label: label,
+                                    value: label,
+                                    id: item.id_locataire
+                                };
+                            }));
+                        }
+                    });
+                },
+                minLength: 2,
+                select: function(event, ui) {
+                    $("#id_locataire").val(ui.item.id);
+                },
+                change: function(event, ui) {
+                    if (!ui.item) {
+                        // Si l'utilisateur efface le champ ou ne sélectionne pas dans la liste
+                        // Réinitialiser l'ID à la valeur initiale ou à null
+                        $("#id_locataire").val($("#initial_id_locataire").val());
+                        // Optionnel: effacer le champ si la valeur n'est pas valide
+                        // $(this).val("");
+                    }
+                }
+            });
 
+            // Autocomplétion pour les communes (pré-remplissage déjà géré par la valeur)
+            $("#commune_search_register").autocomplete({
+                source: function(request, response) {
+                    $.ajax({
+                        url: "/admin/api/communes/search", // Assurez-vous que cette route existe
+                        dataType: "json",
+                        data: {
+                            term: request.term
+                        },
+                        success: function(data) {
+                            response($.map(data, function(item) {
+                                return {
+                                    label: item.nom_commune + ' (' + item.code_postal + ')',
+                                    value: item.nom_commune + ' (' + item.code_postal + ')',
+                                    id: item.id_commune
+                                };
+                            }));
+                        }
+                    });
+                },
+                minLength: 2,
+                select: function(event, ui) {
+                    $("#id_commune_hidden").val(ui.item.id);
+                },
+                change: function(event, ui) {
+                    if (!ui.item) {
+                        // Si l'utilisateur efface le champ ou ne sélectionne pas dans la liste
+                        // Réinitialiser l'ID à la valeur initiale ou à null
+                        $("#id_commune_hidden").val($("#initial_id_commune").val());
+                        // Optionnel: effacer le champ si la valeur n'est pas valide
+                        // $(this).val("");
+                    }
+                }
+            });
+        });
+    </script>
+
+<footer>
+        <p>&copy; <?php echo date("Y"); ?> GlobeNight. Tous droits réservés.</p>
+    </footer>
 </body>
 </html>

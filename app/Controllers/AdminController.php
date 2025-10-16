@@ -6,6 +6,7 @@ require_once __DIR__ . "/../Models/RoleModel.php";
 require_once __DIR__ . "/../Models/CommuneModel.php";
 require_once __DIR__ . "/../Models/TypeBienModel.php";
 require_once __DIR__ . "/../Models/SaisonModel.php";
+require_once __DIR__ . "/../Models/BienModel.php";
 
 class AdminController extends BaseController {
     private $userModel;
@@ -16,7 +17,7 @@ class AdminController extends BaseController {
     private $bienModel;
 
     public function __construct() {
-        // Vérifier si l'utilisateur est connecté et a le rôle d'administrateur
+        // Vérifier si l\'utilisateur est connecté et a le rôle d\'administrateur
         AuthMiddleware::requireRole("Administrateur");
 
         $this->userModel = new UserModel();
@@ -150,8 +151,8 @@ class AdminController extends BaseController {
         // Récupérer les données nécessaires pour le formulaire
         $typesBiens = $this->typeBienModel->getAll();
         $communes = $this->communeModel->getAll();
-        $personnesPhysiques = $this->bienModel->getBienWithPPRole();
-        $personnesMorales = $this->bienModel->getBienWithPMRole();
+        $personnesPhysiques = $this->userModel->getUsersByRole(2, 'physique');
+        $personnesMorales = $this->userModel->getUsersByRole(2, 'morale');
 
         // Passer les données à la vue
         $this->render("admin/add_bien", [
@@ -174,7 +175,7 @@ class AdminController extends BaseController {
                 'nb_couchage' => $_POST["nb_couchage"],
                 'id_TypeBien' => $_POST["id_TypeBien"],
                 'id_commune' => $_POST["id_commune"],
-                'id_locataire' => $_POST["id_locataire"]
+                'id_locataire' => $_POST["id_locataire"] ?? null // S'assurer que id_locataire est toujours défini, même si vide
             ];
             $this->bienModel->update($id, $data);
             $this->redirect("/admin/biens");
@@ -183,15 +184,36 @@ class AdminController extends BaseController {
         // Récupérer les données nécessaires pour la vue
         $bien = $this->bienModel->getById($id);
         $typesBiens = $this->typeBienModel->getAll();
-        $communes = $this->communeModel->getAll();
-        $personnesPhysiques = $this->bienModel->getBienWithPPRole();
-        $personnesMorales = $this->bienModel->getBienWithPMRole();
+
+        // Récupérer la commune associée au bien pour le pré-remplissage
+        $communeBien = $this->communeModel->getById($bien['id_commune']);
+        $communeNom = '';
+        if ($communeBien) {
+            $nomCommune = $communeBien['nom_commune'] ?? '';
+            $codePostal = $communeBien['code_postal'] ?? '';
+            $communeNom = $nomCommune . ' (' . $codePostal . ')';
+        }
+
+        // Récupérer le propriétaire associé au bien pour le pré-remplissage
+        $proprietaireBien = $this->userModel->getById($bien['id_locataire']);
+        $proprietaireNom = '';
+        if ($proprietaireBien) {
+            if (!empty($proprietaireBien['RaisonSociale'])) {
+                $proprietaireNom = $proprietaireBien['RaisonSociale'];
+            } else {
+                $proprietaireNom = $proprietaireBien['prenom_locataire'] . ' ' . $proprietaireBien['nom_locataire'];
+            }
+        }
+
+        $personnesPhysiques = $this->userModel->getUsersByRole(2, 'physique');
+        $personnesMorales = $this->userModel->getUsersByRole(2, 'morale');
 
         // Passer les données à la vue
         $this->render("admin/edit_bien", [
             "bien" => $bien,
             "typesBiens" => $typesBiens,
-            "communes" => $communes,
+            "communeNom" => $communeNom,
+            "proprietaireNom" => $proprietaireNom,
             "personnesPhysiques" => $personnesPhysiques,
             "personnesMorales" => $personnesMorales
         ]);
@@ -284,6 +306,22 @@ class AdminController extends BaseController {
     public function deleteUser($id) {
         $this->userModel->delete($id);
         $this->redirect("/admin/users");
+    }
+
+    // --- API Endpoints for Autocomplete ---
+    public function searchUsers() {
+        header("Content-Type: application/json");
+        $term = $_GET["term"] ?? "";
+        $role = $_GET["role"] ?? null;
+        $users = $this->userModel->searchUsersByRoleAndName($term, $role);
+        echo json_encode($users);
+    }
+
+    public function searchCommunes() {
+        header("Content-Type: application/json");
+        $term = $_GET["term"] ?? "";
+        $communes = $this->communeModel->search($term);
+        echo json_encode($communes);
     }
 }
 
