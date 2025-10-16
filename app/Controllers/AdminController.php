@@ -5,12 +5,14 @@ require_once __DIR__ . "/../Models/UserModel.php";
 require_once __DIR__ . "/../Models/RoleModel.php";
 require_once __DIR__ . "/../Models/CommuneModel.php";
 require_once __DIR__ . "/../Models/TypeBienModel.php";
+require_once __DIR__ . "/../Models/SaisonModel.php";
 
 class AdminController extends BaseController {
     private $userModel;
     private $roleModel;
     private $communeModel;
     private $typeBienModel;
+    private $saisonModel;
 
     public function __construct() {
         // Vérifier si l'utilisateur est connecté et a le rôle d'administrateur
@@ -20,6 +22,7 @@ class AdminController extends BaseController {
         $this->roleModel = new RoleModel();
         $this->communeModel = new CommuneModel();
         $this->typeBienModel = new TypeBienModel();
+        $this->saisonModel = new SaisonModel();
     }
 
     public function index() {
@@ -87,6 +90,35 @@ class AdminController extends BaseController {
         $this->typeBienModel->delete($id);
         $this->redirect("/admin/typesBiens");
     }
+
+    // --- Gestion des Saisons ---
+    public function saisons() {
+        $saisons = $this->saisonModel->getAll();
+        $this->render("admin/saisons", ["saisons" => $saisons]);
+    }
+
+    public function addSaison() {
+        if ($_SERVER["REQUEST_METHOD"] === "POST") {
+            $this->saisonModel->create(["lib_saison" => $_POST["lib_saison"]]);
+            $this->redirect("/admin/saisons");
+        }
+        $this->render("admin/add_saison");
+    }
+
+    public function editSaison($id) {
+        if ($_SERVER["REQUEST_METHOD"] === "POST") {
+            $this->saisonModel->update($id, ["lib_saison" => $_POST["lib_saison"]]);
+            $this->redirect("/admin/saisons");
+        }
+        $saison = $this->saisonModel->getById($id);
+        $this->render("admin/edit_saison", ["saison" => $saison]);
+    }
+
+    public function deleteSaison($id) {
+        $this->saisonModel->delete($id);
+        $this->redirect("/admin/saisons");
+    }
+
 
     // --- Gestion des Utilisateurs ---
     public function users() {
