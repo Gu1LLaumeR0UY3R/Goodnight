@@ -50,6 +50,7 @@
                 <?php if (!empty($biens)): ?>
                     <?php foreach ($biens as $bien): ?>
                         <div class="bien-card">
+                            <img src="<?php echo htmlspecialchars($photo["lien_photo"]); ?>" alt="">
                             <h3><?php echo htmlspecialchars($bien["designation_bien"]); ?></h3>
                             <p>Type: <?php echo htmlspecialchars($bien["type_bien_nom"]); ?></p>
                             <p>Commune: <?php echo htmlspecialchars($bien["commune_nom"]); ?></p>
