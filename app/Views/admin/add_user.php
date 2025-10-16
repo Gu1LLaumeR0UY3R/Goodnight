@@ -52,19 +52,6 @@
     </style>
 </head>
 <body>
-    <header>
-        <h1>Administration GlobeNight</h1>
-        <nav>
-            <ul>
-                <li><a href="/admin">Tableau de bord</a></li>
-                <li><a href="/admin/users">Utilisateurs</a></li>
-                <li><a href="/admin/roles">Rôles</a></li>
-                <li><a href="/admin/communes">Communes</a></li>
-                <li><a href="/admin/typesBiens">Types de biens</a></li>
-                <li><a href="/logout">Déconnexion</a></li>
-            </ul>
-        </nav>
-    </header>
 
     <main>
         <h2>Ajouter un nouvel utilisateur</h2>
@@ -129,10 +116,6 @@
             <button type="submit">Ajouter l'utilisateur</button>
         </form>
     </main>
-
-    <footer>
-        <p>&copy; <?php echo date("Y"); ?> GlobeNight. Tous droits réservés.</p>
-    </footer>
 
     <script>
         function toggleUserType() {
