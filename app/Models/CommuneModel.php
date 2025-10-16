@@ -4,6 +4,7 @@ require_once __DIR__ . "/Model.php";
 
 class CommuneModel extends Model {
     protected $table = 'commune';
+    protected $primaryKey = 'id_commune'; // Définir la clé primaire pour la table commune
 
     public function __construct() {
         parent::__construct();

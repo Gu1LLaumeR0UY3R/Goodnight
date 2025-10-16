@@ -1,17 +1,23 @@
 /**
  * GlobeNight - Registration Form Handler
- * This script handles the dynamic form switching between physical and legal persons
+ * This script handles the dynamic display of the SIRET field based on the selected role.
  */
 
 $(function() {
-    // Toggle form fields based on account type (physical or legal person)
-    $('input[name="type_personne"]').on('change', function() {
-        if ($(this).val() === 'morale') {
-            $('#form-physique').hide();
-            $('#form-morale').show();
+    // Function to toggle SIRET field visibility
+    function toggleSiretField() {
+        if ($('#role_proprietaire').is(':checked')) {
+            $('#siret_field').show();
         } else {
-            $('#form-physique').show();
-            $('#form-morale').hide();
+            $('#siret_field').hide();
         }
+    }
+
+    // Initial call to set the correct state on page load
+    toggleSiretField();
+
+    // Attach change event listener to role radio buttons
+    $('input[name="role_choice"]').on('change', function() {
+        toggleSiretField();
     });
 });

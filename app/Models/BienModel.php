@@ -1,6 +1,7 @@
 <?php
 
 require_once __DIR__ . "/Model.php";
+require_once __DIR__ . "/SaisonModel.php";
 
 class BienModel extends Model {
     protected $table = 'biens';
@@ -61,6 +62,11 @@ class BienModel extends Model {
     }
 
     public function delete($id) {
+        // Suppression des tarifs associés
+        require_once __DIR__ . "/TarifModel.php";
+        $tarifModel = new TarifModel();
+        $tarifModel->deleteByBien($id);
+
         $stmt = $this->db->prepare("DELETE FROM " . $this->table . " WHERE id_biens = :id_biens");
         $stmt->execute(['id_biens' => $id]);
         return $stmt->rowCount();
@@ -74,45 +80,82 @@ class BienModel extends Model {
     }
 
     public function getBiensWithDetails() {
-        $stmt = $this->db->query("
+        $saisonModel = new SaisonModel();
+        $currentSaisonId = $saisonModel->getCurrentSaisonId();
+        $currentYear = date('Y');
+
+        $sql = "
             SELECT 
                 b.*,
                 tb.desc_type_bien as type_bien_nom,
-                c.ville_nom as commune_nom 
+                c.ville_nom as commune_nom,
+                (SELECT lien_photo FROM photos WHERE id_biens = b.id_biens ORDER BY id_photo ASC LIMIT 1) as premiere_photo,
+                IFNULL((SELECT prix_semaine FROM tarifs WHERE id_biens = b.id_biens AND annee = :currentYear AND id_saison = :currentSaisonId LIMIT 1), NULL) as prix_semaine
             FROM biens b 
             LEFT JOIN Type_Bien tb ON b.id_TypeBien = tb.id_typebien 
             LEFT JOIN commune c ON b.id_commune = c.id_commune
-        ");
+        ";
+        
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute([
+            'currentYear' => $currentYear,
+            'currentSaisonId' => $currentSaisonId ?? 0 // Utiliser 0 si pas de saison trouvée
+        ]);
         return $stmt->fetchAll();
     }
 
     public function getBiensByType($typeBienId) {
-        $stmt = $this->db->prepare("
+        $saisonModel = new SaisonModel();
+        $currentSaisonId = $saisonModel->getCurrentSaisonId();
+        $currentYear = date('Y');
+
+        $sql = "
             SELECT 
                 b.*,
                 tb.desc_type_bien as type_bien_nom,
-                c.ville_nom as commune_nom 
+                c.ville_nom as commune_nom,
+                (SELECT lien_photo FROM photos WHERE id_biens = b.id_biens ORDER BY id_photo ASC LIMIT 1) as premiere_photo,
+                IFNULL((SELECT prix_semaine FROM tarifs WHERE id_biens = b.id_biens AND annee = :currentYear AND id_saison = :currentSaisonId LIMIT 1), NULL) as prix_semaine
             FROM biens b 
             LEFT JOIN Type_Bien tb ON b.id_TypeBien = tb.id_typebien 
             LEFT JOIN commune c ON b.id_commune = c.id_commune 
             WHERE b.id_TypeBien = :id_TypeBien
-        ");
-        $stmt->execute(['id_TypeBien' => $typeBienId]);
+        ";
+        
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute([
+            'id_TypeBien' => $typeBienId,
+            'currentYear' => $currentYear,
+            'currentSaisonId' => $currentSaisonId ?? 0
+        ]);
         return $stmt->fetchAll();
     }
 
     public function searchBiensByCommune($communeNom) {
-        $stmt = $this->db->prepare("
+        require_once __DIR__ . "/SaisonModel.php";
+        $saisonModel = new SaisonModel();
+        $currentSaisonId = $saisonModel->getCurrentSaisonId();
+        $currentYear = date('Y');
+
+        $sql = "
             SELECT 
                 b.*,
                 tb.desc_type_bien as type_bien_nom,
-                c.ville_nom as commune_nom 
+                c.ville_nom as commune_nom,
+                (SELECT lien_photo FROM photos WHERE id_biens = b.id_biens ORDER BY id_photo ASC LIMIT 1) as premiere_photo,
+                IFNULL((SELECT prix_semaine FROM tarifs WHERE id_biens = b.id_biens AND annee = :currentYear AND id_saison = :currentSaisonId LIMIT 1), NULL) as prix_semaine
             FROM biens b 
             LEFT JOIN Type_Bien tb ON b.id_TypeBien = tb.id_typebien 
             LEFT JOIN commune c ON b.id_commune = c.id_commune 
             WHERE c.ville_nom LIKE :communeNom
-        ");
-        $stmt->execute(['communeNom' => '%' . $communeNom . '%']);
+        ";
+        
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute([
+            'communeNom' => '%' . $communeNom . '%',
+            'currentYear' => $currentYear,
+            'currentSaisonId' => $currentSaisonId ?? 0
+        ]);
         return $stmt->fetchAll();
     }
 

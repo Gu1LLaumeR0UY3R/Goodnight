@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Modifier un Bien - Propriétaire</title>
     <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/photo-upload.css"> <!-- Styles pour le drag and drop -->
     <link rel="stylesheet" href="//code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
 </head>
 <body>
@@ -54,8 +55,32 @@
             </select>
 
             <label for="id_commune">Commune :</label>
-            <input type="text" id="commune_search_register" name="commune_nom" value="<?php echo htmlspecialchars($old_data['commune_nom'] ?? ''); ?>">
-            <input type="hidden" id="id_commune" name="id_commune" value="<?php echo htmlspecialchars($old_data['id_commune'] ?? ''); ?>">
+            <input type="text" id="commune_search_register" name="commune_nom" value="<?php echo htmlspecialchars($bien["commune_nom"] ?? ''); ?>" placeholder="Commencez à taper le nom de la commune...">
+            <input type="hidden" id="id_commune" name="id_commune" value="<?php echo htmlspecialchars($bien["id_commune"] ?? ''); ?>">
+
+            <fieldset class="form-section">
+                <legend>Tarification (Prix à la semaine)</legend>
+                <div id="tarifs-container" class="tarifs-grid">
+                    <?php foreach ($saisons as $saison): ?>
+                        <div class="tarif-group">
+                            <h4><?php echo htmlspecialchars($saison["lib_saison"]); ?></h4>
+                            <input type="hidden" name="tarifs[<?php echo htmlspecialchars($saison["id_saison"]); ?>][id_saison]" value="<?php echo htmlspecialchars($saison["id_saison"]); ?>">
+                            
+                            <div class="form-group">
+                                <label for="prix_semaine_<?php echo htmlspecialchars($saison["id_saison"]); ?>">Prix Semaine (€) :</label>
+                                <?php
+                                    $currentYear = date('Y');
+                                    $tarifKey = $saison['id_saison'] . '_' . $currentYear;
+                                    $prixSemaine = $tarifsMapped[$tarifKey] ?? '';
+                                ?>
+                                <input type="number" id="prix_semaine_<?php echo htmlspecialchars($saison["id_saison"]); ?>" name="tarifs[<?php echo htmlspecialchars($saison["id_saison"]); ?>][prix_semaine]" step="0.01" min="0" value="<?php echo htmlspecialchars($prixSemaine); ?>">
+                                <input type="hidden" name="tarifs[<?php echo htmlspecialchars($saison["id_saison"]); ?>][annee]" value="<?php echo htmlspecialchars($currentYear); ?>">
+                            </div>
+                            
+                        </div>
+                    <?php endforeach; ?>
+                </div>
+            </fieldset>
 
             <h3>Photos actuelles :</h3>
             <div class="photos-grid">
@@ -71,8 +96,14 @@
                 <?php endif; ?>
             </div>
 
-            <label for="photos">Ajouter de nouvelles photos :</label>
-            <input type="file" id="photos" name="photos[]" multiple accept="image/*">
+            <h3>Ajouter de nouvelles photos :</h3>
+            <div class="photo-drop-zone">
+                <div class="drop-zone-text">
+                    <strong>Glissez-déposez vos photos ici ou cliquez pour sélectionner des fichiers</strong><br>
+                </div>
+                <input type="file" id="photos" name="photos[]" multiple accept="image/*">
+                <div class="photo-preview-container"></div>
+            </div>
 
             <button type="submit">Mettre à jour le bien</button>
         </form>
@@ -86,5 +117,6 @@
     <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js"></script>
     <script src="/js/autocomplete.js"></script>
     <script src="/js/register.js"></script>
+    <script src="/js/photo-upload.js"></script>
 </body>
 </html>

@@ -1,3 +1,4 @@
+<!-- app/Views/home/index.php -->
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -25,9 +26,7 @@
         <section class="hero">
             <h2>Trouvez votre logement idéal</h2>
             <form action="/home/search" method="GET" class="search-bar">
-                <input type="text" id="commune_search" name="q" placeholder="Rechercher par région..." value="<?php echo htmlspecialchars($searchTerm ?? 
-'
-'); ?>">
+                <input type="text" id="commune_search" name="q" placeholder="Rechercher par région..." value="<?php echo htmlspecialchars($searchTerm ?? ''); ?>">
                 <button type="submit">Rechercher</button>
             </form>
         </section>
@@ -35,12 +34,16 @@
         <section class="biens-par-type">
             <h2>Nos biens par type</h2>
             <div class="type-list">
-                <?php foreach ($typesBiens as $type): ?>
-                    <div class="type-item">
-                        <h3><?php echo htmlspecialchars($type["desc_type_bien"]); ?></h3>
-                        <!-- Ici, on pourrait ajouter un lien pour filtrer par ce type -->
-                    </div>
-                <?php endforeach; ?>
+                <?php if (!empty($typesBiens)): ?>
+                    <?php foreach ($typesBiens as $type): ?>
+                        <div class="type-item">
+                            <h3><?php echo htmlspecialchars($type["desc_type_bien"]); ?></h3>
+                            <!-- Ici, on pourrait ajouter un lien pour filtrer par ce type -->
+                        </div>
+                    <?php endforeach; ?>
+                <?php else: ?>
+                    <p>Aucun type de bien trouvé.</p>
+                <?php endif; ?>
             </div>
         </section>
 
@@ -50,13 +53,14 @@
                 <?php if (!empty($biens)): ?>
                     <?php foreach ($biens as $bien): ?>
                         <div class="bien-card">
-                            <img src="<?php echo htmlspecialchars($photo["lien_photo"]); ?>" alt="">
+                            <img src="<?php echo htmlspecialchars($bien["premiere_photo"] ?? '/images/default.jpg'); ?>" alt="Photo de <?php echo htmlspecialchars($bien["designation_bien"]); ?>">
                             <h3><?php echo htmlspecialchars($bien["designation_bien"]); ?></h3>
                             <p>Type: <?php echo htmlspecialchars($bien["type_bien_nom"]); ?></p>
                             <p>Commune: <?php echo htmlspecialchars($bien["commune_nom"]); ?></p>
                             <p>Superficie: <?php echo htmlspecialchars($bien["superficie_biens"]); ?> m²</p>
                             <p>Couchages: <?php echo htmlspecialchars($bien["nb_couchage"]); ?></p>
                             <p><?php echo htmlspecialchars(substr($bien["description_biens"], 0, 100)); ?>...</p>
+                            <p class="prix">Prix semaine: <?php echo htmlspecialchars(($bien["prix_semaine"] ?? null) ? number_format($bien["prix_semaine"], 2, ',', ' ') . ' €' : 'Non renseigné'); ?></p>
                             <a href="/bien/<?php echo htmlspecialchars($bien["id_biens"]); ?>">Voir les détails</a>
                         </div>
                     <?php endforeach; ?>

@@ -6,6 +6,8 @@ require_once __DIR__ . "/../Models/TypeBienModel.php";
 require_once __DIR__ . "/../Models/CommuneModel.php";
 require_once __DIR__ . "/../Models/ReservationModel.php";
 require_once __DIR__ . "/../Models/PhotoModel.php";
+require_once __DIR__ . "/../Models/SaisonModel.php";
+require_once __DIR__ . "/../Models/TarifModel.php";
 
 class ProprietaireController extends BaseController {
     private $bienModel;
@@ -13,6 +15,8 @@ class ProprietaireController extends BaseController {
     private $communeModel;
     private $reservationModel;
     private $photoModel;
+    private $saisonModel;
+    private $tarifModel;
 
     public function __construct() {
         AuthMiddleware::requireRole("Propriétaire");
@@ -22,6 +26,8 @@ class ProprietaireController extends BaseController {
         $this->communeModel = new CommuneModel();
         $this->reservationModel = new ReservationModel();
         $this->photoModel = new PhotoModel();
+        $this->saisonModel = new SaisonModel();
+        $this->tarifModel = new TarifModel();
     }
 
     public function index() {
@@ -51,8 +57,25 @@ class ProprietaireController extends BaseController {
             $bienId = $this->bienModel->create($data);
             
             // Gérer l'upload de photos si nécessaire
-            if ($bienId && isset($_FILES["photos"]) && !empty($_FILES["photos"]["name"][0])) {
-                $this->handlePhotoUpload($bienId, $_FILES["photos"]);
+            if ($bienId) {
+                // Gérer l'upload de photos
+                if (isset($_FILES["photos"]) && !empty($_FILES["photos"]["name"][0])) {
+                    $this->handlePhotoUpload($bienId, $_FILES["photos"]);
+                }
+
+                // Gérer l'ajout des tarifs
+                if (isset($_POST["tarifs"]) && is_array($_POST["tarifs"])) {
+                    foreach ($_POST["tarifs"] as $tarif) {
+                        if (!empty($tarif["prix_semaine"]) && !empty($tarif["annee"]) && !empty($tarif["id_saison"])) {
+                            $this->tarifModel->create([
+                                "prix_semaine" => $tarif["prix_semaine"],
+                                "annee" => $tarif["annee"],
+                                "id_biens" => $bienId,
+                                "id_saison" => $tarif["id_saison"]
+                            ]);
+                        }
+                    }
+                }
             }
             
             $this->redirect("/proprietaire/myBiens");
@@ -60,11 +83,18 @@ class ProprietaireController extends BaseController {
         
         $typesBiens = $this->typeBienModel->getAll();
         $communes = $this->communeModel->getAll();
-        $this->render("proprietaire/add_bien", ["typesBiens" => $typesBiens, "communes" => $communes]);
+        $saisons = $this->saisonModel->getAll();
+        $this->render("proprietaire/add_bien", ["typesBiens" => $typesBiens, "communes" => $communes, "saisons" => $saisons]);
     }
 
     public function editBien($id) {
         $bien = $this->bienModel->getById($id);
+        if ($bien) {
+            $commune = $this->communeModel->getById($bien["id_commune"]);
+            if ($commune) {
+                $bien["commune_nom"] = $commune["ville_nom"];
+            }
+        }
         
         // Vérifier que le bien appartient au propriétaire connecté
         if (!$bien || $bien["id_locataire"] != $_SESSION["user_id"]) {
@@ -85,6 +115,32 @@ class ProprietaireController extends BaseController {
                 "id_commune" => $_POST["id_commune"]
             ];
             $this->bienModel->update($id, $data);
+
+            // Gérer la mise à jour des tarifs
+            if (isset($_POST["tarifs"]) && is_array($_POST["tarifs"])) {
+                foreach ($_POST["tarifs"] as $tarif) {
+                    if (!empty($tarif["prix_semaine"]) && !empty($tarif["annee"]) && !empty($tarif["id_saison"])) {
+                        // Vérifier si un tarif existe déjà pour ce bien, cette saison et cette année
+                        $existingTarif = $this->tarifModel->getTarifByBienSaisonAnnee($id, $tarif["id_saison"], $tarif["annee"]);
+                        if ($existingTarif) {
+                            // Mettre à jour le tarif existant
+                            $this->tarifModel->update($existingTarif["id_tarif"], [
+                                "prix_semaine" => $tarif["prix_semaine"],
+                                "annee" => $tarif["annee"],
+                                "id_saison" => $tarif["id_saison"]
+                            ]);
+                        } else {
+                            // Créer un nouveau tarif
+                            $this->tarifModel->create([
+                                "prix_semaine" => $tarif["prix_semaine"],
+                                "annee" => $tarif["annee"],
+                                "id_biens" => $id,
+                                "id_saison" => $tarif["id_saison"]
+                            ]);
+                        }
+                    }
+                }
+            }
             
             // Gérer l'upload de photos si nécessaire
             if (isset($_FILES["photos"]) && !empty($_FILES["photos"]["name"][0])) {
@@ -97,7 +153,23 @@ class ProprietaireController extends BaseController {
         $typesBiens = $this->typeBienModel->getAll();
         $communes = $this->communeModel->getAll();
         $photos = $this->photoModel->getPhotosByBien($id);
-        $this->render("proprietaire/edit_bien", ["bien" => $bien, "typesBiens" => $typesBiens, "communes" => $communes, "photos" => $photos]);
+        $saisons = $this->saisonModel->getAll();
+        $tarifs = $this->tarifModel->getTarifsByBien($id);
+        
+        // Mapper les tarifs existants pour un accès facile par id_saison et annee
+        $tarifsMapped = [];
+        foreach ($tarifs as $tarif) {
+            $tarifsMapped[$tarif['id_saison'] . '_' . $tarif['annee']] = $tarif['prix_semaine'];
+        }
+
+        $this->render("proprietaire/edit_bien", [
+            "bien" => $bien,
+            "typesBiens" => $typesBiens,
+            "communes" => $communes,
+            "photos" => $photos,
+            "saisons" => $saisons,
+            "tarifsMapped" => $tarifsMapped
+        ]);
     }
 
     public function deleteBien($id) {
