@@ -93,6 +93,7 @@
                                 <label for="prix_semaine_<?php echo htmlspecialchars($saison["id_saison"]); ?>">Prix Semaine (€) :</label>
                                 <input type="number" id="prix_semaine_<?php echo htmlspecialchars($saison["id_saison"]); ?>" name="tarifs[<?php echo htmlspecialchars($saison["id_saison"]); ?>][prix_semaine]" step="0.01" min="0">
                             </div>
+                            <input type="hidden" name="tarifs[<?php echo htmlspecialchars($saison["id_saison"]); ?>][annee]" value="<?php echo date('Y'); ?>">
                             
                         </div>
                     <?php endforeach; ?>

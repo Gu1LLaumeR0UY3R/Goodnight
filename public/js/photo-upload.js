@@ -1,3 +1,4 @@
+
 /**
  * GlobeNight - Photo Upload with Drag & Drop
  * This script handles drag and drop functionality for photo uploads
@@ -41,13 +42,13 @@
             dropZone.addEventListener('drop', (e) => {
                 const dt = e.dataTransfer;
                 const files = dt.files;
-                handleFiles(files, fileInput, previewContainer, dropText);
+                handleFiles(files, fileInput, previewContainer, dropText, e);
             }, false);
 
             // Handle file selection via click
             fileInput.addEventListener('change', (e) => {
                 const files = e.target.files;
-                handleFiles(files, fileInput, previewContainer, dropText);
+                handleFiles(files, fileInput, previewContainer, dropText, e);
             });
 
             // Click on drop zone to open file selector
@@ -66,7 +67,7 @@
     }
 
     // Handle files (from drop or file input)
-    function handleFiles(files, fileInput, previewContainer, dropText) {
+    function handleFiles(files, fileInput, previewContainer, dropText, event) {
         // Convert FileList to Array
         const filesArray = Array.from(files);
         
@@ -79,7 +80,9 @@
         }
 
         // Get existing files from the input
-        const existingFiles = Array.from(fileInput.files);
+        // If the event is a 'change' event (from file input click), clear existing files to avoid duplication.
+        // Otherwise (for drag and drop), combine with existing files.
+        const existingFiles = (event && event.type === 'change') ? [] : Array.from(fileInput.files);
         
         // Combine existing files with new image files
         const combinedFiles = [...existingFiles, ...imageFiles];

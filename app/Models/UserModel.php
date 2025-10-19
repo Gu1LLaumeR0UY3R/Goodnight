@@ -31,7 +31,6 @@ class UserModel extends Model {
             error_log("Erreur d'enregistrement de l'utilisateur : " . $e->getMessage());
             return false;
         }
-        return $this->db->lastInsertId();
     }
 
     public function update($id, $data) {
