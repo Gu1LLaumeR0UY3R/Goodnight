@@ -7,25 +7,67 @@
     <link rel="stylesheet" href="/css/style.css">
     <link rel="stylesheet" href="/css/grille.css">
     <link rel="stylesheet" href="/css/navbar.css">
+    <link rel="stylesheet" href="/css/admin-modal.css">
 </head>
 <body>
     <?php include __DIR__ . '/../layout/navbar.php'; ?>
 
     <main>
         <h2>Bienvenue sur le tableau de bord administrateur</h2>
-        <p>Utilisez le menu de navigation ci-dessus pour gérer les différentes entités de la plateforme.</p>
-        <div class="parent">
-            <div class="div1"><iframe src="/admin/typesBiens" frameborder="0"></iframe></div>
-            <div class="div2"><iframe src="/admin/roles" frameborder="0"></iframe></div>
-            <div class="div3"><iframe src="/admin/communes" frameborder="0"></iframe></div>
-            <div class="div4"><iframe src="/admin/users" frameborder="0"></iframe></div>
-            <div class="div5"><iframe src="/admin/saisons" frameborder="0"></iframe></div>
-            <div class="div6"><iframe src="/admin/biens" frameborder="0"></iframe></div>
+        <p>Cliquez sur une boîte pour gérer les différentes entités de la plateforme.</p>
+        
+        <!-- Conteneur des boîtes cliquables -->
+        <div class="admin-boxes-container">
+            <!-- Gestion des Types de Biens -->
+            <div class="admin-box" data-iframe-url="/admin/typesBiens" data-title="Gestion des Types de Biens">
+                <span class="admin-box-icon">🏠</span>
+                <h3 class="admin-box-title">Types de Biens</h3>
+                <p class="admin-box-description">Gérer les types de biens disponibles</p>
+            </div>
+
+            <!-- Gestion des Rôles -->
+            <div class="admin-box" data-iframe-url="/admin/roles" data-title="Gestion des Rôles">
+                <span class="admin-box-icon">👥</span>
+                <h3 class="admin-box-title">Rôles</h3>
+                <p class="admin-box-description">Gérer les rôles utilisateur</p>
+            </div>
+
+            <!-- Gestion des Communes -->
+            <div class="admin-box" data-iframe-url="/admin/communes" data-title="Gestion des Communes">
+                <span class="admin-box-icon">🗺️</span>
+                <h3 class="admin-box-title">Communes</h3>
+                <p class="admin-box-description">Gérer les communes</p>
+            </div>
+
+            <!-- Gestion des Utilisateurs -->
+            <div class="admin-box" data-iframe-url="/admin/users" data-title="Gestion des Utilisateurs">
+                <span class="admin-box-icon">👤</span>
+                <h3 class="admin-box-title">Utilisateurs</h3>
+                <p class="admin-box-description">Gérer les utilisateurs</p>
+            </div>
+
+            <!-- Gestion des Saisons -->
+            <div class="admin-box" data-iframe-url="/admin/saisons" data-title="Gestion des Saisons">
+                <span class="admin-box-icon">📅</span>
+                <h3 class="admin-box-title">Saisons</h3>
+                <p class="admin-box-description">Gérer les saisons tarifaires</p>
+            </div>
+
+            <!-- Gestion des Biens -->
+            <div class="admin-box" data-iframe-url="/admin/biens" data-title="Gestion des Biens">
+                <span class="admin-box-icon">🏢</span>
+                <h3 class="admin-box-title">Biens</h3>
+                <p class="admin-box-description">Gérer tous les biens</p>
+            </div>
         </div>
     </main>
 
     <footer>
         <p>&copy; <?php echo date("Y"); ?> GlobeNight. Tous droits réservés.</p>
     </footer>
+
+    <!-- Script pour gérer les modales -->
+    <script src="/js/admin-modal.js"></script>
 </body>
 </html>
+
