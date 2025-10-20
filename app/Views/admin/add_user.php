@@ -23,20 +23,26 @@
                 </select>
             </div>
 
-            <div id="physique_fields" class="form-section hidden">
+            <!-- Champs communs -->
+            <div class="form-section">
                 <label for="nom_locataire">Nom :</label>
                 <input type="text" id="nom_locataire" name="nom_locataire" required value="<?php echo htmlspecialchars($old_data['nom_locataire'] ?? ''); ?>">
                 <label for="prenom_locataire">Prénom :</label>
                 <input type="text" id="prenom_locataire" name="prenom_locataire" required value="<?php echo htmlspecialchars($old_data['prenom_locataire'] ?? ''); ?>">
+            </div>
+
+            <!-- Champs pour Personne Physique -->
+            <div id="physique_fields" class="form-section hidden">
                 <label for="dateNaissance_locataire">Date de Naissance :</label>
                 <input type="date" id="dateNaissance_locataire" name="dateNaissance_locataire" value="<?php echo htmlspecialchars($old_data['dateNaissance_locataire'] ?? ''); ?>">
             </div>
 
+            <!-- Champs pour Personne Morale -->
             <div id="morale_fields" class="form-section hidden">
                 <label for="RaisonSociale">Raison Sociale :</label>
-                <input type="text" id="RaisonSociale" name="RaisonSociale" required value="<?php echo htmlspecialchars($old_data['RaisonSociale'] ?? ''); ?>">
+                <input type="text" id="RaisonSociale" name="RaisonSociale" value="<?php echo htmlspecialchars($old_data['RaisonSociale'] ?? ''); ?>">
                 <label for="Siret">SIRET :</label>
-                <input type="text" id="Siret" name="Siret" required value="<?php echo htmlspecialchars($old_data['Siret'] ?? ''); ?>">
+                <input type="text" id="Siret" name="Siret" value="<?php echo htmlspecialchars($old_data['Siret'] ?? ''); ?>" maxlength="14">
             </div>
 
             <div class="form-section">
@@ -102,6 +108,5 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js"></script>
     <script src="/js/autocomplete.js"></script>
-    <script src="/js/register.js"></script>
 </body>
 </html>

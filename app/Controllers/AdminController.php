@@ -243,6 +243,24 @@ class AdminController extends BaseController {
 
     public function addUser() {
         if ($_SERVER["REQUEST_METHOD"] === "POST") {
+            // Validation des champs Siret et RaisonSociale
+            $siret = $_POST["Siret"] ?? "";
+            if (!empty($siret) && (!ctype_digit($siret) || strlen($siret) !== 14)) {
+                $_SESSION["error"] = "Le numéro SIRET doit contenir exactement 14 chiffres.";
+                $_SESSION["old_data"] = $_POST;
+                $this->redirect("/admin/addUser");
+                return;
+            }
+
+            $raisonSociale = $_POST["RaisonSociale"] ?? "";
+            if (!empty($raisonSociale) && strlen($raisonSociale) > 255) {
+                $_SESSION["error"] = "La raison sociale ne peut pas dépasser 255 caractères.";
+                $_SESSION["old_data"] = $_POST;
+                $this->redirect("/admin/addUser");
+                return;
+            }
+
+            // Préparer les données
             $data = [
                 'nom_locataire' => $_POST["nom_locataire"],
                 'prenom_locataire' => $_POST["prenom_locataire"],
@@ -252,10 +270,12 @@ class AdminController extends BaseController {
                 'tel_locataire' => $_POST["tel_locataire"] ?? null,
                 'rue_locataire' => $_POST["rue_locataire"] ?? null,
                 'complement_locataire' => $_POST["complement_locataire"] ?? null,
-                'RaisonSociale' => $_POST["RaisonSociale"] ?? null,
-                'Siret' => $_POST["Siret"] ?? null,
+                'RaisonSociale' => empty($_POST["RaisonSociale"]) ? null : $_POST["RaisonSociale"],
+                'Siret' => empty($_POST["Siret"]) ? null : $_POST["Siret"],
                 'id_commune' => $_POST["id_commune"] ?? null
             ];
+
+            // Créer l'utilisateur
             $userId = $this->userModel->create($data);
 
             // Assigner les rôles sélectionnés seulement si l'utilisateur a été créé avec succès
@@ -264,9 +284,10 @@ class AdminController extends BaseController {
                     $this->userModel->assignRole($userId, $roleId);
                 }
             }
-            
+
             $this->redirect("/admin/users");
         }
+
         $roles = $this->roleModel->getAll();
         $communes = $this->communeModel->getAll();
         $this->render("admin/add_user", ["roles" => $roles, "communes" => $communes]);
