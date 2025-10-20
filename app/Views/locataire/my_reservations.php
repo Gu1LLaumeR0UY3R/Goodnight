@@ -5,18 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mes Réservations - Locataire</title>
     <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/navbar.css">
 </head>
 <body>
-    <header>
-        <h1>Tableau de bord Locataire</h1>
-        <nav>
-            <ul>
-                <li><a href="/locataire">Accueil Locataire</a></li>
-                <li><a href="/locataire/myReservations">Mes Réservations</a></li>
-                <li><a href="/logout">Déconnexion</a></li>
-            </ul>
-        </nav>
-    </header>
+    <?php include __DIR__ . '/../layout/navbar.php'; ?>
 
     <main>
         <h2>Mes Réservations</h2>

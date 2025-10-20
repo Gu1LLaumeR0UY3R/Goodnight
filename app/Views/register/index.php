@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Inscription - GlobeNight</title>
     <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/navbar.css">
     <link rel="stylesheet" href="https://code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
     <style>
         .form-section { margin-bottom: 1em; }
@@ -12,16 +13,7 @@
     </style>
 </head>
 <body>
-    <header>
-        <h1>GlobeNight</h1>
-        <nav>
-            <ul>
-                <li><a href="/home">Accueil</a></li>
-                <li><a href="/register">Inscription</a></li>
-                <li><a href="/login">Connexion</a></li>
-            </ul>
-        </nav>
-    </header>
+    <?php include __DIR__ . '/../layout/navbar.php'; ?>
 
     <main>
         <h2>Créez votre compte</h2>

@@ -5,18 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Connexion - GlobeNight</title>
     <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/navbar.css">
 </head>
 <body>
-    <header>
-        <h1>GlobeNight</h1>
-        <nav>
-            <ul>
-                <li><a href="/home">Accueil</a></li>
-                <li><a href="/register">Inscription</a></li>
-                <li><a href="/login">Connexion</a></li>
-            </ul>
-        </nav>
-    </header>
+    <?php include __DIR__ . '/../layout/navbar.php'; ?>
 
     <main>
         <h2>Connectez-vous à votre compte</h2>

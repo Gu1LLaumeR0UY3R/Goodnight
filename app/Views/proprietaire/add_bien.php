@@ -5,22 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ajouter un Bien - Propriétaire</title>
     <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/navbar.css">
     <link rel="stylesheet" href="/css/form_style.css"> <!-- Nouveau fichier CSS pour le formulaire -->
     <link rel="stylesheet" href="/css/photo-upload.css"> <!-- Styles pour le drag and drop -->
     <link rel="stylesheet" href="//code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
 </head>
 <body>
-    <header>
-        <h1>Tableau de bord Propriétaire</h1>
-        <nav>
-            <ul>
-                <li><a href="/proprietaire">Accueil Propriétaire</a></li>
-                <li><a href="/proprietaire/myBiens">Mes Biens</a></li>
-                <li><a href="/proprietaire/myReservations">Mes Réservations</a></li>
-                <li><a href="/logout">Déconnexion</a></li>
-            </ul>
-        </nav>
-    </header>
+    <?php include __DIR__ . '/../layout/navbar.php'; ?>
 
     <main>
         <h2 class="form-title">Ajouter un nouveau Bien</h2>

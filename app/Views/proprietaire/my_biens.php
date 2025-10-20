@@ -5,19 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mes Biens - Propriétaire</title>
     <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/navbar.css">
 </head>
 <body>
-    <header>
-        <h1>Tableau de bord Propriétaire</h1>
-        <nav>
-            <ul>
-                <li><a href="/proprietaire">Accueil Propriétaire</a></li>
-                <li><a href="/proprietaire/myBiens">Mes Biens</a></li>
-                <li><a href="/proprietaire/myReservations">Mes Réservations</a></li>
-                <li><a href="/logout">Déconnexion</a></li>
-            </ul>
-        </nav>
-    </header>
+    <?php include __DIR__ . '/../layout/navbar.php'; ?>
 
     <main>
         <div class="page-header">

@@ -6,17 +6,10 @@
     <title>Administration - GlobeNight</title>
     <link rel="stylesheet" href="/css/style.css">
     <link rel="stylesheet" href="/css/grille.css">
+    <link rel="stylesheet" href="/css/navbar.css">
 </head>
 <body>
-    <header>
-        <h1>Administration GlobeNight</h1>
-        <nav>
-            <ul>
-                <li><a href="/admin">Tableau de bord</a></li>
-                <li><a href="/logout">Déconnexion</a></li>
-            </ul>
-        </nav>
-    </header>
+    <?php include __DIR__ . '/../layout/navbar.php'; ?>
 
     <main>
         <h2>Bienvenue sur le tableau de bord administrateur</h2>
