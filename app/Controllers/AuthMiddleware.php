@@ -16,13 +16,19 @@ class AuthMiddleware extends BaseController {
     public static function requireRole($roles) {
         self::requireLogin(); // Assurez-vous que l'utilisateur est connecté
 
+        // S'assurer que $roles est toujours un tableau
         if (!is_array($roles)) {
             $roles = [$roles];
         }
 
+        // Vérifier si l'utilisateur est un administrateur via la session
+        if (isset($_SESSION["is_admin"]) && $_SESSION["is_admin"] === true && in_array("Administrateur", $roles)) {
+            return; // L'administrateur a accès à tout
+        }
+
         $hasRole = false;
         foreach ($roles as $role) {
-            if (in_array($role, $_SESSION["user_roles"])) {
+            if (isset($_SESSION["user_roles"]) && is_array($_SESSION["user_roles"]) && in_array($role, $_SESSION["user_roles"])) {
                 $hasRole = true;
                 break;
             }

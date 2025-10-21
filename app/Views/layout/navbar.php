@@ -26,15 +26,16 @@ $userEmail = $_SESSION['user_email'] ?? null;
             <ul class="navbar-menu">
                 <li><a href="/home" class="navbar-link">Accueil</a></li>
                 
-                <?php if ($isLoggedIn && in_array('Propriétaire', $userRoles)): ?>
+                <?php if ($isLoggedIn && isset($_SESSION['is_admin']) && $_SESSION['is_admin'] === true): ?>
+                    <li><a href="/admin" class="navbar-link">Administration</a></li>
+                <?php elseif ($isLoggedIn && in_array('Propriétaire', $userRoles)): ?>
                     <li><a href="/proprietaire" class="navbar-link">Tableau de bord</a></li>
                     <li><a href="/proprietaire/myBiens" class="navbar-link">Mes Biens</a></li>
                     <li><a href="/proprietaire/myReservations" class="navbar-link">Mes Réservations</a></li>
                 <?php elseif ($isLoggedIn && in_array('Locataire', $userRoles)): ?>
                     <li><a href="/locataire" class="navbar-link">Tableau de bord</a></li>
                     <li><a href="/locataire/myReservations" class="navbar-link">Mes Réservations</a></li>
-                <?php elseif ($isLoggedIn && in_array('Administrateur', $userRoles)): ?>
-                    <li><a href="/admin" class="navbar-link">Administration</a></li>
+
                 <?php endif; ?>
             </ul>
         </nav>

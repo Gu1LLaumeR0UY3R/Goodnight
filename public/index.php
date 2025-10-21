@@ -38,6 +38,10 @@ $routes = [
     
     // Routes Administrateur
     "admin" => ["controller" => "AdminController", "action" => "index"],
+    "admin/admins" => ["controller" => "AdminController", "action" => "admins"],
+    "admin/addAdmin" => ["controller" => "AdminController", "action" => "addAdmin"],
+    "admin/editAdmin/([0-9]+)" => ["controller" => "AdminController", "action" => "editAdmin"],
+    "admin/deleteAdmin/([0-9]+)" => ["controller" => "AdminController", "action" => "deleteAdmin"],
     "admin/roles" => ["controller" => "AdminController", "action" => "roles"],
     "admin/addRole" => ["controller" => "AdminController", "action" => "addRole"],
     "admin/editRole/([0-9]+)" => ["controller" => "AdminController", "action" => "editRole"],

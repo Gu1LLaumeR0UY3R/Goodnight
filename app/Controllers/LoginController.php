@@ -2,12 +2,15 @@
 
 require_once __DIR__ . "/BaseController.php";
 require_once __DIR__ . "/../Models/UserModel.php";
+require_once __DIR__ . "/../Models/AdminModel.php";
 
 class LoginController extends BaseController {
     private $userModel;
+    private $adminModel;
 
     public function __construct() {
         $this->userModel = new UserModel();
+        $this->adminModel = new AdminModel();
     }
 
     public function index() {
@@ -28,6 +31,21 @@ class LoginController extends BaseController {
             $password = $_POST["password"] ?? "";
 
             // Récupérer l'utilisateur par email
+            // Tenter de se connecter en tant qu'administrateur
+            $admin = $this->adminModel->getAdminByEmail($email);
+
+            if ($admin && password_verify($password, $admin["mot_de_passe_admin"]) && $admin["is_admin"]) {
+                // Connexion admin réussie
+                $_SESSION["user_id"] = $admin["id_admin"];
+                $_SESSION["user_email"] = $admin["email_admin"];
+                $_SESSION["user_nom"] = $admin["nom_admin"];
+                $_SESSION["user_prenom"] = $admin["prenom_admin"];
+                $_SESSION["is_admin"] = true;
+                $this->redirect("/admin");
+                return;
+            }
+
+            // Si ce n'est pas un admin, tenter de se connecter en tant qu'utilisateur normal (locataire)
             $user = $this->userModel->getUserByEmail($email);
 
             if ($user && password_verify($password, $user["password_locataire"])) {
@@ -43,7 +61,7 @@ class LoginController extends BaseController {
 
                 // Rediriger selon le rôle
                 $this->redirectByRole();
-            } else {
+            } else if (!$admin) { // Seulement si l'email n'est pas celui d'un admin
                 // Échec de la connexion
                 $_SESSION["error"] = "Email ou mot de passe incorrect.";
                 $_SESSION["old_email"] = $email;
@@ -58,10 +76,10 @@ class LoginController extends BaseController {
     }
 
     private function redirectByRole() {
-        if (isset($_SESSION["user_roles"]) && is_array($_SESSION["user_roles"])) {
-            if (in_array("Administrateur", $_SESSION["user_roles"])) {
-                $this->redirect("/admin");
-            } elseif (in_array("Propriétaire", $_SESSION["user_roles"])) {
+        if (isset($_SESSION["is_admin"]) && $_SESSION["is_admin"]) {
+            $this->redirect("/admin");
+        } else if (isset($_SESSION["user_roles"]) && is_array($_SESSION["user_roles"])) {
+            if (in_array("Propriétaire", $_SESSION["user_roles"])) {
                 $this->redirect("/proprietaire");
             } elseif (in_array("Locataire", $_SESSION["user_roles"])) {
                 $this->redirect("/locataire");

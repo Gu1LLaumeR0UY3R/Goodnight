@@ -8,6 +8,7 @@ require_once __DIR__ . "/../Models/TypeBienModel.php";
 require_once __DIR__ . "/../Models/SaisonModel.php";
 require_once __DIR__ . "/../Models/BienModel.php";
 require_once __DIR__ . "/../Models/TarifModel.php";
+require_once __DIR__ . "/../Models/AdminModel.php";
 
 class AdminController extends BaseController {
     private $userModel;
@@ -17,9 +18,9 @@ class AdminController extends BaseController {
     private $saisonModel;
     private $bienModel;
     private $tarifModel;
+    private $adminModel;
 
     public function __construct() {
-        // Vérifier si l\'utilisateur est connecté et a le rôle d\'administrateur
         AuthMiddleware::requireRole("Administrateur");
 
         $this->userModel = new UserModel();
@@ -29,11 +30,53 @@ class AdminController extends BaseController {
         $this->saisonModel = new SaisonModel();
         $this->bienModel = new BienModel();
         $this->tarifModel = new TarifModel();
-
+        $this->adminModel = new AdminModel();
     }
 
     public function index() {
         $this->render("admin/index");
+    }
+
+    // --- Gestion des Administrateurs ---
+    public function admins() {
+        $admins = $this->adminModel->getAll();
+        $this->render("admin/admins", ["admins" => $admins]);
+    }
+
+    public function addAdmin() {
+        if ($_SERVER["REQUEST_METHOD"] === "POST") {
+            $data = [
+                "nom_admin" => $_POST["nom_admin"],
+                "email_admin" => $_POST["email_admin"],
+                "mot_de_passe" => password_hash($_POST["mot_de_passe"], PASSWORD_DEFAULT),
+                "is_admin" => isset($_POST["is_admin"]) ? 1 : 0
+            ];
+            $this->adminModel->create($data);
+            $this->redirect("/admin/admins");
+        }
+        $this->render("admin/add_admin");
+    }
+
+    public function editAdmin($id) {
+        if ($_SERVER["REQUEST_METHOD"] === "POST") {
+            $data = [
+                "nom_admin" => $_POST["nom_admin"],
+                "email_admin" => $_POST["email_admin"],
+                "is_admin" => isset($_POST["is_admin"]) ? 1 : 0
+            ];
+            if (!empty($_POST["mot_de_passe"])) {
+                $data["mot_de_passe"] = password_hash($_POST["mot_de_passe"], PASSWORD_DEFAULT);
+            }
+            $this->adminModel->update($id, $data);
+            $this->redirect("/admin/admins");
+        }
+        $admin = $this->adminModel->getById($id);
+        $this->render("admin/edit_admin", ["admin" => $admin]);
+    }
+
+    public function deleteAdmin($id) {
+        $this->adminModel->delete($id);
+        $this->redirect("/admin/admins");
     }
 
     // --- Gestion des Rôles ---
@@ -125,7 +168,6 @@ class AdminController extends BaseController {
         $this->saisonModel->delete($id);
         $this->redirect("/admin/saisons");
     }
-
 
     // --- Gestion des Biens ---
     public function biens() {
@@ -232,8 +274,6 @@ class AdminController extends BaseController {
         $this->bienModel->delete($id);
         $this->redirect("/admin/biens");
     }
-
-
 
     // --- Gestion des Utilisateurs ---
     public function users() {
