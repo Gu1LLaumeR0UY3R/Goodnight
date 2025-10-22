@@ -16,6 +16,9 @@
             <input type="text" id="designation_bien" name="desc_type_bien" value="<?php echo htmlspecialchars($typeBien["desc_type_bien"]); ?>" required>
             <button type="submit">Mettre à jour le type de bien</button>
         </form>
+
+        <button onclick="window.location.href='/admin/typesBiens'">Retour</button>
+        
     </main>
 
 </body>

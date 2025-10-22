@@ -17,5 +17,9 @@
             <button type="submit">Ajouter la Saison</button>
         </form>
 
+        <button onclick="window.location.href='/admin/saisons'">Retour</button>
+
+    </main>
+
 </body>
 </html>
