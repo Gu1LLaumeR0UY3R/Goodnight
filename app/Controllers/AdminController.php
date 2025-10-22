@@ -34,13 +34,13 @@ class AdminController extends BaseController {
     }
 
     public function index() {
-        $this->render("admin/index");
+        $this->render("admin/index", [], ["style.css", "grille.css"]);
     }
 
     // --- Gestion des Administrateurs ---
     public function admins() {
         $admins = $this->adminModel->getAll();
-        $this->render("admin/admins", ["admins" => $admins]);
+        $this->render("admin/admins", ["admins" => $admins], ["style.css", "grille.css"]);
     }
 
     public function addAdmin() {
@@ -54,7 +54,7 @@ class AdminController extends BaseController {
             $this->adminModel->create($data);
             $this->redirect("/admin/admins");
         }
-        $this->render("admin/add_admin");
+        $this->render("admin/add_admin", [], ["style.css", "grille.css"]);
     }
 
     public function editAdmin($id) {
@@ -71,7 +71,7 @@ class AdminController extends BaseController {
             $this->redirect("/admin/admins");
         }
         $admin = $this->adminModel->getById($id);
-        $this->render("admin/edit_admin", ["admin" => $admin]);
+        $this->render("admin/edit_admin", ["admin" => $admin], ["style.css", "grille.css"]);
     }
 
     public function deleteAdmin($id) {
@@ -82,7 +82,7 @@ class AdminController extends BaseController {
     // --- Gestion des Rôles ---
     public function roles() {
         $roles = $this->roleModel->getAll();
-        $this->render("admin/roles", ["roles" => $roles]);
+        $this->render("admin/roles", ["roles" => $roles], ["style.css", "grille.css"]);
     }
 
     public function addRole() {
@@ -90,7 +90,7 @@ class AdminController extends BaseController {
             $this->roleModel->create(["nom_roles" => $_POST["nom_roles"]]);
             $this->redirect("/admin/roles");
         }
-        $this->render("admin/add_role");
+        $this->render("admin/add_role", [], ["style.css", "grille.css"]);
     }
 
     public function editRole($id) {
@@ -99,7 +99,7 @@ class AdminController extends BaseController {
             $this->redirect("/admin/roles");
         }
         $role = $this->roleModel->getById($id);
-        $this->render("admin/edit_role", ["role" => $role]);
+        $this->render("admin/edit_role", ["role" => $role], ["style.css", "grille.css"]);
     }
 
     public function deleteRole($id) {
@@ -110,13 +110,13 @@ class AdminController extends BaseController {
     // --- Gestion des Communes ---
     public function communes() {
         $communes = $this->communeModel->getAll();
-        $this->render("admin/communes", ["communes" => $communes]);
+        $this->render("admin/communes", ["communes" => $communes], ["style.css", "grille.css"]);
     }
 
     // --- Gestion des Types de Biens ---
     public function typesBiens() {
         $typesBiens = $this->typeBienModel->getAll();
-        $this->render("admin/types_biens", ["typesBiens" => $typesBiens]);
+        $this->render("admin/types_biens", ["typesBiens" => $typesBiens], ["style.css", "grille.css"]);
     }
 
     public function addTypeBien() {
@@ -124,7 +124,7 @@ class AdminController extends BaseController {
             $this->typeBienModel->create(["desc_type_bien" => $_POST["desc_type_bien"]]);
             $this->redirect("/admin/typesBiens");
         }
-        $this->render("admin/add_type_bien");
+        $this->render("admin/add_type_bien", [], ["style.css", "grille.css"]);
     }
 
     public function editTypeBien($id) {
@@ -133,7 +133,7 @@ class AdminController extends BaseController {
             $this->redirect("/admin/typesBiens");
         }
         $typeBien = $this->typeBienModel->getById($id);
-        $this->render("admin/edit_type_bien", ["typeBien" => $typeBien]);
+        $this->render("admin/edit_type_bien", ["typeBien" => $typeBien], ["style.css", "grille.css"]);
     }
 
     public function deleteTypeBien($id) {
@@ -144,7 +144,7 @@ class AdminController extends BaseController {
     // --- Gestion des Saisons ---
     public function saisons() {
         $saisons = $this->saisonModel->getAll();
-        $this->render("admin/saisons", ["saisons" => $saisons]);
+        $this->render("admin/saisons", ["saisons" => $saisons], ["style.css", "grille.css"]);
     }
 
     public function addSaison() {
@@ -152,7 +152,7 @@ class AdminController extends BaseController {
             $this->saisonModel->create(["lib_saison" => $_POST["lib_saison"]]);
             $this->redirect("/admin/saisons");
         }
-        $this->render("admin/add_saison");
+        $this->render("admin/add_saison", [], ["style.css", "grille.css"]);
     }
 
     public function editSaison($id) {
@@ -161,7 +161,7 @@ class AdminController extends BaseController {
             $this->redirect("/admin/saisons");
         }
         $saison = $this->saisonModel->getById($id);
-        $this->render("admin/edit_saison", ["saison" => $saison]);
+        $this->render("admin/edit_saison", ["saison" => $saison], ["style.css", "grille.css"]);
     }
 
     public function deleteSaison($id) {
@@ -172,7 +172,7 @@ class AdminController extends BaseController {
     // --- Gestion des Biens ---
     public function biens() {
         $biens = $this->bienModel->getBiensWithProprietaireDetails();
-        $this->render("admin/biens", ["biens" => $biens]);
+        $this->render("admin/biens", ["biens" => $biens], ["style.css", "grille.css"]);
     }
 
     public function addBien() {
@@ -205,7 +205,7 @@ class AdminController extends BaseController {
             "communes" => $communes,
             "personnesPhysiques" => $personnesPhysiques,
             "personnesMorales" => $personnesMorales
-        ]);
+        ], ["style.css", "grille.css"]);
     }
 
     public function editBien($id) {
@@ -267,7 +267,7 @@ class AdminController extends BaseController {
             "proprietaireNom" => $proprietaireNom,
             "saisons" => $saisons,
             "tarifsMapped" => $tarifsMapped
-        ]);
+        ], ["style.css", "grille.css"]);
     }
 
     public function deleteBien($id) {
@@ -278,7 +278,7 @@ class AdminController extends BaseController {
     // --- Gestion des Utilisateurs ---
     public function users() {
         $users = $this->userModel->getAllUsersWithRoles();
-        $this->render("admin/users", ["users" => $users]);
+        $this->render("admin/users", ["users" => $users], ["style.css", "grille.css"]);
     }
 
     public function addUser() {
@@ -330,7 +330,7 @@ class AdminController extends BaseController {
 
         $roles = $this->roleModel->getAll();
         $communes = $this->communeModel->getAll();
-        $this->render("admin/add_user", ["roles" => $roles, "communes" => $communes]);
+        $this->render("admin/addUser", ["roles" => $roles, "communes" => $communes], ["style.css", "grille.css"]);
     }
 
     public function editUser($id) {
@@ -370,7 +370,17 @@ class AdminController extends BaseController {
         $communes = $this->communeModel->getAll();
         $userRoles = $this->userModel->getUserRoles($id);
         $userRoleIds = array_column($userRoles, 'id_roles');
-        $this->render("admin/edit_user", ["user" => $user, "roles" => $roles, "communes" => $communes, "userRoleIds" => $userRoleIds]);
+        $this->render(
+            "admin/editUser",
+            [
+                "user" => $user,
+                "roles" => $roles,
+                "userRoles" => $userRoles,
+                "userRoleIds" => $userRoleIds,
+                "communes" => $communes
+            ],
+            ["style.css", "grille.css"]
+        );
     }
 
     public function deleteUser($id) {
