@@ -59,6 +59,12 @@
                 <h3 class="admin-box-title">Biens</h3>
                 <p class="admin-box-description">Gérer tous les biens</p>
             </div>
+
+            <div class="admin-box" data-iframe-url="/admin/admins" data-title="Gestion des Admins">
+                <span class="admin-box-icon"></span>
+                <h3 class="admin-box-title">Admin</h3>
+                <p class="admin-box-description">Gérer tous les admins</p>
+            </div>
         </div>
     </main>
 
