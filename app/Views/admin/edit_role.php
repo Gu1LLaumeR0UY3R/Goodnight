@@ -16,6 +16,9 @@
             <input type="text" id="nom_roles" name="nom_roles" value="<?php echo htmlspecialchars($role["nom_roles"]); ?>" required>
             <button type="submit">Mettre à jour le rôle</button>
         </form>
+
+        <button onclick="window.location.href='/admin/roles'">Retour</button>
+        
     </main>
 
 </body>

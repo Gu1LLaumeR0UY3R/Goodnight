@@ -51,6 +51,9 @@
 
             <button type="submit">Mettre à jour l'utilisateur</button>
         </form>
+
+        <button onclick="window.location.href='/admin/users'">Retour</button>
+        
     </main>
 
 </body>
