@@ -16,6 +16,9 @@
             <input type="text" id="lib_saison" name="lib_saison" value="<?php echo htmlspecialchars($saison["lib_saison"]); ?>" required>
             <button type="submit">Mettre à jour la Saison</button>
         </form>
+
+        <button onclick="window.location.href='/admin/saisons'">Retour</button>
+        
     </main>
 
 </body>

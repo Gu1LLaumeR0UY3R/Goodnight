@@ -78,6 +78,9 @@
 
             <button type="submit">Ajouter l'utilisateur</button>
         </form>
+
+        <button onclick="window.location.href='/admin/users'">Retour</button>
+        
     </main>
 
     <script>
