@@ -16,6 +16,9 @@
             <input type="text" id="nom_roles" name="nom_roles" required>
             <button type="submit">Ajouter le rôle</button>
         </form>
+
+        <button onclick="window.location.href='/admin/roles'">Retour</button>
+        
     </main>
 
 </body>

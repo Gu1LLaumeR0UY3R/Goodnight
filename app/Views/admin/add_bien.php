@@ -60,6 +60,9 @@
 
             <button type="submit">Ajouter le bien</button>
         </form>
+
+        <button onclick="window.location.href='/admin/biens'">Retour</button>
+        
     </main>
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
