@@ -36,7 +36,7 @@
                             <p>Couchages: <?php echo htmlspecialchars($bien["nb_couchage"]); ?></p>
                             <p><?php echo htmlspecialchars(substr($bien["description_biens"], 0, 100)); ?>...</p>
                             <p class="prix">Prix semaine: <?php echo htmlspecialchars(($bien["prix_semaine"] ?? null) ? number_format($bien["prix_semaine"], 2, ',', ' ') . ' €' : 'Non renseigné'); ?></p>
-                            <a href="/bien/<?php echo htmlspecialchars($bien["id_biens"]); ?>">Voir les détails</a>
+                            <a href="/bien/<?php echo htmlspecialchars($bien["id_biens"]); ?>" class="btn-reserver">Voir les détails</a>
                         </div>
                     <?php endforeach; ?>
                 <?php else: ?>

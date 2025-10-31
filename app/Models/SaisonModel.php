@@ -73,8 +73,40 @@ class SaisonModel extends Model {
         ]);
         $result = $stmt->fetch();
         
-        return $result ? $result['id_saison'] : null;
-    }
-}
+	        return $result ? $result['id_saison'] : null;
+	    }
 
-?>
+	    /**
+	     * Détermine l'ID de la saison en fonction d'une date donnée.
+	     * @param string $date La date à vérifier (format Y-m-d).
+	     * @return int|null L'ID de la saison ou null si aucune saison n'est trouvée.
+	     */
+	    public function getSaisonIdByDate($date) {
+	        $monthDay = date('m-d', strtotime($date));
+	        
+	        $stmt = $this->db->prepare("
+	            SELECT id_saison 
+	            FROM " . $this->table . " 
+	            WHERE 
+	                -- Cas normal : date_debut <= date_fin (saison dans la même année)
+	                (DATE_FORMAT(date_debut, '%m-%d') <= :md1 AND DATE_FORMAT(date_fin, '%m-%d') >= :md2)
+	                -- Cas de chevauchement d'année : date_debut > date_fin (ex: Décembre à Février)
+	                OR (DATE_FORMAT(date_debut, '%m-%d') > DATE_FORMAT(date_fin, '%m-%d') 
+	                    AND (DATE_FORMAT(date_debut, '%m-%d') <= :md3 OR DATE_FORMAT(date_fin, '%m-%d') >= :md4)
+	                )
+	            LIMIT 1
+	        ");
+
+	        $stmt->execute([
+	            'md1' => $monthDay,
+	            'md2' => $monthDay,
+	            'md3' => $monthDay,
+	            'md4' => $monthDay
+	        ]);
+	        $result = $stmt->fetch();
+	        
+	        return $result ? $result['id_saison'] : null;
+	    }
+	}
+	
+	?>

@@ -79,6 +79,32 @@ class BienModel extends Model {
         return $stmt->fetchAll();
     }
 
+    public function getBienWithDetailsById($id) {
+        $saisonModel = new SaisonModel();
+        $currentSaisonId = $saisonModel->getCurrentSaisonId();
+        $currentYear = date('Y');
+
+        $sql = "
+            SELECT 
+                b.*,
+                tb.desc_type_bien as type_bien_nom,
+                c.ville_nom as commune_nom,
+                IFNULL((SELECT prix_semaine FROM tarifs WHERE id_biens = b.id_biens AND annee = :currentYear AND id_saison = :currentSaisonId LIMIT 1), NULL) as prix_semaine
+            FROM biens b 
+            LEFT JOIN Type_Bien tb ON b.id_TypeBien = tb.id_typebien 
+            LEFT JOIN commune c ON b.id_commune = c.id_commune
+            WHERE b.id_biens = :id
+        ";
+        
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute([
+            'id' => $id,
+            'currentYear' => $currentYear,
+            'currentSaisonId' => $currentSaisonId ?? 0 // Utiliser 0 si pas de saison trouvée
+        ]);
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+
     public function getBiensWithDetails() {
         $saisonModel = new SaisonModel();
         $currentSaisonId = $saisonModel->getCurrentSaisonId();

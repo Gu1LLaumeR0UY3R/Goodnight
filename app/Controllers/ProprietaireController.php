@@ -185,7 +185,8 @@ class ProprietaireController extends BaseController {
     }
 
     public function myReservations() {
-        $reservations = $this->reservationModel->getReservationsByProprietaire($_SESSION["user_id"]);
+        // Affiche les réservations faites par l'utilisateur connecté (le propriétaire)
+        $reservations = $this->reservationModel->getReservationsByLocataire($_SESSION["user_id"]);
         $this->render("proprietaire/my_reservations", ["reservations" => $reservations]);
     }
 

@@ -94,6 +94,47 @@ class TarifModel extends Model {
         $stmt->execute(['id_biens' => $bienId]);
         return $stmt->rowCount();
     }
+
+    /**
+     * Récupère l'ID du tarif pour un bien, en fonction des dates de réservation.
+     * La logique est de trouver l'ID de la saison qui chevauche la date de début de la réservation.
+     *
+     * @param int $bienId L'ID du bien.
+     * @param string $date_debut La date de début de la réservation (format Y-m-d).
+     * @return int|null L'ID du tarif trouvé ou null.
+     */
+    public function getTarifIdByDates($bienId, $date_debut) {
+        // 1. Déterminer l'ID de la saison basée sur la date de début
+        require_once __DIR__ . "/SaisonModel.php";
+        $saisonModel = new SaisonModel();
+        $saisonId = $saisonModel->getSaisonIdByDate($date_debut);
+
+        if (!$saisonId) {
+            return null;
+        }
+
+        // 2. Trouver le tarif correspondant pour le bien, l'année et la saison
+        $annee = date('Y', strtotime($date_debut));
+        
+        $stmt = $this->db->prepare("
+            SELECT id_tarif 
+            FROM " . $this->table . " 
+            WHERE 
+                id_biens = :id_biens AND 
+                id_saison = :id_saison AND 
+                annee = :annee
+            LIMIT 1
+        ");
+
+        $stmt->execute([
+            'id_biens' => $bienId,
+            'id_saison' => $saisonId,
+            'annee' => $annee
+        ]);
+
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        return $result ? $result['id_tarif'] : null;
+    }
 }
 
 ?>

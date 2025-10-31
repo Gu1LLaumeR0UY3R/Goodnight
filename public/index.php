@@ -30,8 +30,10 @@ $routes = [
     "home" => ["controller" => "HomeController", "action" => "index"],
     "home/search" => ["controller" => "HomeController", "action" => "search"],
     "home/autocompleteCommunes" => ["controller" => "HomeController", "action" => "autocompleteCommunes"],
+    "bien/([0-9]+)" => ["controller" => "HomeController", "action" => "details"],
     "register" => ["controller" => "RegisterController", "action" => "index"],
     "register/process" => ["controller" => "RegisterController", "action" => "register"],
+    
     "login" => ["controller" => "LoginController", "action" => "index"],
     "login/process" => ["controller" => "LoginController", "action" => "login"],
     "logout" => ["controller" => "LoginController", "action" => "logout"],
@@ -80,7 +82,10 @@ $routes = [
 
     // Routes Locataire
     "locataire" => ["controller" => "LocataireController", "action" => "index"],
-    "locataire/myReservations" => ["controller" => "LocataireController", "action" => "myReservations"],
+    "locataire/myReservations" => ["controller" => "ReservationController", "action" => "myReservations"],
+    
+    "reservation/store" => ["controller" => "ReservationController", "action" => "store"],
+    "reservation/cancel/([0-9]+)" => ["controller" => "ReservationController", "action" => "cancel"],
 ];
 
 $matchedRoute = null;

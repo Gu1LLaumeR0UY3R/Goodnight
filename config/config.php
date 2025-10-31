@@ -1,7 +1,7 @@
 <?php
 
 define("DB_HOST", "localhost");
-define("DB_NAME", "Goodnight");
+define("DB_NAME", "goodnight");
 define("DB_USER", "root");
 define("DB_PASS", "");
 

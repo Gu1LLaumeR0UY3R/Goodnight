@@ -27,10 +27,10 @@
                     <?php foreach ($reservations as $reservation): ?>
                         <tr>
                             <td><?php echo htmlspecialchars($reservation["designation_bien"]); ?></td>
-                            <td><?php echo htmlspecialchars($reservation["nom_users"] . " " . $reservation["prenom_users"]); ?></td>
+                            <td><?php echo htmlspecialchars($reservation["nom_locataire"] . " " . $reservation["prenom_locataire"]); ?></td>
                             <td><?php echo htmlspecialchars($reservation["date_debut"]); ?></td>
                             <td><?php echo htmlspecialchars($reservation["date_fin"]); ?></td>
-                            <td><?php echo htmlspecialchars($reservation["ville_nom"]); ?></td>
+                            <td><?php echo htmlspecialchars($reservation["commune_nom"]); ?></td>
                         </tr>
                     <?php endforeach; ?>
                 </tbody>

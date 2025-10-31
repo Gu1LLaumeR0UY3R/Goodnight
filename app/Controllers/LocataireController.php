@@ -15,11 +15,6 @@ class LocataireController extends BaseController {
     public function index() {
         $this->render("locataire/index");
     }
-
-    public function myReservations() {
-        $reservations = $this->reservationModel->getReservationsByUser($_SESSION["user_id"]);
-        $this->render("locataire/my_reservations", ["reservations" => $reservations]);
-    }
 }
 
 ?>

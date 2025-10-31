@@ -13,17 +13,17 @@ class LoginController extends BaseController {
         $this->adminModel = new AdminModel();
     }
 
-    public function index() {
-        // Si l'utilisateur est déjà connecté, rediriger selon son rôle
-        if (isset($_SESSION["user_id"])) {
-            $this->redirectByRole();
-            return;
-        }
+	    public function index() {
+	        // Si l'utilisateur est déjà connecté, rediriger selon son rôle
+	        if (isset($_SESSION["user_id"])) {
+	            $this->redirectByRole();
+	            return;
+	        }
 
-        $old_email = $_SESSION["old_email"] ?? "";
-        unset($_SESSION["old_email"]);
-        $this->render("login/index", ["old_email" => $old_email]);
-    }
+	        $old_email = $_SESSION["old_email"] ?? "";
+	        unset($_SESSION["old_email"]);
+	        $this->render("login/index", ["old_email" => $old_email]);
+	    }
 
     public function login() {
         if ($_SERVER["REQUEST_METHOD"] === "POST") {
@@ -61,6 +61,7 @@ class LoginController extends BaseController {
 
                 // Rediriger selon le rôle
                 $this->redirectByRole();
+                return; // Ajout du return pour stopper l'exécution
             } else if (!$admin) { // Seulement si l'email n'est pas celui d'un admin
                 // Échec de la connexion
                 $_SESSION["error"] = "Email ou mot de passe incorrect.";
