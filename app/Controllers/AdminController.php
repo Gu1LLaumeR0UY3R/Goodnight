@@ -9,6 +9,7 @@ require_once __DIR__ . "/../Models/SaisonModel.php";
 require_once __DIR__ . "/../Models/BienModel.php";
 require_once __DIR__ . "/../Models/TarifModel.php";
 require_once __DIR__ . "/../Models/AdminModel.php";
+require_once __DIR__ . "/../Models/ReservationModel.php";
 
 class AdminController extends BaseController {
     private $userModel;
@@ -19,6 +20,7 @@ class AdminController extends BaseController {
     private $bienModel;
     private $tarifModel;
     private $adminModel;
+    private $reservationModel;
 
     public function __construct() {
         AuthMiddleware::requireRole("Administrateur");
@@ -31,6 +33,7 @@ class AdminController extends BaseController {
         $this->bienModel = new BienModel();
         $this->tarifModel = new TarifModel();
         $this->adminModel = new AdminModel();
+        $this->reservationModel = new ReservationModel();
     }
 
     public function index() {
@@ -387,6 +390,87 @@ class AdminController extends BaseController {
         $this->userModel->delete($id);
         $this->redirect("/admin/users");
     }
+
+
+
+
+
+
+
+
+
+    // --- Gestion des Utilisateurs ---
+    public function reservations() {
+        $reservations = $this->reservationModel->getAllReservations();
+        $this->render("admin/reservations", ["reservations" => $reservations], ["style.css", "grille.css"]);
+    }
+
+    public function addReservation() {
+        if ($_SERVER["REQUEST_METHOD"] === "POST") {
+            $data = [
+                'id_biens' => $_POST["id_biens"],
+                'id_locataire' => $_POST["id_locataire"],
+                'date_debut' => $_POST["date_debut"],
+                'date_fin' => $_POST["date_fin"],
+                'id_tarif' => $_POST["id_tarif"]
+            ];
+            $this->reservationModel->createReservation($data);
+            $this->redirect("/admin/reservations");
+        }
+
+        // Récupérer les données nécessaires pour le formulaire
+        $biens = $this->bienModel->getAll();
+        $users = $this->userModel->getAllUsersWithRoles();
+        $tarifs = $this->tarifModel->getAll();
+
+        $this->render("admin/add_reservation", [
+            "biens" => $biens,
+            "users" => $users,
+            "tarifs" => $tarifs
+        ], ["style.css", "grille.css"]);
+    }
+
+    public function editReservation($id) {
+        if ($_SERVER["REQUEST_METHOD"] === "POST") {
+            $data = [
+                'id_biens' => $_POST["id_biens"],
+                'id_locataire' => $_POST["id_locataire"],
+                'date_debut' => $_POST["date_debut"],
+                'date_fin' => $_POST["date_fin"],
+                'id_tarif' => $_POST["id_tarif"]
+            ];
+            $this->reservationModel->update($id, $data);
+            $this->redirect("/admin/reservations");
+        }
+        $reservation = $this->reservationModel->getById($id);
+
+        // Récupérer les données nécessaires pour le formulaire
+        $biens = $this->bienModel->getAll();
+        $users = $this->userModel->getAllUsersWithRoles();
+        $tarifs = $this->tarifModel->getAll();
+
+        $this->render("admin/edit_reservation", [
+            "reservation" => $reservation,
+            "biens" => $biens,
+            "users" => $users,
+            "tarifs" => $tarifs
+        ], ["style.css", "grille.css"]);
+    }
+
+    public function deleteReservation($id) {
+        $this->reservationModel->delete($id);
+        $this->redirect("/admin/reservations");
+    }
+
+
+
+
+
+
+
+
+
+
 
     // --- API Endpoints for Autocomplete ---
     public function searchUsers() {
