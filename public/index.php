@@ -54,7 +54,7 @@ $routes = [
     "admin/editTypeBien/([0-9]+)" => ["controller" => "AdminController", "action" => "editTypeBien"],
     "admin/deleteTypeBien/([0-9]+)" => ["controller" => "AdminController", "action" => "deleteTypeBien"],
 
-    // Ajout saisons
+    // Partie Saisons
     "admin/saisons" => ["controller" => "AdminController", "action" => "saisons"],
     "admin/addSaison" => ["controller" => "AdminController", "action" => "addSaison"],
     "admin/editSaison/([0-9]+)" => ["controller" => "AdminController", "action" => "editSaison"],
@@ -66,10 +66,17 @@ $routes = [
     "admin/editBien/([0-9]+)" => ["controller" => "AdminController", "action" => "editBien"],
     "admin/deleteBien/([0-9]+)" => ["controller" => "AdminController", "action" => "deleteBien"],
 
+    //Partie Utilisateurs
     "admin/users" => ["controller" => "AdminController", "action" => "users"],
     "admin/addUser" => ["controller" => "AdminController", "action" => "addUser"],
     "admin/editUser/([0-9]+)" => ["controller" => "AdminController", "action" => "editUser"],
     "admin/deleteUser/([0-9]+)" => ["controller" => "AdminController", "action" => "deleteUser"],
+
+    //Partie Réservations
+    "admin/reservations" => ["controller" => "AdminController", "action" => "reservations"],
+    "admin/addReservation" => ["controller" => "AdminController", "action" => "addReservation"],
+    "admin/editReservation/([0-9]+)" => ["controller" => "AdminController", "action" => "editReservation"],
+    "admin/deleteReservation/([0-9]+)" => ["controller" => "AdminController", "action" => "deleteReservation"],
 
     // Routes Propriétaire
     "proprietaire" => ["controller" => "ProprietaireController", "action" => "index"],

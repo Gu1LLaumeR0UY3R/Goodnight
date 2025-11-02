@@ -113,10 +113,10 @@ class ReservationModel extends Model {
                 id_locataire = :id_locataire AND 
                 id_biens = :id_biens AND 
                 statut IN (
-'en_attente
-', 
-'confirmee
-') AND
+                'en_attente
+                ', 
+                'confirmee
+                ') AND
                 date_fin >= CURDATE()
         ";
         $stmt = $this->db->prepare($sql);
@@ -197,8 +197,21 @@ class ReservationModel extends Model {
     }
 
     public function update($id, $data) {
-        // Cette méthode n'est pas utilisée directement
-        throw new \Exception("La méthode update n'est pas implémentée pour ReservationModel.");
+        $sql = "
+            UPDATE " . $this->table . "
+            SET id_biens = :id_biens, id_locataire = :id_locataire, date_debut = :date_debut, date_fin = :date_fin, id_tarif = :id_tarif
+            WHERE id_reservation = :id_reservation
+        ";
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute([
+            'id_biens' => $data['id_biens'],
+            'id_locataire' => $data['id_locataire'],
+            'date_debut' => $data['date_debut'],
+            'date_fin' => $data['date_fin'],
+            'id_tarif' => $data['id_tarif'],
+            'id_reservation' => $id
+        ]);
+        return $stmt->rowCount();
     }
 
     public function delete($id) {
