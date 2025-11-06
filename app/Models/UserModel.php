@@ -10,6 +10,12 @@ class UserModel extends Model {
         parent::__construct();
     }
 
+    public function emailExists($email) {
+        $stmt = $this->db->prepare("SELECT COUNT(*) FROM " . $this->table . " WHERE email_locataire = :email");
+        $stmt->execute(['email' => $email]);
+        return $stmt->fetchColumn() > 0;
+    }
+
     public function create($data) {
         $stmt = $this->db->prepare("INSERT INTO " . $this->table . " (nom_locataire, prenom_locataire, dateNaissance_locataire, email_locataire, password_locataire, tel_locataire, rue_locataire, complement_locataire, RaisonSociale, Siret, id_commune) VALUES (:nom_locataire, :prenom_locataire, :dateNaissance_locataire, :email_locataire, :password_locataire, :tel_locataire, :rue_locataire, :complement_locataire, :RaisonSociale, :Siret, :id_commune)");
         try {
@@ -167,6 +173,15 @@ class UserModel extends Model {
         $stmt = $this->db->prepare($query);
         $stmt->execute($params);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function updatePassword($email, $hashedPassword) {
+        $stmt = $this->db->prepare("UPDATE " . $this->table . " SET password_locataire = :password_locataire WHERE email_locataire = :email");
+        $stmt->execute([
+            'password_locataire' => $hashedPassword,
+            'email' => $email
+        ]);
+        return $stmt->rowCount();
     }
 }
 

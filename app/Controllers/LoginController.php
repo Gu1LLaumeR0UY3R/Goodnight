@@ -91,6 +91,73 @@ class LoginController extends BaseController {
             $this->redirect("/home");
         }
     }
+
+    public function showResetForm() {
+        if ($_SERVER["REQUEST_METHOD"] === "POST") {
+            $email = $_POST["email"] ?? "";
+            if ($this->userModel->emailExists($email)) {
+                // Si l'email existe, on affiche le formulaire avec l'email pré-rempli
+                $this->render("login/reset_password", ["email" => $email]);
+            } else {
+                $_SESSION["error"] = "Cette adresse email n'existe pas dans notre système.";
+                $this->redirect("/login/reset");
+            }
+        } else {
+            // Affichage initial du formulaire
+            $this->render("login/reset_password");
+        }
+    }
+
+    public function updatePassword() {
+        if ($_SERVER["REQUEST_METHOD"] === "POST") {
+            $email = $_POST["email"] ?? "";
+            $password = $_POST["password"] ?? "";
+            $password_confirm = $_POST["password_confirm"] ?? "";
+
+            // Vérifications
+            if (empty($email) || empty($password) || empty($password_confirm)) {
+                $_SESSION["error"] = "Tous les champs sont obligatoires.";
+                $this->redirect("/login/reset");
+                return;
+            }
+
+            if ($password !== $password_confirm) {
+                $_SESSION["error"] = "Les mots de passe ne correspondent pas.";
+                $this->redirect("/login/reset");
+                return;
+            }
+
+            // Vérifier que l'email existe
+            if (!$this->userModel->emailExists($email)) {
+                $_SESSION["error"] = "Cette adresse email n'existe pas dans notre système.";
+                $this->redirect("/login/reset");
+                return;
+            }
+
+            // Vérifier la complexité du mot de passe
+            if (!preg_match('/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/', $password)) {
+                $_SESSION["error"] = "Le mot de passe doit contenir au moins 8 caractères, une majuscule, une minuscule, un chiffre et un caractère spécial.";
+                $this->redirect("/login/reset");
+                return;
+            }
+
+            // Hasher le nouveau mot de passe
+            $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
+
+            // Mettre à jour le mot de passe
+            try {
+                $this->userModel->updatePassword($email, $hashedPassword);
+
+                $_SESSION["success"] = "Votre mot de passe a été mis à jour avec succès.";
+                $this->redirect("/login");
+            } catch (PDOException $e) {
+                $_SESSION["error"] = "Une erreur est survenue lors de la mise à jour du mot de passe.";
+                $this->redirect("/login/reset");
+            }
+        } else {
+            $this->redirect("/login/reset");
+        }
+    }
 }
 
 ?>
