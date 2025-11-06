@@ -6,10 +6,24 @@
     <title>Inscription - GlobeNight</title>
     <link rel="stylesheet" href="/css/style.css">
     <link rel="stylesheet" href="/css/navbar.css">
+    <link rel="stylesheet" href="/lib/intl-tel-input/intlTelInput.min.css">
     <link rel="stylesheet" href="https://code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
     <style>
         .form-section { margin-bottom: 1em; }
         .hidden { display: none; }
+            /* Style pour centrer le sélecteur de drapeau */
+            .iti__selected-flag {
+                padding: 0 6px 0 8px;
+                display: flex;
+                align-items: center;
+                height: 100%;
+            }
+            .iti__flag-container {
+                height: 100%;
+            }
+            input[type="tel"] {
+                padding-left: 90px !important;
+            }
     </style>
 </head>
 <body>
@@ -63,7 +77,9 @@
                 <input type="password" id="confirm_password" name="confirm_password" required>
 
                 <label for="tel">Téléphone :</label>
-                <input type="tel" id="tel" name="tel" value="<?php echo htmlspecialchars($old_data['tel'] ?? ''); ?>">
+                <!-- inputmode + pattern aident les claviers mobiles et la validation HTML -->
+                <input type="tel" id="tel" name="tel" inputmode="tel" pattern="^\+?[0-9\s\-\(\)]*$" title="Veuillez entrer uniquement des chiffres et les caractères + - ( )" maxlength="20" value="<?php echo htmlspecialchars($old_data['tel'] ?? ''); ?>">
+                <input type="hidden" id="full_tel" name="full_tel">
 
                 <label for="rue">Rue :</label>
                 <input type="text" id="rue" name="rue" value="<?php echo htmlspecialchars($old_data['rue'] ?? ''); ?>">
@@ -95,6 +111,7 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js"></script>
     <script src="/js/autocomplete.js"></script>
+    <script src="/lib/intl-tel-input/intlTelInput.min.js"></script>
     <script>
         function toggleUserType() {
             const userType = document.getElementById('user_type').value;
@@ -119,7 +136,63 @@
         }
 
         // Appeler la fonction au chargement pour initialiser l'état
-        window.onload = toggleUserType;
+        window.onload = function() {
+            toggleUserType();
+            // Initialisation de intl-tel-input
+            const input = document.querySelector("#tel");
+            const fullTelInput = document.querySelector("#full_tel");
+            const form = document.querySelector('form[action="/register/process"]');
+            const iti = window.intlTelInput(input, {
+                initialCountry: "fr", // Pays initial par défaut
+                separateDialCode: true,
+                utilsScript: "" // Le script utils.js n'est pas nécessaire pour la validation de base
+            });
+
+            // Empêcher les lettres en temps réel : autoriser 0-9 + espaces - ( )
+            input.addEventListener('input', function() {
+                const clean = this.value.replace(/[^0-9+\s\-()]/g, '');
+                if (this.value !== clean) {
+                    this.value = clean;
+                }
+                // Mettre à jour le champ caché si le numéro est valide
+                if (iti.isValidNumber()) {
+                    fullTelInput.value = iti.getNumber();
+                } else {
+                    fullTelInput.value = '';
+                }
+            });
+
+            // Mettre à jour aussi au blur (quand l'utilisateur quitte le champ)
+            input.addEventListener('blur', function() {
+                if (iti.isValidNumber()) {
+                    fullTelInput.value = iti.getNumber();
+                } else {
+                    fullTelInput.value = '';
+                }
+            });
+
+            // Validation finale à la soumission du formulaire
+            if (form) {
+                form.addEventListener('submit', function(e) {
+                    if (!iti.isValidNumber()) {
+                        e.preventDefault();
+                        // Afficher une erreur simple sous le champ
+                        let existing = document.getElementById('tel-error');
+                        if (!existing) {
+                            existing = document.createElement('p');
+                            existing.id = 'tel-error';
+                            existing.className = 'error';
+                            existing.textContent = 'Veuillez entrer un numéro de téléphone valide.';
+                            input.parentNode.insertBefore(existing, input.nextSibling);
+                        }
+                        input.focus();
+                        return false;
+                    }
+                    // Assignation finale du numéro complet (E.164)
+                    fullTelInput.value = iti.getNumber();
+                });
+            }
+        };
     </script>
 </body>
 </html>

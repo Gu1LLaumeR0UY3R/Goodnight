@@ -24,6 +24,15 @@ class RegisterController extends BaseController {
        if ($_SERVER["REQUEST_METHOD"] === "POST") {
                 // Validation des données
                 $siret = $_POST["siret"] ?? "";
+            $fullTel = $_POST["full_tel"] ?? "";
+
+            // Validation du numéro de téléphone (si fourni)
+            if (!empty($fullTel) && !preg_match('/^\+[1-9]\d{1,14}$/', $fullTel)) {
+                $_SESSION["error"] = "Le numéro de téléphone n'est pas valide (format E.164 requis).";
+                $_SESSION["old_data"] = $_POST;
+                $this->redirect("/register");
+                return;
+            }
                 if (!empty($siret) && (!ctype_digit($siret) || strlen($siret) !== 14)) {
                     $_SESSION["error"] = "Le numéro SIRET doit contenir exactement 14 chiffres.";
                     $_SESSION["old_data"] = $_POST;
@@ -58,7 +67,7 @@ class RegisterController extends BaseController {
                 'dateNaissance_locataire' => $_POST["date_naissance"] ?? null,
                 'email_locataire' => $email,
                 'password_locataire' => password_hash($password, PASSWORD_DEFAULT),
-                'tel_locataire' => $_POST["tel"] ?? null,
+                'tel_locataire' => $fullTel ?? null,
                 'rue_locataire' => $_POST["rue"] ?? null,
                 'complement_locataire' => $_POST["complement"] ?? null,
                 'RaisonSociale' => empty($_POST["raison_sociale"]) ? null : $_POST["raison_sociale"],

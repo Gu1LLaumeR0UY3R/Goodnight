@@ -6,6 +6,7 @@
     <title>Modifier Utilisateur - Admin</title>
     <link rel="stylesheet" href="/css/style.css">
     <link rel="stylesheet" href="/css/navbar.css">
+    <link rel="stylesheet" href="/lib/intl-tel-input/intlTelInput.min.css">
 </head>
 <body>
 
@@ -31,6 +32,7 @@
 
             <label for="tel_locataire">Téléphone :</label>
             <input type="tel" id="tel_locataire" name="tel_locataire" value="<?php echo htmlspecialchars($user["tel_locataire"] ?? ''); ?>">
+            <input type="hidden" id="full_tel_locataire" name="full_tel_locataire">
 
             <label for="id_commune">Commune :</label>
             <select id="id_commune" name="id_commune">
@@ -56,5 +58,36 @@
         
     </main>
 
+    <script src="/lib/intl-tel-input/intlTelInput.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialisation de intl-tel-input
+            const input = document.querySelector("#tel_locataire");
+            const fullTelInput = document.querySelector("#full_tel_locataire");
+            const iti = window.intlTelInput(input, {
+                initialCountry: "fr", // Pays initial par défaut
+                separateDialCode: true,
+                utilsScript: "" // Le script utils.js n'est pas nécessaire pour la validation de base
+            });
+
+            // Mettre à jour le champ caché avec le numéro complet
+            function updateFullTel() {
+                if (iti.isValidNumber()) {
+                    fullTelInput.value = iti.getNumber();
+                } else {
+                    fullTelInput.value = ""; // Vider si invalide
+                }
+            }
+
+            // Mettre à jour le champ caché au chargement avec la valeur existante
+            if (input.value) {
+                iti.setNumber(input.value);
+                updateFullTel();
+            }
+
+            input.addEventListener("change", updateFullTel);
+            input.addEventListener("keyup", updateFullTel);
+        });
+    </script>
 </body>
 </html>
