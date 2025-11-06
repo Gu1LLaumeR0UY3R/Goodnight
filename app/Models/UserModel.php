@@ -53,9 +53,46 @@ class UserModel extends Model {
     }
 
     public function delete($id) {
-        $stmt = $this->db->prepare("DELETE FROM " . $this->table . " WHERE id_locataire = :id_locataire");
-        $stmt->execute(['id_locataire' => $id]);
-        return $stmt->rowCount();
+        // Démarre une transaction pour garantir l'atomicité
+        $this->db->beginTransaction();
+
+        try {
+            // Supprime les entrées de User_role
+            $stmt = $this->db->prepare("DELETE FROM User_role WHERE id_locataire = :id_locataire");
+            $stmt->execute(['id_locataire' => $id]);
+
+            // Supprime les réservations où l'utilisateur est locataire
+            $stmt = $this->db->prepare("DELETE FROM reservations WHERE id_locataire = :id_locataire");
+            $stmt->execute(['id_locataire' => $id]);
+
+            // Supprime les réservations sur les biens appartenant à cet utilisateur
+            $stmt = $this->db->prepare("DELETE FROM reservations WHERE id_biens IN (SELECT id_biens FROM biens WHERE id_locataire = :id_locataire)");
+            $stmt->execute(['id_locataire' => $id]);
+
+            // Supprime les photos des biens appartenant à cet utilisateur
+            $stmt = $this->db->prepare("DELETE FROM Photos WHERE id_biens IN (SELECT id_biens FROM biens WHERE id_locataire = :id_locataire)");
+            $stmt->execute(['id_locataire' => $id]);
+
+            // Supprime les tarifs des biens appartenant à cet utilisateur
+            $stmt = $this->db->prepare("DELETE FROM tarifs WHERE id_biens IN (SELECT id_biens FROM biens WHERE id_locataire = :id_locataire)");
+            $stmt->execute(['id_locataire' => $id]);
+
+            // Supprime les biens appartenant à cet utilisateur
+            $stmt = $this->db->prepare("DELETE FROM biens WHERE id_locataire = :id_locataire");
+            $stmt->execute(['id_locataire' => $id]);
+
+            // Enfin, supprime l'utilisateur
+            $stmt = $this->db->prepare("DELETE FROM " . $this->table . " WHERE id_locataire = :id_locataire");
+            $stmt->execute(['id_locataire' => $id]);
+
+            // Valide la transaction
+            $this->db->commit();
+            return $stmt->rowCount();
+        } catch (Exception $e) {
+            // Annule la transaction en cas d'erreur
+            $this->db->rollBack();
+            throw $e;
+        }
     }
 
     public function getUserByEmail($email) {

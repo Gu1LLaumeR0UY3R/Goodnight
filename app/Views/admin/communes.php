@@ -19,7 +19,6 @@
 
     <main>
         <h2>Gestion des Communes</h2>
-        <p>La liste des communes est généralement gérée via une base de données externe et n'est pas modifiable directement via cette interface.</p>
         <table id="admintable" class="display">
             <thead>
                 <tr>
