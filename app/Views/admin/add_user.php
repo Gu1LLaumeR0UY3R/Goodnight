@@ -6,6 +6,7 @@
     <title>Ajouter Utilisateur - Admin</title>
     <link rel="stylesheet" href="/css/style.css">
     <link rel="stylesheet" href="/css/navbar.css">
+    <link rel="stylesheet" href="/lib/intl-tel-input/intlTelInput.min.css">
     <link rel="stylesheet" href="https://code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
     <style>
         .form-section { margin-bottom: 1em; }
@@ -58,6 +59,7 @@
 
                 <label for="tel_locataire">Téléphone :</label>
                 <input type="tel" id="tel_locataire" name="tel_locataire" value="<?php echo htmlspecialchars($old_data['tel_locataire'] ?? ''); ?>">
+                <input type="hidden" id="full_tel_locataire" name="full_tel_locataire">
 
                 <label for="rue_locataire">Rue :</label>
                 <input type="text" id="rue_locataire" name="rue_locataire" value="<?php echo htmlspecialchars($old_data['rue_locataire'] ?? ''); ?>">
@@ -107,10 +109,37 @@
         }
 
         // Appeler la fonction au chargement pour initialiser l'état
-        window.onload = toggleUserType;
+        window.onload = function() {
+            toggleUserType();
+            // Initialisation de intl-tel-input
+            const input = document.querySelector("#tel_locataire");
+            const fullTelInput = document.querySelector("#full_tel_locataire");
+            const iti = window.intlTelInput(input, {
+                initialCountry: "fr", // Pays initial par défaut
+                separateDialCode: true,
+                utilsScript: "" // Le script utils.js n'est pas nécessaire pour la validation de base
+            });
+
+            // Mettre à jour le champ caché avec le numéro complet
+            input.addEventListener("change", function() {
+                if (iti.isValidNumber()) {
+                    fullTelInput.value = iti.getNumber();
+                } else {
+                    fullTelInput.value = ""; // Vider si invalide
+                }
+            });
+            input.addEventListener("keyup", function() {
+                if (iti.isValidNumber()) {
+                    fullTelInput.value = iti.getNumber();
+                } else {
+                    fullTelInput.value = ""; // Vider si invalide
+                }
+            });
+        };
     </script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js"></script>
     <script src="/js/autocomplete.js"></script>
+    <script src="/lib/intl-tel-input/intlTelInput.min.js"></script>
 </body>
 </html>

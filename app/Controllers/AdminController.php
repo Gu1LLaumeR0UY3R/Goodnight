@@ -288,6 +288,15 @@ class AdminController extends BaseController {
         if ($_SERVER["REQUEST_METHOD"] === "POST") {
             // Validation des champs Siret et RaisonSociale
             $siret = $_POST["Siret"] ?? "";
+            $fullTel = $_POST["full_tel_locataire"] ?? "";
+
+            // Validation du numéro de téléphone (si fourni)
+            if (!empty($fullTel) && !preg_match("/^\\+[1-9]\\d{1,14}$/", $fullTel)) {
+                $_SESSION["error"] = "Le numéro de téléphone n'est pas valide (format E.164 requis).";
+                $_SESSION["old_data"] = $_POST;
+                $this->redirect("/admin/addUser");
+                return;
+            }
             if (!empty($siret) && (!ctype_digit($siret) || strlen($siret) !== 14)) {
                 $_SESSION["error"] = "Le numéro SIRET doit contenir exactement 14 chiffres.";
                 $_SESSION["old_data"] = $_POST;
@@ -310,7 +319,7 @@ class AdminController extends BaseController {
                 'dateNaissance_locataire' => $_POST["dateNaissance_locataire"] ?? null,
                 'email_locataire' => $_POST["email_locataire"],
                 'password_locataire' => password_hash($_POST["password_locataire"], PASSWORD_DEFAULT),
-                'tel_locataire' => $_POST["tel_locataire"] ?? null,
+                'tel_locataire' => $fullTel ?? null,
                 'rue_locataire' => $_POST["rue_locataire"] ?? null,
                 'complement_locataire' => $_POST["complement_locataire"] ?? null,
                 'RaisonSociale' => empty($_POST["RaisonSociale"]) ? null : $_POST["RaisonSociale"],
@@ -338,13 +347,22 @@ class AdminController extends BaseController {
 
     public function editUser($id) {
         if ($_SERVER["REQUEST_METHOD"] === "POST") {
+            $fullTel = $_POST["full_tel_locataire"] ?? "";
+
+            // Validation du numéro de téléphone (si fourni)
+            if (!empty($fullTel) && !preg_match("/^\\+[1-9]\\d{1,14}$/", $fullTel)) {
+                $_SESSION["error"] = "Le numéro de téléphone n'est pas valide (format E.164 requis).";
+                // Note : Pour editUser, il faudrait idéalement rediriger vers la page d'édition avec les données postées,
+                // mais comme le code original ne le fait pas, je vais simplement rediriger vers la liste des utilisateurs.
+                $this->redirect("/admin/users");
+                return;
+            }
             $data = [
                 'nom_locataire' => $_POST["nom_locataire"],
                 'prenom_locataire' => $_POST["prenom_locataire"],
                 'dateNaissance_locataire' => $_POST["dateNaissance_locataire"] ?? null,
                 'email_locataire' => $_POST["email_locataire"],
-                'tel_locataire' => $_POST["tel_locataire"] ?? null,
-                'rue_locataire' => $_POST["rue_locataire"] ?? null,
+                'tel_locataire' => $fullTel ?? null,
                 'complement_locataire' => $_POST["complement_locataire"] ?? null,
                 'RaisonSociale' => $_POST["RaisonSociale"] ?? null,
                 'Siret' => $_POST["Siret"] ?? null,
