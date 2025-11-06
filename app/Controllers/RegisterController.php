@@ -24,7 +24,8 @@ class RegisterController extends BaseController {
        if ($_SERVER["REQUEST_METHOD"] === "POST") {
                 // Validation des données
                 $siret = $_POST["siret"] ?? "";
-            $fullTel = $_POST["full_tel"] ?? "";
+            $fullTel = $_POST["tel_locataire_formatted"] ?? "";
+            $tel = $_POST["tel_locataire"] ?? "";
 
             // Validation du numéro de téléphone (si fourni)
             if (!empty($fullTel) && !preg_match('/^\+[1-9]\d{1,14}$/', $fullTel)) {
@@ -67,7 +68,7 @@ class RegisterController extends BaseController {
                 'dateNaissance_locataire' => $_POST["date_naissance"] ?? null,
                 'email_locataire' => $email,
                 'password_locataire' => password_hash($password, PASSWORD_DEFAULT),
-                'tel_locataire' => $fullTel ?? null,
+                'tel_locataire' => $fullTel ?: ($tel ?? null),
                 'rue_locataire' => $_POST["rue"] ?? null,
                 'complement_locataire' => $_POST["complement"] ?? null,
                 'RaisonSociale' => empty($_POST["raison_sociale"]) ? null : $_POST["raison_sociale"],

@@ -8,10 +8,22 @@
     <link rel="stylesheet" href="/css/navbar.css">
     <link rel="stylesheet" href="/lib/intl-tel-input/intlTelInput.min.css">
     <link rel="stylesheet" href="https://code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
-    <style>
-        .form-section { margin-bottom: 1em; }
-        .hidden { display: none; }
-    </style>
+<style>
+	        .form-section { margin-bottom: 1em; }
+	        .hidden { display: none; }
+	        /* Correction de positionnement pour intl-tel-input */
+	        .iti {
+	            width: 100% !important; /* Assure que le conteneur intl-tel-input prend toute la largeur disponible */
+	            display: flex !important; /* Utiliser flex pour forcer l'alignement */
+	        }
+	        .iti .iti__country-container {
+	            flex-shrink: 0 !important; /* Empêche le sélecteur de rétrécir */
+	        }
+	        .iti input.iti__tel-input {
+	            flex-grow: 1 !important; /* Permet au champ de saisie de prendre l'espace restant */
+	            padding-right: 0 !important; /* Corrige le padding si nécessaire */
+	        }
+	    </style>
 </head>
 <body>
     <main>
@@ -58,7 +70,7 @@
                 <input type="password" id="confirm_password" name="confirm_password" required>
 
                 <label for="tel_locataire">Téléphone :</label>
-                <input type="tel" id="tel_locataire" name="tel_locataire" value="<?php echo htmlspecialchars($old_data['tel_locataire'] ?? ''); ?>">
+                <input type="tel" id="tel_locataire" name="tel_locataire" value="<?php echo htmlspecialchars($old_data['tel_locataire'] ?? ''); ?>" maxlength="15">
                 <input type="hidden" id="full_tel_locataire" name="full_tel_locataire">
 
                 <label for="rue_locataire">Rue :</label>
@@ -121,20 +133,24 @@
             });
 
             // Mettre à jour le champ caché avec le numéro complet
-            input.addEventListener("change", function() {
+            input.addEventListener("change", updateFullTel);
+            input.addEventListener("keyup", updateFullTel);
+
+            // Empêcher la saisie de caractères non numériques et mettre à jour le champ caché
+            input.addEventListener("input", function() {
+                // Supprimer immédiatement tout caractère non numérique
+                this.value = this.value.replace(/[^0-9]/g, '');
+                updateFullTel();
+            });
+
+            function updateFullTel() {
                 if (iti.isValidNumber()) {
                     fullTelInput.value = iti.getNumber();
                 } else {
                     fullTelInput.value = ""; // Vider si invalide
                 }
             });
-            input.addEventListener("keyup", function() {
-                if (iti.isValidNumber()) {
-                    fullTelInput.value = iti.getNumber();
-                } else {
-                    fullTelInput.value = ""; // Vider si invalide
-                }
-            });
+            // La fonction updateFullTel est maintenant définie ci-dessous, donc on retire cette partie redondante.
         };
     </script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>

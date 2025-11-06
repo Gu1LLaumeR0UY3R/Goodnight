@@ -55,9 +55,10 @@ class LoginController extends BaseController {
                 $_SESSION["user_nom"] = $user["nom_locataire"];
                 $_SESSION["user_prenom"] = $user["prenom_locataire"];
 
-                // Récupérer les rôles
-                $roles = $this->userModel->getUserRoles($user["id_locataire"]);
-                $_SESSION["user_roles"] = array_column($roles, 'nom_roles');
+	                // Récupérer les rôles
+	                $roles = $this->userModel->getUserRoles($user["id_locataire"]);
+	                $_SESSION["user_roles"] = array_column($roles, 'nom_roles');
+	                $_SESSION["SESSION_USERS"] = $user; // Ajout de la variable demandée par l'utilisateur pour la compatibilité
 
                 // Rediriger selon le rôle
                 $this->redirectByRole();

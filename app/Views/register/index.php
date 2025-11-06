@@ -8,23 +8,34 @@
     <link rel="stylesheet" href="/css/navbar.css">
     <link rel="stylesheet" href="/lib/intl-tel-input/intlTelInput.min.css">
     <link rel="stylesheet" href="https://code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
-    <style>
-        .form-section { margin-bottom: 1em; }
-        .hidden { display: none; }
-            /* Style pour centrer le sélecteur de drapeau */
-            .iti__selected-flag {
-                padding: 0 6px 0 8px;
-                display: flex;
-                align-items: center;
-                height: 100%;
+<style>
+	        .form-section { margin-bottom: 1em; }
+	        .hidden { display: none; }
+	        /* Correction de positionnement pour intl-tel-input */
+	        .iti {
+	            width: 100% !important; /* Assure que le conteneur intl-tel-input prend toute la largeur disponible */
+	            display: flex !important; /* Utiliser flex pour forcer l'alignement */
+	        }
+	        .iti .iti__country-container {
+	            flex-shrink: 0 !important; /* Empêche le sélecteur de rétrécir */
+	        }
+	        .iti input.iti__tel-input {
+	            flex-grow: 1 !important; /* Permet au champ de saisie de prendre l'espace restant */
+	            padding-right: 0 !important; /* Corrige le padding si nécessaire */
+	        }
+            .tel-error {
+                color: #dc3545;
+                font-size: 0.875rem;
+                margin-top: 0.25rem;
+                margin-bottom: 0.5rem;
             }
-            .iti__flag-container {
-                height: 100%;
+            input.error {
+                border-color: #dc3545;
             }
-            input[type="tel"] {
-                padding-left: 90px !important;
+            input.error:focus {
+                box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, 0.25);
             }
-    </style>
+	    </style>
 </head>
 <body>
     <?php include __DIR__ . '/../layout/navbar.php'; ?>
@@ -77,9 +88,8 @@
                 <input type="password" id="confirm_password" name="confirm_password" required>
 
                 <label for="tel">Téléphone :</label>
-                <!-- inputmode + pattern aident les claviers mobiles et la validation HTML -->
-                <input type="tel" id="tel" name="tel" inputmode="tel" pattern="^\+?[0-9\s\-\(\)]*$" title="Veuillez entrer uniquement des chiffres et les caractères + - ( )" maxlength="20" value="<?php echo htmlspecialchars($old_data['tel'] ?? ''); ?>">
-                <input type="hidden" id="full_tel" name="full_tel">
+                <input type="tel" id="tel" name="tel_locataire" value="<?php echo htmlspecialchars($old_data['tel_locataire'] ?? ''); ?>" maxlength="15">
+                <input type="hidden" id="full_tel" name="tel_locataire_formatted">
 
                 <label for="rue">Rue :</label>
                 <input type="text" id="rue" name="rue" value="<?php echo htmlspecialchars($old_data['rue'] ?? ''); ?>">
@@ -121,77 +131,152 @@
             if (userType === 'physique') {
                 physiqueFields.classList.remove('hidden');
                 moraleFields.classList.add('hidden');
-                // Activer le champ physique, désactiver les champs moraux
                 document.getElementById('date_naissance').required = true;
                 document.getElementById('raison_sociale').required = false;
                 document.getElementById('siret').required = false;
             } else {
                 physiqueFields.classList.add('hidden');
                 moraleFields.classList.remove('hidden');
-                // Activer les champs moraux, désactiver le champ physique
                 document.getElementById('date_naissance').required = false;
                 document.getElementById('raison_sociale').required = true;
                 document.getElementById('siret').required = true;
             }
         }
 
-        // Appeler la fonction au chargement pour initialiser l'état
+        // Afficher un message d'erreur sous le champ de téléphone
+        function showError(input, message) {
+            let errorMsg = input.parentNode.querySelector('.tel-error');
+            if (!errorMsg) {
+                errorMsg = document.createElement('p');
+                errorMsg.className = 'tel-error error';
+                input.parentNode.insertBefore(errorMsg, input.nextSibling);
+            }
+            errorMsg.textContent = message;
+        }
+
+        // Supprimer le message d'erreur
+        function removeError(input) {
+            const errorMsg = input.parentNode.querySelector('.tel-error');
+            if (errorMsg) {
+                errorMsg.remove();
+            }
+        }
+
+        // Obtenir le message d'erreur approprié
+        function getErrorMessage(errorCode) {
+            switch(errorCode) {
+                case intlTelInputUtils.validationError.INVALID_COUNTRY_CODE:
+                    return "Code pays invalide";
+                case intlTelInputUtils.validationError.TOO_SHORT:
+                    return "Numéro trop court";
+                case intlTelInputUtils.validationError.TOO_LONG:
+                    return "Numéro trop long";
+                case intlTelInputUtils.validationError.NOT_A_NUMBER:
+                    return "Numéro invalide";
+                default:
+                    return "Numéro de téléphone invalide";
+            }
+        }
+
         window.onload = function() {
             toggleUserType();
-            // Initialisation de intl-tel-input
+
             const input = document.querySelector("#tel");
             const fullTelInput = document.querySelector("#full_tel");
-            const form = document.querySelector('form[action="/register/process"]');
             const iti = window.intlTelInput(input, {
-                initialCountry: "fr", // Pays initial par défaut
+                allowDropdown: true,
+                autoInsertDialCode: true,
+                dropdownContainer: document.body,
+                formatOnDisplay: true,
+                initialCountry: "fr",
+                nationalMode: false,
+                preferredCountries: ["fr", "be", "ch", "lu"],
                 separateDialCode: true,
-                utilsScript: "" // Le script utils.js n'est pas nécessaire pour la validation de base
+                showFlags: true,
+                utilsScript: "/lib/intl-tel-input/utils.js",
+                onlyCountries: [
+                    "fr", "be", "ch", "lu", "de", "es", "it", "gb", "pt", 
+                    "nl", "at", "dk", "ie", "gr", "pl", "se", "no", "fi", 
+                    "cz", "hu", "ro", "bg", "hr", "si", "sk", "ee", "lv", 
+                    "lt", "cy", "mt"
+                ],
+                localizedCountries: {
+                    'fr': 'France',
+                    'be': 'Belgique',
+                    'ch': 'Suisse',
+                    'lu': 'Luxembourg',
+                    'de': 'Allemagne',
+                    'es': 'Espagne',
+                    'it': 'Italie',
+                    'gb': 'Royaume-Uni',
+                    'pt': 'Portugal',
+                    'nl': 'Pays-Bas',
+                    'at': 'Autriche',
+                    'dk': 'Danemark',
+                    'ie': 'Irlande',
+                    'gr': 'Grèce',
+                    'pl': 'Pologne',
+                    'se': 'Suède',
+                    'no': 'Norvège',
+                    'fi': 'Finlande',
+                    'cz': 'République Tchèque',
+                    'hu': 'Hongrie',
+                    'ro': 'Roumanie',
+                    'bg': 'Bulgarie',
+                    'hr': 'Croatie',
+                    'si': 'Slovénie',
+                    'sk': 'Slovaquie',
+                    'ee': 'Estonie',
+                    'lv': 'Lettonie',
+                    'lt': 'Lituanie',
+                    'cy': 'Chypre',
+                    'mt': 'Malte'
+                }
             });
 
-            // Empêcher les lettres en temps réel : autoriser 0-9 + espaces - ( )
-            input.addEventListener('input', function() {
-                const clean = this.value.replace(/[^0-9+\s\-()]/g, '');
-                if (this.value !== clean) {
-                    this.value = clean;
-                }
-                // Mettre à jour le champ caché si le numéro est valide
-                if (iti.isValidNumber()) {
-                    fullTelInput.value = iti.getNumber();
-                } else {
-                    fullTelInput.value = '';
-                }
-            });
-
-            // Mettre à jour aussi au blur (quand l'utilisateur quitte le champ)
-            input.addEventListener('blur', function() {
-                if (iti.isValidNumber()) {
-                    fullTelInput.value = iti.getNumber();
-                } else {
-                    fullTelInput.value = '';
-                }
-            });
-
-            // Validation finale à la soumission du formulaire
-            if (form) {
-                form.addEventListener('submit', function(e) {
-                    if (!iti.isValidNumber()) {
-                        e.preventDefault();
-                        // Afficher une erreur simple sous le champ
-                        let existing = document.getElementById('tel-error');
-                        if (!existing) {
-                            existing = document.createElement('p');
-                            existing.id = 'tel-error';
-                            existing.className = 'error';
-                            existing.textContent = 'Veuillez entrer un numéro de téléphone valide.';
-                            input.parentNode.insertBefore(existing, input.nextSibling);
-                        }
-                        input.focus();
-                        return false;
+            // Fonction de validation et mise à jour du numéro
+            function updatePhoneNumber() {
+                if (input.value.trim()) {
+                    if (iti.isValidNumber()) {
+                        const number = iti.getNumber(intlTelInputUtils.numberFormat.E164);
+                        fullTelInput.value = number;
+                        input.classList.remove('error');
+                        input.setCustomValidity('');
+                        removeError(input);
+                    } else {
+                        const errorCode = iti.getValidationError();
+                        const errorMsg = getErrorMessage(errorCode);
+                        input.classList.add('error');
+                        input.setCustomValidity(errorMsg);
+                        showError(input, errorMsg);
+                        fullTelInput.value = '';
                     }
-                    // Assignation finale du numéro complet (E.164)
-                    fullTelInput.value = iti.getNumber();
-                });
+                } else {
+                    input.classList.remove('error');
+                    input.setCustomValidity('');
+                    removeError(input);
+                    fullTelInput.value = '';
+                }
             }
+
+            // Écouteurs d'événements
+            input.addEventListener('blur', updatePhoneNumber);
+            input.addEventListener('change', updatePhoneNumber);
+            input.addEventListener('keyup', updatePhoneNumber);
+            iti.promise.then(function() {
+                input.addEventListener('countrychange', updatePhoneNumber);
+                updatePhoneNumber();
+            });
+
+            // Validation du formulaire
+            const form = document.querySelector('form');
+            form.addEventListener('submit', function(e) {
+                updatePhoneNumber();
+                if (!iti.isValidNumber() && input.value.trim()) {
+                    e.preventDefault();
+                    input.focus();
+                }
+            });
         };
     </script>
 </body>

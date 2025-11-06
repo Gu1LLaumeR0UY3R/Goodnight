@@ -47,7 +47,7 @@
 
                 <?php 
                 // Affichage du formulaire de réservation
-                if (isset($_SESSION['user_id']) && !isset($_SESSION['is_admin']) && (in_array('Locataire', $_SESSION['user_roles'] ?? []) || in_array('Propriétaire', $_SESSION['user_roles'] ?? []))):
+                if (isset($_SESSION['user_id']) && !isset($_SESSION['is_admin']) && (in_array('Locataire', $_SESSION['user_roles'] ?? []) || in_array('Proprietaire', $_SESSION['user_roles'] ?? []))):
                 ?>
                     <div class="info-block">
                         <h3>Réserver ce bien</h3>
@@ -89,7 +89,7 @@
                             <button type="submit" class="btn btn-primary">Confirmer la réservation</button>
                         </form>
                     </div>
-                <?php elseif (!isset($_SESSION['user_id']) || isset($_SESSION['is_admin']) || (!in_array('Locataire', $_SESSION['user_roles'] ?? []) && !in_array('Propriétaire', $_SESSION['user_roles'] ?? []))): ?>
+                <?php elseif (!isset($_SESSION['user_id']) || isset($_SESSION['is_admin']) || (!in_array('Locataire', $_SESSION['user_roles'] ?? []) && !in_array('Proprietaire', $_SESSION['user_roles'] ?? []))): ?>
                     <div class="info-block">
                         <h3>Réserver ce bien</h3>
                         <p>Veuillez vous <a href="/login">connecter</a> pour effectuer une réservation.</p>
