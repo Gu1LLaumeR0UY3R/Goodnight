@@ -10,6 +10,7 @@ require_once __DIR__ . "/../Models/BienModel.php";
 require_once __DIR__ . "/../Models/TarifModel.php";
 require_once __DIR__ . "/../Models/AdminModel.php";
 require_once __DIR__ . "/../Models/ReservationModel.php";
+require_once __DIR__ . "/../Models/PhotoModel.php";
 
 class AdminController extends BaseController {
     private $userModel;
@@ -21,6 +22,7 @@ class AdminController extends BaseController {
     private $tarifModel;
     private $adminModel;
     private $reservationModel;
+    private $photoModel;
 
     public function __construct() {
         AuthMiddleware::requireRole("Administrateur");
@@ -34,16 +36,17 @@ class AdminController extends BaseController {
         $this->tarifModel = new TarifModel();
         $this->adminModel = new AdminModel();
         $this->reservationModel = new ReservationModel();
+        $this->photoModel = new PhotoModel();
     }
 
     public function index() {
-        $this->render("admin/index", [], ["style.css", "grille.css"]);
+        $this->render("admin/index", [], ["style.css"]);
     }
 
     // --- Gestion des Administrateurs ---
     public function admins() {
         $admins = $this->adminModel->getAll();
-        $this->render("admin/admins", ["admins" => $admins], ["style.css", "grille.css"]);
+        $this->render("admin/admins", ["admins" => $admins], ["style.css"]);
     }
 
     public function addAdmin() {
@@ -57,7 +60,7 @@ class AdminController extends BaseController {
             $this->adminModel->create($data);
             $this->redirect("/admin/admins");
         }
-        $this->render("admin/add_admin", [], ["style.css", "grille.css"]);
+        $this->render("admin/add_admin", [], ["style.css"]);
     }
 
     public function editAdmin($id) {
@@ -74,7 +77,7 @@ class AdminController extends BaseController {
             $this->redirect("/admin/admins");
         }
         $admin = $this->adminModel->getById($id);
-        $this->render("admin/edit_admin", ["admin" => $admin], ["style.css", "grille.css"]);
+        $this->render("admin/edit_admin", ["admin" => $admin], ["style.css"]);
     }
 
     public function deleteAdmin($id) {
@@ -85,7 +88,7 @@ class AdminController extends BaseController {
     // --- Gestion des Rôles ---
     public function roles() {
         $roles = $this->roleModel->getAll();
-        $this->render("admin/roles", ["roles" => $roles], ["style.css", "grille.css"]);
+        $this->render("admin/roles", ["roles" => $roles], ["style.css"]);
     }
 
     public function addRole() {
@@ -93,7 +96,7 @@ class AdminController extends BaseController {
             $this->roleModel->create(["nom_roles" => $_POST["nom_roles"]]);
             $this->redirect("/admin/roles");
         }
-        $this->render("admin/add_role", [], ["style.css", "grille.css"]);
+        $this->render("admin/add_role", [], ["style.css"]);
     }
 
     public function editRole($id) {
@@ -102,7 +105,7 @@ class AdminController extends BaseController {
             $this->redirect("/admin/roles");
         }
         $role = $this->roleModel->getById($id);
-        $this->render("admin/edit_role", ["role" => $role], ["style.css", "grille.css"]);
+        $this->render("admin/edit_role", ["role" => $role], ["style.css"]);
     }
 
     public function deleteRole($id) {
@@ -113,13 +116,13 @@ class AdminController extends BaseController {
     // --- Gestion des Communes ---
     public function communes() {
         $communes = $this->communeModel->getAll();
-        $this->render("admin/communes", ["communes" => $communes], ["style.css", "grille.css"]);
+        $this->render("admin/communes", ["communes" => $communes], ["style.css"]);
     }
 
     // --- Gestion des Types de Biens ---
     public function typesBiens() {
         $typesBiens = $this->typeBienModel->getAll();
-        $this->render("admin/types_biens", ["typesBiens" => $typesBiens], ["style.css", "grille.css"]);
+        $this->render("admin/types_biens", ["typesBiens" => $typesBiens], ["style.css"]);
     }
 
     public function addTypeBien() {
@@ -127,7 +130,7 @@ class AdminController extends BaseController {
             $this->typeBienModel->create(["desc_type_bien" => $_POST["desc_type_bien"]]);
             $this->redirect("/admin/typesBiens");
         }
-        $this->render("admin/add_type_bien", [], ["style.css", "grille.css"]);
+        $this->render("admin/add_type_bien", [], ["style.css"]);
     }
 
     public function editTypeBien($id) {
@@ -136,7 +139,7 @@ class AdminController extends BaseController {
             $this->redirect("/admin/typesBiens");
         }
         $typeBien = $this->typeBienModel->getById($id);
-        $this->render("admin/edit_type_bien", ["typeBien" => $typeBien], ["style.css", "grille.css"]);
+        $this->render("admin/edit_type_bien", ["typeBien" => $typeBien], ["style.css"]);
     }
 
     public function deleteTypeBien($id) {
@@ -147,7 +150,7 @@ class AdminController extends BaseController {
     // --- Gestion des Saisons ---
     public function saisons() {
         $saisons = $this->saisonModel->getAll();
-        $this->render("admin/saisons", ["saisons" => $saisons], ["style.css", "grille.css"]);
+        $this->render("admin/saisons", ["saisons" => $saisons], ["style.css"]);
     }
 
     public function addSaison() {
@@ -155,7 +158,7 @@ class AdminController extends BaseController {
             $this->saisonModel->create(["lib_saison" => $_POST["lib_saison"]]);
             $this->redirect("/admin/saisons");
         }
-        $this->render("admin/add_saison", [], ["style.css", "grille.css"]);
+        $this->render("admin/add_saison", [], ["style.css"]);
     }
 
     public function editSaison($id) {
@@ -164,7 +167,7 @@ class AdminController extends BaseController {
             $this->redirect("/admin/saisons");
         }
         $saison = $this->saisonModel->getById($id);
-        $this->render("admin/edit_saison", ["saison" => $saison], ["style.css", "grille.css"]);
+        $this->render("admin/edit_saison", ["saison" => $saison], ["style.css"]);
     }
 
     public function deleteSaison($id) {
@@ -175,7 +178,7 @@ class AdminController extends BaseController {
     // --- Gestion des Biens ---
     public function biens() {
         $biens = $this->bienModel->getBiensWithProprietaireDetails();
-        $this->render("admin/biens", ["biens" => $biens], ["style.css", "grille.css"]);
+        $this->render("admin/biens", ["biens" => $biens], ["style.css"]);
     }
 
     public function addBien() {
@@ -208,7 +211,7 @@ class AdminController extends BaseController {
             "communes" => $communes,
             "personnesPhysiques" => $personnesPhysiques,
             "personnesMorales" => $personnesMorales
-        ], ["style.css", "grille.css"]);
+        ], ["style.css"]);
     }
 
     public function editBien($id) {
@@ -270,7 +273,7 @@ class AdminController extends BaseController {
             "proprietaireNom" => $proprietaireNom,
             "saisons" => $saisons,
             "tarifsMapped" => $tarifsMapped
-        ], ["style.css", "grille.css"]);
+        ], ["style.css"]);
     }
 
     public function deleteBien($id) {
@@ -278,10 +281,17 @@ class AdminController extends BaseController {
         $this->redirect("/admin/biens");
     }
 
+
+
+
+
+
+    
+
     // --- Gestion des Utilisateurs ---
     public function users() {
         $users = $this->userModel->getAllUsersWithRoles();
-        $this->render("admin/users", ["users" => $users], ["style.css", "grille.css"]);
+        $this->render("admin/users", ["users" => $users], ["style.css"]);
     }
 
     public function addUser() {
@@ -294,13 +304,13 @@ class AdminController extends BaseController {
             if (!empty($fullTel) && !preg_match("/^\\+[1-9]\\d{1,14}$/", $fullTel)) {
                 $_SESSION["error"] = "Le numéro de téléphone n'est pas valide (format E.164 requis).";
                 $_SESSION["old_data"] = $_POST;
-                $this->redirect("/admin/addUser");
+                $this->redirect("/admin/add_user");
                 return;
             }
             if (!empty($siret) && (!ctype_digit($siret) || strlen($siret) !== 14)) {
                 $_SESSION["error"] = "Le numéro SIRET doit contenir exactement 14 chiffres.";
                 $_SESSION["old_data"] = $_POST;
-                $this->redirect("/admin/addUser");
+                $this->redirect("/admin/add_user");
                 return;
             }
 
@@ -308,7 +318,7 @@ class AdminController extends BaseController {
             if (!empty($raisonSociale) && strlen($raisonSociale) > 255) {
                 $_SESSION["error"] = "La raison sociale ne peut pas dépasser 255 caractères.";
                 $_SESSION["old_data"] = $_POST;
-                $this->redirect("/admin/addUser");
+                $this->redirect("/admin/add_user");
                 return;
             }
 
@@ -342,7 +352,7 @@ class AdminController extends BaseController {
 
         $roles = $this->roleModel->getAll();
         $communes = $this->communeModel->getAll();
-        $this->render("admin/addUser", ["roles" => $roles, "communes" => $communes], ["style.css", "grille.css"]);
+        $this->render("admin/add_user", ["roles" => $roles, "communes" => $communes], ["style.css"]);
     }
 
     public function editUser($id) {
@@ -392,7 +402,7 @@ class AdminController extends BaseController {
         $userRoles = $this->userModel->getUserRoles($id);
         $userRoleIds = array_column($userRoles, 'id_roles');
         $this->render(
-            "admin/editUser",
+            "admin/edit_user",
             [
                 "user" => $user,
                 "roles" => $roles,
@@ -400,7 +410,7 @@ class AdminController extends BaseController {
                 "userRoleIds" => $userRoleIds,
                 "communes" => $communes
             ],
-            ["style.css", "grille.css"]
+            ["style.css"]
         );
     }
 
@@ -417,10 +427,10 @@ class AdminController extends BaseController {
 
 
 
-    // --- Gestion des Utilisateurs ---
+    // --- Gestion des Réservations ---
     public function reservations() {
         $reservations = $this->reservationModel->getAllReservations();
-        $this->render("admin/reservations", ["reservations" => $reservations], ["style.css", "grille.css"]);
+        $this->render("admin/reservations", ["reservations" => $reservations], ["style.css"]);
     }
 
     public function addReservation() {
@@ -445,7 +455,7 @@ class AdminController extends BaseController {
             "biens" => $biens,
             "users" => $users,
             "tarifs" => $tarifs
-        ], ["style.css", "grille.css"]);
+        ], ["style.css"]);
     }
 
     public function editReservation($id) {
@@ -472,7 +482,7 @@ class AdminController extends BaseController {
             "biens" => $biens,
             "users" => $users,
             "tarifs" => $tarifs
-        ], ["style.css", "grille.css"]);
+        ], ["style.css"]);
     }
 
     public function deleteReservation($id) {
