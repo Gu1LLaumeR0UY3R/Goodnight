@@ -8,6 +8,27 @@
     <link rel="stylesheet" href="/css/style.css">
     <link rel="stylesheet" href="/css/navbar.css">
 
+    <style>
+        /* Carousel styles */
+        .bien-photos { position: relative; display: flex; justify-content: center; align-items: center; }
+        .carousel { position: relative; width: 100%; max-width: 900px; }
+        .slides { position: relative; overflow: hidden; }
+        .slide { display: none; text-align: center; }
+        .slide img { max-width: 100%; height: auto; cursor: zoom-in; border-radius: 6px; }
+        .carousel-button { position: absolute; top: 50%; transform: translateY(-50%); background: rgba(0,0,0,0.5); color: #fff; border: none; width: 44px; height: 44px; border-radius: 22px; cursor: pointer; font-size: 24px; line-height: 1; display: flex; align-items: center; justify-content: center; }
+        .carousel-button:focus { outline: 2px solid #fff; }
+        .carousel-button.prev { left: 8px; }
+        .carousel-button.next { right: 8px; }
+        .carousel-dots { text-align: center; margin-top: 8px; }
+        .carousel-dots button { background: #ddd; border: none; width: 10px; height: 10px; border-radius: 50%; margin: 0 4px; cursor: pointer; }
+        .carousel-dots button.active { background: #333; }
+
+
+        @media (max-width: 600px) {
+            .carousel-button { width: 36px; height: 36px; }
+        }
+    </style>
+
 </head>
 <body>
     <?php include __DIR__ . '/../layout/navbar.php'; ?>
@@ -20,14 +41,37 @@
             </div>
 
             <div class="bien-photos">
-                <?php if (!empty($photos)): ?>
-                    <?php foreach ($photos as $photo): ?>
-                        <img src="<?php echo htmlspecialchars($photo["lien_photo"]); ?>" alt="<?php echo htmlspecialchars($photo["nom_photo"]); ?>">
-                    <?php endforeach; ?>
-                <?php else: ?>
-                    <img src="/images/default.jpg" alt="Aucune photo disponible">
-                <?php endif; ?>
+                <div class="carousel">
+                    <div class="slides">
+                        <?php if (!empty($photos)): ?>
+                            <?php foreach ($photos as $index => $photo): ?>
+                                <div class="slide" data-index="<?php echo $index; ?>">
+                                    <img src="<?php echo htmlspecialchars($photo["lien_photo"]); ?>" alt="<?php echo htmlspecialchars($photo["nom_photo"]); ?>" data-full="<?php echo htmlspecialchars($photo["lien_photo"]); ?>">
+                                </div>
+                            <?php endforeach; ?>
+                        <?php else: ?>
+                            <div class="slide" data-index="0">
+                                <img src="/images/default.jpg" alt="Aucune photo disponible">
+                            </div>
+                        <?php endif; ?>
+                    </div>
+
+                    <?php if (!empty($photos) && count($photos) > 1): ?>
+                        <button class="carousel-button prev" aria-label="Image précédente">‹</button>
+                        <button class="carousel-button next" aria-label="Image suivante">›</button>
+                    <?php endif; ?>
+
+                    <?php if (!empty($photos) && count($photos) > 1): ?>
+                        <div class="carousel-dots">
+                            <?php for ($i = 0; $i < count($photos); $i++): ?>
+                                <button data-dot="<?php echo $i; ?>" class="<?php echo $i === 0 ? 'active' : ''; ?>" aria-label="Aller à l'image <?php echo $i + 1; ?>"></button>
+                            <?php endfor; ?>
+                        </div>
+                    <?php endif; ?>
+                </div>
             </div>
+
+
 
             <div class="bien-info">
                 <div class="info-block">
@@ -102,5 +146,68 @@
     <footer>
         <p>&copy; <?php echo date("Y"); ?> GlobeNight. Tous droits réservés.</p>
     </footer>
+    <script>
+        (function(){
+            // Carousel logic (preserved)
+            const slidesContainer = document.querySelector('.slides');
+            if (!slidesContainer) return;
+            const slides = Array.from(slidesContainer.querySelectorAll('.slide'));
+            let current = 0;
+
+            function showSlide(n) {
+                if (slides.length === 0) return;
+                current = (n + slides.length) % slides.length;
+                slides.forEach((s, i) => {
+                    s.style.display = (i === current) ? 'block' : 'none';
+                });
+                // update dots
+                const dots = document.querySelectorAll('.carousel-dots button');
+                dots.forEach(d => d.classList.remove('active'));
+                const activeDot = document.querySelector('.carousel-dots button[data-dot="' + current + '"]') || document.querySelectorAll('.carousel-dots button')[current];
+                if (activeDot) activeDot.classList.add('active');
+            }
+
+            // initialize
+            showSlide(0);
+
+            // Prev / Next
+            const prevBtn = document.querySelector('.carousel-button.prev');
+            const nextBtn = document.querySelector('.carousel-button.next');
+            if (prevBtn) prevBtn.addEventListener('click', () => showSlide(current - 1));
+            if (nextBtn) nextBtn.addEventListener('click', () => showSlide(current + 1));
+
+            // Dots
+            document.querySelectorAll('.carousel-dots button').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const idx = parseInt(this.getAttribute('data-dot'), 10);
+                    showSlide(idx);
+                });
+            });
+
+            // jQuery Magnify implementation
+            $(document).ready(function() {
+                // Initialisation de Magnify sur toutes les images du carrousel
+                // On utilise l'attribut data-magnify-src pour l'image haute résolution
+                $('.slide img').each(function() {
+                    const fullSrc = $(this).data('full') || $(this).attr('src');
+                    $(this).attr('data-magnify-src', fullSrc);
+                    $(this).magnify({
+                        speed: 200,
+                        // Le plugin Magnify fonctionne comme une loupe.
+                        // On s'assure que le curseur est de type 'zoom-in' dans le CSS (ligne 17)
+                    });
+                });
+            });
+
+            // small accessibility: keyboard nav for arrows (preserved)
+            document.addEventListener('keydown', function(e){
+                if (e.key === 'ArrowLeft') showSlide(current - 1);
+                if (e.key === 'ArrowRight') showSlide(current + 1);
+            });
+        })();
+    </script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link rel="stylesheet" href="/css/magnify.css">
+    <script src="/js/jquery.magnify.min.js"></script>
 </body>
 </html>

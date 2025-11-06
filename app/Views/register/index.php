@@ -19,10 +19,12 @@
 	        .iti .iti__country-container {
 	            flex-shrink: 0 !important; /* Empêche le sélecteur de rétrécir */
 	        }
-	        .iti input.iti__tel-input {
-	            flex-grow: 1 !important; /* Permet au champ de saisie de prendre l'espace restant */
-	            padding-right: 0 !important; /* Corrige le padding si nécessaire */
-	        }
+                .iti input.iti__tel-input {
+            flex-grow: 1 !important; /* Permet au champ de saisie de prendre l'espace restant */
+            padding-right: 0 !important; /* Corrige le padding si nécessaire */
+        }
+            /* Ensure the country dropdown is above other elements */
+            .iti__country-list, .iti__flag-list, .iti__country { z-index: 200000 !important; }
             .tel-error {
                 color: #dc3545;
                 font-size: 0.875rem;
@@ -88,7 +90,7 @@
                 <input type="password" id="confirm_password" name="confirm_password" required>
 
                 <label for="tel">Téléphone :</label>
-                <input type="tel" id="tel" name="tel_locataire" value="<?php echo htmlspecialchars($old_data['tel_locataire'] ?? ''); ?>" maxlength="15">
+                <input type="tel" id="tel" name="tel_locataire" value="<?php echo htmlspecialchars($old_data['tel_locataire'] ?? ''); ?>" maxlength="20">
                 <input type="hidden" id="full_tel" name="tel_locataire_formatted">
 
                 <label for="rue">Rue :</label>
@@ -155,106 +157,52 @@
         }
 
         // Supprimer le message d'erreur
-        function removeError(input) {
-            const errorMsg = input.parentNode.querySelector('.tel-error');
-            if (errorMsg) {
-                errorMsg.remove();
-            }
-        }
-
-        // Obtenir le message d'erreur approprié
-        function getErrorMessage(errorCode) {
-            switch(errorCode) {
-                case intlTelInputUtils.validationError.INVALID_COUNTRY_CODE:
-                    return "Code pays invalide";
-                case intlTelInputUtils.validationError.TOO_SHORT:
-                    return "Numéro trop court";
-                case intlTelInputUtils.validationError.TOO_LONG:
-                    return "Numéro trop long";
-                case intlTelInputUtils.validationError.NOT_A_NUMBER:
-                    return "Numéro invalide";
-                default:
-                    return "Numéro de téléphone invalide";
-            }
-        }
-
-        window.onload = function() {
-            toggleUserType();
-
-            const input = document.querySelector("#tel");
-            const fullTelInput = document.querySelector("#full_tel");
-            const iti = window.intlTelInput(input, {
-                allowDropdown: true,
-                autoInsertDialCode: true,
-                dropdownContainer: document.body,
-                formatOnDisplay: true,
-                initialCountry: "fr",
-                nationalMode: false,
-                preferredCountries: ["fr", "be", "ch", "lu"],
-                separateDialCode: true,
-                showFlags: true,
-                utilsScript: "/lib/intl-tel-input/utils.js",
-                onlyCountries: [
-                    "fr", "be", "ch", "lu", "de", "es", "it", "gb", "pt", 
-                    "nl", "at", "dk", "ie", "gr", "pl", "se", "no", "fi", 
-                    "cz", "hu", "ro", "bg", "hr", "si", "sk", "ee", "lv", 
-                    "lt", "cy", "mt"
-                ],
-                localizedCountries: {
-                    'fr': 'France',
-                    'be': 'Belgique',
-                    'ch': 'Suisse',
-                    'lu': 'Luxembourg',
-                    'de': 'Allemagne',
-                    'es': 'Espagne',
-                    'it': 'Italie',
-                    'gb': 'Royaume-Uni',
-                    'pt': 'Portugal',
-                    'nl': 'Pays-Bas',
-                    'at': 'Autriche',
-                    'dk': 'Danemark',
-                    'ie': 'Irlande',
-                    'gr': 'Grèce',
-                    'pl': 'Pologne',
-                    'se': 'Suède',
-                    'no': 'Norvège',
-                    'fi': 'Finlande',
-                    'cz': 'République Tchèque',
-                    'hu': 'Hongrie',
-                    'ro': 'Roumanie',
-                    'bg': 'Bulgarie',
-                    'hr': 'Croatie',
-                    'si': 'Slovénie',
-                    'sk': 'Slovaquie',
-                    'ee': 'Estonie',
-                    'lv': 'Lettonie',
-                    'lt': 'Lituanie',
-                    'cy': 'Chypre',
-                    'mt': 'Malte'
-                }
-            });
-
-            // Fonction de validation et mise à jour du numéro
             function updatePhoneNumber() {
-                if (input.value.trim()) {
-                    if (iti.isValidNumber()) {
-                        const number = iti.getNumber(intlTelInputUtils.numberFormat.E164);
+                if (!input) return;
+                const raw = input.value.trim();
+                if (!raw) {
+                    input.classList.remove('error');
+                    input.setCustomValidity('');
+                    removeError(input);
+                    fullTelInput.value = '';
+                    return;
+                }
+
+                // Use iti validations; guard accesses to intlTelInputUtils
+                try {
+                    if (typeof iti.isValidNumber === 'function' && iti.isValidNumber()) {
+                        let number = '';
+                        if (window.intlTelInputUtils && window.intlTelInputUtils.numberFormat) {
+                            number = iti.getNumber(window.intlTelInputUtils.numberFormat.E164) || '';
+                        } else {
+                            number = iti.getNumber() || '';
+                        }
                         fullTelInput.value = number;
                         input.classList.remove('error');
                         input.setCustomValidity('');
                         removeError(input);
-                    } else {
-                        const errorCode = iti.getValidationError();
-                        const errorMsg = getErrorMessage(errorCode);
-                        input.classList.add('error');
-                        input.setCustomValidity(errorMsg);
-                        showError(input, errorMsg);
-                        fullTelInput.value = '';
+                        return;
                     }
-                } else {
-                    input.classList.remove('error');
-                    input.setCustomValidity('');
-                    removeError(input);
+
+                    // build an error code if possible
+                    let errorCode = null;
+                    if (typeof iti.getValidationError === 'function') {
+                        errorCode = iti.getValidationError();
+                    } else if (window.intlTelInputUtils && typeof window.intlTelInputUtils.getValidationError === 'function') {
+                        const countryIso = (typeof iti.getSelectedCountryData === 'function' && iti.getSelectedCountryData()) ? iti.getSelectedCountryData().iso2 : 'fr';
+                        errorCode = window.intlTelInputUtils.getValidationError(raw, countryIso);
+                    }
+
+                    const errorMsg = (typeof errorCode !== 'number') ? 'Numéro de téléphone invalide' : getErrorMessage(errorCode);
+                    input.classList.add('error');
+                    input.setCustomValidity(errorMsg);
+                    showError(input, errorMsg);
+                    fullTelInput.value = '';
+                } catch (err) {
+                    console.warn('Phone validation error', err);
+                    input.classList.add('error');
+                    input.setCustomValidity('Numéro de téléphone invalide');
+                    showError(input, 'Numéro de téléphone invalide');
                     fullTelInput.value = '';
                 }
             }
@@ -263,10 +211,17 @@
             input.addEventListener('blur', updatePhoneNumber);
             input.addEventListener('change', updatePhoneNumber);
             input.addEventListener('keyup', updatePhoneNumber);
-            iti.promise.then(function() {
+            // when utils are loaded, make sure to re-run validation and listen for country changes
+            if (iti && iti.promise && typeof iti.promise.then === 'function') {
+                iti.promise.then(function() {
+                    input.addEventListener('countrychange', updatePhoneNumber);
+                    updatePhoneNumber();
+                });
+            } else {
+                // if no promise support, add countrychange listener anyway and run validation after small delay
                 input.addEventListener('countrychange', updatePhoneNumber);
-                updatePhoneNumber();
-            });
+                setTimeout(updatePhoneNumber, 200);
+            }
 
             // Validation du formulaire
             const form = document.querySelector('form');
