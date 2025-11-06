@@ -36,6 +36,9 @@ $routes = [
     
     "login" => ["controller" => "LoginController", "action" => "index"],
     "login/process" => ["controller" => "LoginController", "action" => "login"],
+    "login/reset" => ["controller" => "LoginController", "action" => "showResetForm"],
+    "login/reset-password/request" => ["controller" => "LoginController", "action" => "requestPasswordReset"],
+    "login/reset-password/update" => ["controller" => "LoginController", "action" => "updatePassword"],
     "logout" => ["controller" => "LoginController", "action" => "logout"],
     
     // Routes Administrateur
