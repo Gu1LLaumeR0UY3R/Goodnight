@@ -123,34 +123,55 @@
         // Appeler la fonction au chargement pour initialiser l'état
         window.onload = function() {
             toggleUserType();
-            // Initialisation de intl-tel-input
-            const input = document.querySelector("#tel_locataire");
-            const fullTelInput = document.querySelector("#full_tel_locataire");
-            const iti = window.intlTelInput(input, {
-                initialCountry: "fr", // Pays initial par défaut
-                separateDialCode: true,
-                utilsScript: "" // Le script utils.js n'est pas nécessaire pour la validation de base
-            });
 
-            // Mettre à jour le champ caché avec le numéro complet
-            input.addEventListener("change", updateFullTel);
-            input.addEventListener("keyup", updateFullTel);
+            (function(){
+                const input = document.querySelector('#tel_locataire');
+                const fullTelInput = document.querySelector('#full_tel_locataire');
+                if (!input) return;
 
-            // Empêcher la saisie de caractères non numériques et mettre à jour le champ caché
-            input.addEventListener("input", function() {
-                // Supprimer immédiatement tout caractère non numérique
-                this.value = this.value.replace(/[^0-9]/g, '');
-                updateFullTel();
-            });
+                // attach digits-only behavior
+                (function attachDigitsOnly(el){
+                    const max = parseInt(el.getAttribute('maxlength') || '0', 10) || null;
+                    el.addEventListener('input', function() {
+                        let v = this.value || '';
+                        const cleaned = v.replace(/\D+/g, '');
+                        this.value = (max ? cleaned.slice(0, max) : cleaned);
+                    });
+                    el.addEventListener('keydown', function(e) {
+                        if (e.ctrlKey || e.metaKey || e.altKey) return;
+                        const allowed = ['Backspace','Tab','ArrowLeft','ArrowRight','Delete','Home','End'];
+                        if (allowed.includes(e.key)) return;
+                        if (!/^[0-9]$/.test(e.key)) e.preventDefault();
+                    });
+                })(input);
 
-            function updateFullTel() {
-                if (iti.isValidNumber()) {
-                    fullTelInput.value = iti.getNumber();
-                } else {
-                    fullTelInput.value = ""; // Vider si invalide
+                const iti = window.intlTelInput(input, {
+                    initialCountry: 'fr',
+                    separateDialCode: true,
+                    utilsScript: ''
+                });
+
+                function updateFullTel(){
+                    try{
+                        if (typeof iti.isValidNumber === 'function' && iti.isValidNumber()){
+                            const full = (window.intlTelInputUtils && window.intlTelInputUtils.numberFormat)
+                                ? iti.getNumber(window.intlTelInputUtils.numberFormat.E164) || ''
+                                : iti.getNumber() || '';
+                            if (fullTelInput) fullTelInput.value = full;
+                            return;
+                        }
+                        if (fullTelInput) fullTelInput.value = '';
+                    }catch(e){
+                        if (fullTelInput) fullTelInput.value = '';
+                    }
                 }
-            });
-            // La fonction updateFullTel est maintenant définie ci-dessous, donc on retire cette partie redondante.
+
+                input.addEventListener('change', updateFullTel);
+                input.addEventListener('keyup', updateFullTel);
+                input.addEventListener('blur', updateFullTel);
+                input.addEventListener('countrychange', updateFullTel);
+                setTimeout(updateFullTel, 150);
+            })();
         };
     </script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>

@@ -156,83 +156,115 @@
             errorMsg.textContent = message;
         }
 
-        // Supprimer le message d'erreur
+        function removeError(input) {
+            const errorMsg = input.parentNode.querySelector('.tel-error');
+            if (errorMsg) errorMsg.remove();
+        }
+
+        // Utility: force digits-only and enforce maxlength while keeping intl-tel-input validation
+        function attachDigitsOnlyBehavior(el) {
+            if (!el) return;
+            const max = parseInt(el.getAttribute('maxlength') || '0', 10) || null;
+
+            // sanitize on input (removes any non-digit characters)
+            el.addEventListener('input', function() {
+                let v = this.value || '';
+                const cleaned = v.replace(/\D+/g, '');
+                this.value = (max ? cleaned.slice(0, max) : cleaned);
+            });
+
+            // prevent non-digit key presses (but allow navigation and control keys)
+            el.addEventListener('keydown', function(e) {
+                if (e.ctrlKey || e.metaKey || e.altKey) return; // allow shortcuts
+                const allowed = ['Backspace','Tab','ArrowLeft','ArrowRight','Delete','Home','End'];
+                if (allowed.includes(e.key)) return;
+                if (!/^[0-9]$/.test(e.key)) {
+                    e.preventDefault();
+                }
+            });
+        }
+
+        // Initialize intl-tel-input and wire up sanitization + validation
+        document.addEventListener('DOMContentLoaded', function() {
+            const input = document.querySelector('#tel');
+            const fullTelInput = document.querySelector('#full_tel');
+            if (!input) return;
+
+            attachDigitsOnlyBehavior(input);
+
+            // init iti
+            const iti = window.intlTelInput(input, {
+                initialCountry: 'fr',
+                separateDialCode: true,
+                utilsScript: ''
+            });
+
             function updatePhoneNumber() {
-                if (!input) return;
                 const raw = input.value.trim();
                 if (!raw) {
                     input.classList.remove('error');
                     input.setCustomValidity('');
                     removeError(input);
-                    fullTelInput.value = '';
+                    if (fullTelInput) fullTelInput.value = '';
                     return;
                 }
 
-                // Use iti validations; guard accesses to intlTelInputUtils
                 try {
                     if (typeof iti.isValidNumber === 'function' && iti.isValidNumber()) {
-                        let number = '';
-                        if (window.intlTelInputUtils && window.intlTelInputUtils.numberFormat) {
-                            number = iti.getNumber(window.intlTelInputUtils.numberFormat.E164) || '';
-                        } else {
-                            number = iti.getNumber() || '';
-                        }
-                        fullTelInput.value = number;
+                        const number = (window.intlTelInputUtils && window.intlTelInputUtils.numberFormat)
+                            ? iti.getNumber(window.intlTelInputUtils.numberFormat.E164) || ''
+                            : iti.getNumber() || '';
+                        if (fullTelInput) fullTelInput.value = number;
                         input.classList.remove('error');
                         input.setCustomValidity('');
                         removeError(input);
                         return;
                     }
 
-                    // build an error code if possible
                     let errorCode = null;
                     if (typeof iti.getValidationError === 'function') {
                         errorCode = iti.getValidationError();
-                    } else if (window.intlTelInputUtils && typeof window.intlTelInputUtils.getValidationError === 'function') {
-                        const countryIso = (typeof iti.getSelectedCountryData === 'function' && iti.getSelectedCountryData()) ? iti.getSelectedCountryData().iso2 : 'fr';
-                        errorCode = window.intlTelInputUtils.getValidationError(raw, countryIso);
                     }
-
                     const errorMsg = (typeof errorCode !== 'number') ? 'Numéro de téléphone invalide' : getErrorMessage(errorCode);
                     input.classList.add('error');
                     input.setCustomValidity(errorMsg);
                     showError(input, errorMsg);
-                    fullTelInput.value = '';
+                    if (fullTelInput) fullTelInput.value = '';
                 } catch (err) {
                     console.warn('Phone validation error', err);
                     input.classList.add('error');
                     input.setCustomValidity('Numéro de téléphone invalide');
                     showError(input, 'Numéro de téléphone invalide');
-                    fullTelInput.value = '';
+                    if (fullTelInput) fullTelInput.value = '';
                 }
             }
 
-            // Écouteurs d'événements
             input.addEventListener('blur', updatePhoneNumber);
             input.addEventListener('change', updatePhoneNumber);
             input.addEventListener('keyup', updatePhoneNumber);
-            // when utils are loaded, make sure to re-run validation and listen for country changes
+
             if (iti && iti.promise && typeof iti.promise.then === 'function') {
                 iti.promise.then(function() {
                     input.addEventListener('countrychange', updatePhoneNumber);
                     updatePhoneNumber();
                 });
             } else {
-                // if no promise support, add countrychange listener anyway and run validation after small delay
                 input.addEventListener('countrychange', updatePhoneNumber);
                 setTimeout(updatePhoneNumber, 200);
             }
 
-            // Validation du formulaire
+            // form submit
             const form = document.querySelector('form');
-            form.addEventListener('submit', function(e) {
-                updatePhoneNumber();
-                if (!iti.isValidNumber() && input.value.trim()) {
-                    e.preventDefault();
-                    input.focus();
-                }
-            });
-        };
+            if (form) {
+                form.addEventListener('submit', function(e) {
+                    updatePhoneNumber();
+                    if (typeof iti.isValidNumber === 'function' && !iti.isValidNumber() && input.value.trim()) {
+                        e.preventDefault();
+                        input.focus();
+                    }
+                });
+            }
+        });
     </script>
 </body>
 </html>

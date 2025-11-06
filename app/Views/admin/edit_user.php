@@ -76,38 +76,54 @@
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             // Initialisation de intl-tel-input
-            const input = document.querySelector("#tel_locataire");
-            const fullTelInput = document.querySelector("#full_tel_locataire");
+            const input = document.querySelector('#tel_locataire');
+            const fullTelInput = document.querySelector('#full_tel_locataire');
+            if (!input) return;
+
+            function attachDigitsOnly(el) {
+                const max = parseInt(el.getAttribute('maxlength') || '0', 10) || null;
+                el.addEventListener('input', function() {
+                    let v = this.value || '';
+                    const cleaned = v.replace(/\D+/g, '');
+                    this.value = (max ? cleaned.slice(0, max) : cleaned);
+                });
+                el.addEventListener('keydown', function(e) {
+                    if (e.ctrlKey || e.metaKey || e.altKey) return;
+                    const allowed = ['Backspace','Tab','ArrowLeft','ArrowRight','Delete','Home','End'];
+                    if (allowed.includes(e.key)) return;
+                    if (!/^[0-9]$/.test(e.key)) e.preventDefault();
+                });
+            }
+
+            attachDigitsOnly(input);
+
             const iti = window.intlTelInput(input, {
-                initialCountry: "fr", // Pays initial par défaut
+                initialCountry: 'fr',
                 separateDialCode: true,
-                utilsScript: "" // Le script utils.js n'est pas nécessaire pour la validation de base
+                utilsScript: ''
             });
 
             // Mettre à jour le champ caché avec le numéro complet
             function updateFullTel() {
-                if (iti.isValidNumber()) {
-                    fullTelInput.value = iti.getNumber();
+                if (typeof iti.isValidNumber === 'function' && iti.isValidNumber()) {
+                    fullTelInput.value = (window.intlTelInputUtils && window.intlTelInputUtils.numberFormat)
+                        ? iti.getNumber(window.intlTelInputUtils.numberFormat.E164) || ''
+                        : iti.getNumber() || '';
                 } else {
-                    fullTelInput.value = ""; // Vider si invalide
+                    fullTelInput.value = ''; // Vider si invalide
                 }
             }
 
             // Mettre à jour le champ caché au chargement avec la valeur existante
             if (input.value) {
-                iti.setNumber(input.value);
+                try { iti.setNumber(input.value); } catch (e) {}
                 updateFullTel();
             }
 
-            input.addEventListener("change", updateFullTel);
-            input.addEventListener("keyup", updateFullTel);
-
-            // Empêcher la saisie de caractères non numériques et mettre à jour le champ caché
-            input.addEventListener("input", function() {
-                // Supprimer immédiatement tout caractère non numérique
-                this.value = this.value.replace(/[^0-9]/g, '');
-                updateFullTel();
-            });
+            input.addEventListener('change', updateFullTel);
+            input.addEventListener('keyup', updateFullTel);
+            input.addEventListener('blur', updateFullTel);
+            input.addEventListener('countrychange', updateFullTel);
         });
     </script>
 </body>
