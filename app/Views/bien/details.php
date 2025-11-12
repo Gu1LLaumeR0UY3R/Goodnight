@@ -23,7 +23,16 @@
         .carousel-dots button { background: #ddd; border: none; width: 10px; height: 10px; border-radius: 50%; margin: 0 4px; cursor: pointer; }
         .carousel-dots button.active { background: #333; }
 
+        /* Modal zoom */
+        .img-modal { display: none; position: fixed; inset: 0; z-index: 9999; align-items: center; justify-content: center; }
+        .img-modal.open { display: flex; }
+        .img-modal-backdrop { position: absolute; inset: 0; background: rgba(0,0,0,0.6); backdrop-filter: blur(4px); }
+        .img-modal-content { position: relative; max-width: 95%; max-height: 95%; z-index: 10000; }
+        .img-modal-content img { width: auto; height: auto; max-width: 100%; max-height: 100%; border-radius: 6px; box-shadow: 0 8px 30px rgba(0,0,0,0.6); }
+        .img-modal-close { position: absolute; top: -18px; right: -18px; background: #fff; color: #000; border-radius: 50%; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; cursor: pointer; font-weight: bold; box-shadow: 0 4px 12px rgba(0,0,0,0.3); }
 
+        /* Blur main content when modal open */
+        main.blurred { filter: blur(6px); transition: filter 0.15s ease-in-out; }
         @media (max-width: 600px) {
             .carousel-button { width: 36px; height: 36px; }
         }
@@ -32,7 +41,6 @@
 </head>
 <body>
     <?php include __DIR__ . '/../layout/navbar.php'; ?>
-
     <main>
         <div class="bien-details">
             <div class="bien-header">
@@ -71,7 +79,14 @@
                 </div>
             </div>
 
-
+            <!-- Modal for zoomed image -->
+            <div id="imgModal" class="img-modal" aria-hidden="true">
+                <div class="img-modal-backdrop" data-close></div>
+                <div class="img-modal-content">
+                    <button class="img-modal-close" aria-label="Fermer">✕</button>
+                    <img src="" alt="Agrandissement" id="modalImage">
+                </div>
+            </div>
 
             <div class="bien-info">
                 <div class="info-block">
@@ -146,9 +161,11 @@
     <footer>
         <p>&copy; <?php echo date("Y"); ?> GlobeNight. Tous droits réservés.</p>
     </footer>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- Ensure jQuery is available for any scripts that expect `$` -->
     <script>
         (function(){
-            // Carousel logic (preserved)
+            // Carousel + modal logic
             const slidesContainer = document.querySelector('.slides');
             if (!slidesContainer) return;
             const slides = Array.from(slidesContainer.querySelectorAll('.slide'));
@@ -184,30 +201,95 @@
                 });
             });
 
-            // jQuery Magnify implementation
-            $(document).ready(function() {
-                // Initialisation de Magnify sur toutes les images du carrousel
-                // On utilise l'attribut data-magnify-src pour l'image haute résolution
-                $('.slide img').each(function() {
-                    const fullSrc = $(this).data('full') || $(this).attr('src');
-                    $(this).attr('data-magnify-src', fullSrc);
-                    $(this).magnify({
-                        speed: 200,
-                        // Le plugin Magnify fonctionne comme une loupe.
-                        // On s'assure que le curseur est de type 'zoom-in' dans le CSS (ligne 17)
-                    });
+            // Click to open modal
+            const modal = document.getElementById('imgModal');
+            const modalImage = document.getElementById('modalImage');
+            const modalClose = modal && modal.querySelector('.img-modal-close');
+            const mainEl = document.querySelector('main');
+
+            // prevent immediate backdrop clicks from closing the modal right after open
+            let ignoreBackdropClick = false;
+
+            // add load/error handlers to modalImage to debug and handle slow loads
+            if (modalImage) {
+                modalImage.style.transition = 'opacity 180ms ease-in-out';
+                modalImage.style.opacity = 0;
+                modalImage.addEventListener('load', function() {
+                    console.log('modalImage loaded:', this.src);
+                    this.style.opacity = 1;
+                    if (modal) modal.classList.remove('loading');
+                });
+                modalImage.addEventListener('error', function(e) {
+                    console.error('modalImage failed to load:', this.src, e);
+                    this.style.opacity = 1; // show whatever fallback (or keep empty)
+                    if (modal) modal.classList.remove('loading');
+                });
+            }
+
+            slides.forEach(s => {
+                const img = s.querySelector('img');
+                if (!img) return;
+
+                // Bloque la propagation du clic sur le slide
+                s.addEventListener('click', e => e.stopPropagation());
+
+                img.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    const src = this.getAttribute('data-full') || this.src;
+                    if (!modal || !modalImage) return;
+
+                    console.log('thumbnail clicked, opening modal for', src);
+
+                    // Open modal first so it's visible (prevents any layout issues)
+                    modal.classList.add('open');
+                    modal.setAttribute('aria-hidden', 'false');
+                    if (mainEl) mainEl.classList.add('blurred');
+
+                    // show loading state until image loads
+                    if (modal) modal.classList.add('loading');
+                    modalImage.style.opacity = 0;
+
+                    // set src after opening to force load event
+                    modalImage.src = src;
+
+                    // briefly ignore backdrop clicks triggered by the same interaction
+                    ignoreBackdropClick = true;
+                    setTimeout(() => { ignoreBackdropClick = false; }, 300);
                 });
             });
 
-            // small accessibility: keyboard nav for arrows (preserved)
+            function closeModal() {
+                if (!modal) return;
+                modal.classList.remove('open');
+                modal.setAttribute('aria-hidden', 'true');
+                modalImage.src = '';
+                if (mainEl) mainEl.classList.remove('blurred');
+            }
+
+            if (modalClose) modalClose.addEventListener('click', closeModal);
+            // click on backdrop
+            const backdrop = modal && modal.querySelector('[data-close]');
+            // Backdrop click: only close if click target is the backdrop itself and not ignored
+            if (backdrop) {
+                backdrop.addEventListener('click', function(e) {
+                    if (ignoreBackdropClick || e.target !== backdrop) return;
+                    closeModal();
+                });
+            }
+            // prevent clicks inside modal content from bubbling to the backdrop
+            const modalContent = modal && modal.querySelector('.img-modal-content');
+            if (modalContent) modalContent.addEventListener('click', function(e){ e.stopPropagation(); });
+            // ESC key
+            document.addEventListener('keydown', function(e){ if (e.key === 'Escape') closeModal(); });
+
+            // small accessibility: keyboard nav for arrows
             document.addEventListener('keydown', function(e){
+                if (modal && modal.classList.contains('open')) return; // don't navigate while modal open
                 if (e.key === 'ArrowLeft') showSlide(current - 1);
                 if (e.key === 'ArrowRight') showSlide(current + 1);
             });
         })();
     </script>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <link rel="stylesheet" href="/css/magnify.css">
-    <script src="/js/jquery.magnify.min.js"></script>
 </body>
 </html>
