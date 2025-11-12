@@ -161,24 +161,45 @@
             if (errorMsg) errorMsg.remove();
         }
 
-        // Utility: force digits-only and enforce maxlength while keeping intl-tel-input validation
+        // Map intl-tel-input validation error codes to user-friendly messages
+        function getErrorMessage(errorCode) {
+            if (!window.intlTelInputUtils || !window.intlTelInputUtils.validationError) return 'Numéro de téléphone invalide';
+            const v = window.intlTelInputUtils.validationError;
+            switch (errorCode) {
+                case v.INVALID_COUNTRY_CODE:
+                    return 'Code pays invalide';
+                case v.TOO_SHORT:
+                    return 'Numéro trop court';
+                case v.TOO_LONG:
+                    return 'Numéro trop long';
+                case v.NOT_A_NUMBER:
+                    return 'Ce n\'est pas un numéro de téléphone';
+                default:
+                    return 'Numéro de téléphone invalide';
+            }
+        }
+
+        // Utility: sanitize input but allow international prefixes (+) and common separators
+        // We intentionally DO NOT strip the leading + because intl-tel-input needs it
         function attachDigitsOnlyBehavior(el) {
             if (!el) return;
             const max = parseInt(el.getAttribute('maxlength') || '0', 10) || null;
 
-            // sanitize on input (removes any non-digit characters)
+            // sanitize on input: keep digits, plus sign, spaces, parentheses and dashes
             el.addEventListener('input', function() {
                 let v = this.value || '';
-                const cleaned = v.replace(/\D+/g, '');
+                // remove any characters except digits and +, space, (), -
+                const cleaned = v.replace(/[^0-9+\s()\-]/g, '');
                 this.value = (max ? cleaned.slice(0, max) : cleaned);
             });
 
-            // prevent non-digit key presses (but allow navigation and control keys)
+            // allow navigation and numeric characters + plus and separators
             el.addEventListener('keydown', function(e) {
                 if (e.ctrlKey || e.metaKey || e.altKey) return; // allow shortcuts
-                const allowed = ['Backspace','Tab','ArrowLeft','ArrowRight','Delete','Home','End'];
+                const allowed = ['Backspace','Tab','ArrowLeft','ArrowRight','Delete','Home','End','Enter'];
                 if (allowed.includes(e.key)) return;
-                if (!/^[0-9]$/.test(e.key)) {
+                // allow digits, +, space, parentheses and dash
+                if (!/^[0-9+\s()\-]$/.test(e.key)) {
                     e.preventDefault();
                 }
             });
@@ -196,7 +217,8 @@
             const iti = window.intlTelInput(input, {
                 initialCountry: 'fr',
                 separateDialCode: true,
-                utilsScript: ''
+                // load utils so that isValidNumber, getNumber, getValidationError work
+                utilsScript: '/lib/intl-tel-input/utils.js'
             });
 
             function updatePhoneNumber() {

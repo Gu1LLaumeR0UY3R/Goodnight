@@ -70,7 +70,7 @@
                 <input type="password" id="confirm_password" name="confirm_password" required>
 
                 <label for="tel_locataire">Téléphone :</label>
-                <input type="tel" id="tel_locataire" name="tel_locataire" value="<?php echo htmlspecialchars($old_data['tel_locataire'] ?? ''); ?>" maxlength="15">
+                <input type="tel" id="tel_locataire" name="tel_locataire" value="<?php echo htmlspecialchars($old_data['tel_locataire'] ?? ''); ?>" maxlength="20">
                 <input type="hidden" id="full_tel_locataire" name="full_tel_locataire">
 
                 <label for="rue_locataire">Rue :</label>
@@ -132,23 +132,24 @@
                 // attach digits-only behavior
                 (function attachDigitsOnly(el){
                     const max = parseInt(el.getAttribute('maxlength') || '0', 10) || null;
+                    // allow digits, +, spaces, parentheses and dashes
                     el.addEventListener('input', function() {
                         let v = this.value || '';
-                        const cleaned = v.replace(/\D+/g, '');
+                        const cleaned = v.replace(/[^0-9+\s()\-]/g, '');
                         this.value = (max ? cleaned.slice(0, max) : cleaned);
                     });
                     el.addEventListener('keydown', function(e) {
                         if (e.ctrlKey || e.metaKey || e.altKey) return;
-                        const allowed = ['Backspace','Tab','ArrowLeft','ArrowRight','Delete','Home','End'];
+                        const allowed = ['Backspace','Tab','ArrowLeft','ArrowRight','Delete','Home','End','Enter'];
                         if (allowed.includes(e.key)) return;
-                        if (!/^[0-9]$/.test(e.key)) e.preventDefault();
+                        if (!/^[0-9+\s()\-]$/.test(e.key)) e.preventDefault();
                     });
                 })(input);
 
                 const iti = window.intlTelInput(input, {
                     initialCountry: 'fr',
                     separateDialCode: true,
-                    utilsScript: ''
+                    utilsScript: '/lib/intl-tel-input/utils.js'
                 });
 
                 function updateFullTel(){
