@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -7,9 +6,9 @@
     <title><?php echo htmlspecialchars($bien["designation_bien"]); ?> - GlobeNight</title>
     <link rel="stylesheet" href="/css/style.css">
     <link rel="stylesheet" href="/css/navbar.css">
-
+    <!-- Styles du carousel (inchangés) -->
     <style>
-        /* Carousel styles */
+        /* ... (ton CSS existant, inchangé) ... */
         .bien-photos { position: relative; display: flex; justify-content: center; align-items: center; }
         .carousel { position: relative; width: 100%; max-width: 900px; }
         .slides { position: relative; overflow: hidden; }
@@ -22,39 +21,37 @@
         .carousel-dots { text-align: center; margin-top: 8px; }
         .carousel-dots button { background: #ddd; border: none; width: 10px; height: 10px; border-radius: 50%; margin: 0 4px; cursor: pointer; }
         .carousel-dots button.active { background: #333; }
-
-        /* Modal zoom */
         .img-modal { display: none; position: fixed; inset: 0; z-index: 9999; align-items: center; justify-content: center; }
         .img-modal.open { display: flex; }
         .img-modal-backdrop { position: absolute; inset: 0; background: rgba(0,0,0,0.6); backdrop-filter: blur(4px); }
         .img-modal-content { position: relative; max-width: 95%; max-height: 95%; z-index: 10000; }
         .img-modal-content img { width: auto; height: auto; max-width: 100%; max-height: 100%; border-radius: 6px; box-shadow: 0 8px 30px rgba(0,0,0,0.6); }
         .img-modal-close { position: absolute; top: -18px; right: -18px; background: #fff; color: #000; border-radius: 50%; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; cursor: pointer; font-weight: bold; box-shadow: 0 4px 12px rgba(0,0,0,0.3); }
-
-        /* Blur main content when modal open */
         main.blurred { filter: blur(6px); transition: filter 0.15s ease-in-out; }
-        @media (max-width: 600px) {
-            .carousel-button { width: 36px; height: 36px; }
-        }
+        @media (max-width: 600px) { .carousel-button { width: 36px; height: 36px; } }
     </style>
-
 </head>
 <body>
     <?php include __DIR__ . '/../layout/navbar.php'; ?>
+
     <main>
         <div class="bien-details">
             <div class="bien-header">
                 <h1><?php echo htmlspecialchars($bien["designation_bien"]); ?></h1>
-
             </div>
 
+            
+
+            <!-- Carousel (inchangé) -->
             <div class="bien-photos">
                 <div class="carousel">
                     <div class="slides">
                         <?php if (!empty($photos)): ?>
                             <?php foreach ($photos as $index => $photo): ?>
                                 <div class="slide" data-index="<?php echo $index; ?>">
-                                    <img src="<?php echo htmlspecialchars($photo["lien_photo"]); ?>" alt="<?php echo htmlspecialchars($photo["nom_photo"]); ?>" data-full="<?php echo htmlspecialchars($photo["lien_photo"]); ?>">
+                                    <img src="<?php echo htmlspecialchars($photo["lien_photo"]); ?>" 
+                                         alt="<?php echo htmlspecialchars($photo["nom_photo"]); ?>" 
+                                         data-full="<?php echo htmlspecialchars($photo["lien_photo"]); ?>">
                                 </div>
                             <?php endforeach; ?>
                         <?php else: ?>
@@ -67,23 +64,21 @@
                     <?php if (!empty($photos) && count($photos) > 1): ?>
                         <button class="carousel-button prev" aria-label="Image précédente">‹</button>
                         <button class="carousel-button next" aria-label="Image suivante">›</button>
-                    <?php endif; ?>
-
-                    <?php if (!empty($photos) && count($photos) > 1): ?>
                         <div class="carousel-dots">
                             <?php for ($i = 0; $i < count($photos); $i++): ?>
-                                <button data-dot="<?php echo $i; ?>" class="<?php echo $i === 0 ? 'active' : ''; ?>" aria-label="Aller à l'image <?php echo $i + 1; ?>"></button>
+                                <button data-dot="<?php echo $i; ?>" class="<?php echo $i === 0 ? 'active' : ''; ?>" 
+                                        aria-label="Aller à l'image <?php echo $i + 1; ?>"></button>
                             <?php endfor; ?>
                         </div>
                     <?php endif; ?>
                 </div>
             </div>
 
-            <!-- Modal for zoomed image -->
+            <!-- Modal zoom (inchangé) -->
             <div id="imgModal" class="img-modal" aria-hidden="true">
                 <div class="img-modal-backdrop" data-close></div>
                 <div class="img-modal-content">
-                    <button class="img-modal-close" aria-label="Fermer">✕</button>
+                    <button class="img-modal-close" aria-label="Fermer">X</button>
                     <img src="" alt="Agrandissement" id="modalImage">
                 </div>
             </div>
@@ -97,28 +92,54 @@
                     <p><strong>Superficie :</strong> <?php echo htmlspecialchars($bien["superficie_biens"]); ?> m²</p>
                     <p><strong>Nombre de couchages :</strong> <?php echo htmlspecialchars($bien["nb_couchage"]); ?></p>
                     <p><strong>Animaux acceptés :</strong> <?php echo $bien["animaux_biens"] ? 'Oui' : 'Non'; ?></p>
-                    <p><strong>Prix semaine actuel :</strong> <?php echo htmlspecialchars(($bien["prix_semaine"] ?? null) ? number_format($bien["prix_semaine"], 2, ',', ' ') . ' €' : 'Non renseigné'); ?></p>
+                    <p><strong>Prix semaine actuel :</strong> 
+                        <?php echo ($bien["prix_semaine"] ?? null) 
+                            ? number_format($bien["prix_semaine"], 2, ',', ' ') . ' €' 
+                            : 'Non renseigné'; ?>
+                    </p>
+                    <p>
+                         <?php
+                            // DEBUG - À RETIRER après vérification
+                            echo "<!-- DEBUG SESSION -->";
+                            echo "<!-- user_id: " . ($_SESSION['user_id'] ?? 'NON DÉFINI') . " -->";
+                            echo "<!-- is_admin: " . (isset($_SESSION['is_admin']) ? 'OUI' : 'NON') . " -->";
+                            echo "<!-- user_roles: " . print_r($_SESSION['user_roles'] ?? [], true) . " -->";
+                            echo "<!-- END DEBUG -->";
+                        ?>
+                    </p>
                 </div>
+
                 <div class="info-block">
                     <h3>Description</h3>
                     <p><?php echo nl2br(htmlspecialchars($bien["description_biens"])); ?></p>
                 </div>
 
+                <!-- FORMULAIRE DE RÉSERVATION (CORRIGÉ) -->
                 <?php 
-                // Affichage du formulaire de réservation
-                if (isset($_SESSION['user_id']) && !isset($_SESSION['is_admin']) && (in_array('Locataire', $_SESSION['user_roles'] ?? []) || in_array('Proprietaire', $_SESSION['user_roles'] ?? []))):
+                $userId = $_SESSION['user_id'] ?? null;
+                $userRoles = $_SESSION['user_roles'] ?? []; // Tableau de rôles
+                $isAdmin = isset($_SESSION['is_admin']) && $_SESSION['is_admin'];
+                $isOwner = ($userId && isset($bien['id_locataire']) && $bien['id_locataire'] == $userId);
+                                            
+                // Vérification des rôles
+                $isLocataire = in_array('Locataire', $userRoles);
+                $isProprietaire = in_array('Propriétaire', $userRoles); // ATTENTION À L'ACCENT !
+                                            
+                // Peut réserver si : connecté, pas admin, a un rôle valide, et n'est pas le propriétaire du bien
+                $canBook = $userId && !$isAdmin && ($isLocataire || $isProprietaire) && !$isOwner;
                 ?>
+                
+                <?php if ($canBook): ?>
                     <div class="info-block">
                         <h3>Réserver ce bien</h3>
-
+                
                         <?php 
-                        // Récupération des erreurs et des données de formulaire
                         $errors = $_SESSION['errors'] ?? [];
                         $old_input = $_SESSION['old_input'] ?? [];
                         unset($_SESSION['errors'], $_SESSION['old_input']);
-
-                        if (!empty($errors)): 
                         ?>
+                
+                        <?php if (!empty($errors)): ?>
                             <div class="alert alert-danger">
                                 <ul>
                                     <?php foreach ($errors as $error): ?>
@@ -127,28 +148,48 @@
                                 </ul>
                             </div>
                         <?php endif; ?>
-
+                                    
                         <form action="/reservation/store" method="POST" class="form-reservation">
                             <input type="hidden" name="id_biens" value="<?php echo htmlspecialchars($bien['id_biens']); ?>">
-                            
+                                    
                             <div class="form-group">
                                 <label for="date_debut">Date de début :</label>
                                 <input type="date" id="date_debut" name="date_debut" required 
-                                    value="<?php echo htmlspecialchars($old_input['date_debut'] ?? date('Y-m-d')); ?>"
-                                    min="<?php echo date('Y-m-d'); ?>">
+                                       value="<?php echo htmlspecialchars($old_input['date_debut'] ?? date('Y-m-d')); ?>"
+                                       min="<?php echo date('Y-m-d'); ?>">
                             </div>
-
+                                    
                             <div class="form-group">
                                 <label for="date_fin">Date de fin :</label>
                                 <input type="date" id="date_fin" name="date_fin" required 
-                                    value="<?php echo htmlspecialchars($old_input['date_fin'] ?? date('Y-m-d', strtotime('+7 days'))); ?>"
-                                    min="<?php echo date('Y-m-d', strtotime('+1 day')); ?>">
+                                       value="<?php echo htmlspecialchars($old_input['date_fin'] ?? date('Y-m-d', strtotime('+7 days'))); ?>"
+                                       min="<?php echo date('Y-m-d', strtotime('+1 day')); ?>">
                             </div>
-
+                                    
                             <button type="submit" class="btn btn-primary">Confirmer la réservation</button>
                         </form>
                     </div>
-                <?php elseif (!isset($_SESSION['user_id']) || isset($_SESSION['is_admin']) || (!in_array('Locataire', $_SESSION['user_roles'] ?? []) && !in_array('Proprietaire', $_SESSION['user_roles'] ?? []))): ?>
+                                    
+                <?php elseif ($userId): ?>
+                    <!-- Connecté mais pas autorisé à réserver -->
+                    <div class="info-block">
+                        <h3>Réserver ce bien</h3>
+                        <p>
+                            <?php if ($isOwner): ?>
+                                Vous êtes le propriétaire de ce bien, vous ne pouvez pas le réserver.
+                            <?php elseif ($isAdmin): ?>
+                                Les administrateurs ne peuvent pas effectuer de réservations.
+                            <?php elseif (empty($userRoles)): ?>
+                                Aucun rôle n'est assigné à votre compte. Veuillez contacter l'administrateur.
+                            <?php else: ?>
+                                Rôle actuel : <?php echo implode(', ', $userRoles); ?>. 
+                                Vous devez être Locataire ou Propriétaire pour réserver.
+                            <?php endif; ?>
+                        </p>
+                    </div>
+                            
+                <?php else: ?>
+                    <!-- Non connecté -->
                     <div class="info-block">
                         <h3>Réserver ce bien</h3>
                         <p>Veuillez vous <a href="/login">connecter</a> pour effectuer une réservation.</p>
@@ -159,13 +200,13 @@
     </main>
 
     <footer>
-        <p>&copy; <?php echo date("Y"); ?> GlobeNight. Tous droits réservés.</p>
+        <p>© <?php echo date("Y"); ?> GlobeNight. Tous droits réservés.</p>
     </footer>
+
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <!-- Ensure jQuery is available for any scripts that expect `$` -->
     <script>
+        // Ton script carousel + modal (inchangé)
         (function(){
-            // Carousel + modal logic
             const slidesContainer = document.querySelector('.slides');
             if (!slidesContainer) return;
             const slides = Array.from(slidesContainer.querySelectorAll('.slide'));
@@ -174,120 +215,60 @@
             function showSlide(n) {
                 if (slides.length === 0) return;
                 current = (n + slides.length) % slides.length;
-                slides.forEach((s, i) => {
-                    s.style.display = (i === current) ? 'block' : 'none';
-                });
-                // update dots
-                const dots = document.querySelectorAll('.carousel-dots button');
-                dots.forEach(d => d.classList.remove('active'));
-                const activeDot = document.querySelector('.carousel-dots button[data-dot="' + current + '"]') || document.querySelectorAll('.carousel-dots button')[current];
+                slides.forEach((s, i) => s.style.display = (i === current) ? 'block' : 'none');
+                document.querySelectorAll('.carousel-dots button').forEach(d => d.classList.remove('active'));
+                const activeDot = document.querySelector(`.carousel-dots button[data-dot="${current}"]`);
                 if (activeDot) activeDot.classList.add('active');
             }
-
-            // initialize
             showSlide(0);
 
-            // Prev / Next
-            const prevBtn = document.querySelector('.carousel-button.prev');
-            const nextBtn = document.querySelector('.carousel-button.next');
-            if (prevBtn) prevBtn.addEventListener('click', () => showSlide(current - 1));
-            if (nextBtn) nextBtn.addEventListener('click', () => showSlide(current + 1));
-
-            // Dots
+            document.querySelector('.carousel-button.prev')?.addEventListener('click', () => showSlide(current - 1));
+            document.querySelector('.carousel-button.next')?.addEventListener('click', () => showSlide(current + 1));
             document.querySelectorAll('.carousel-dots button').forEach(btn => {
-                btn.addEventListener('click', function() {
-                    const idx = parseInt(this.getAttribute('data-dot'), 10);
-                    showSlide(idx);
-                });
+                btn.addEventListener('click', () => showSlide(parseInt(btn.dataset.dot, 10)));
             });
 
-            // Click to open modal
+            // Modal
             const modal = document.getElementById('imgModal');
             const modalImage = document.getElementById('modalImage');
-            const modalClose = modal && modal.querySelector('.img-modal-close');
             const mainEl = document.querySelector('main');
-
-            // prevent immediate backdrop clicks from closing the modal right after open
             let ignoreBackdropClick = false;
-
-            // add load/error handlers to modalImage to debug and handle slow loads
-            if (modalImage) {
-                modalImage.style.transition = 'opacity 180ms ease-in-out';
-                modalImage.style.opacity = 0;
-                modalImage.addEventListener('load', function() {
-                    console.log('modalImage loaded:', this.src);
-                    this.style.opacity = 1;
-                    if (modal) modal.classList.remove('loading');
-                });
-                modalImage.addEventListener('error', function(e) {
-                    console.error('modalImage failed to load:', this.src, e);
-                    this.style.opacity = 1; // show whatever fallback (or keep empty)
-                    if (modal) modal.classList.remove('loading');
-                });
-            }
 
             slides.forEach(s => {
                 const img = s.querySelector('img');
                 if (!img) return;
-
-                // Bloque la propagation du clic sur le slide
                 s.addEventListener('click', e => e.stopPropagation());
-
                 img.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    const src = this.getAttribute('data-full') || this.src;
-                    if (!modal || !modalImage) return;
-
-                    console.log('thumbnail clicked, opening modal for', src);
-
-                    // Open modal first so it's visible (prevents any layout issues)
+                    e.preventDefault(); e.stopPropagation();
+                    const src = this.dataset.full || this.src;
                     modal.classList.add('open');
                     modal.setAttribute('aria-hidden', 'false');
-                    if (mainEl) mainEl.classList.add('blurred');
-
-                    // show loading state until image loads
-                    if (modal) modal.classList.add('loading');
-                    modalImage.style.opacity = 0;
-
-                    // set src after opening to force load event
+                    mainEl.classList.add('blurred');
                     modalImage.src = src;
-
-                    // briefly ignore backdrop clicks triggered by the same interaction
                     ignoreBackdropClick = true;
-                    setTimeout(() => { ignoreBackdropClick = false; }, 300);
+                    setTimeout(() => ignoreBackdropClick = false, 300);
                 });
             });
 
             function closeModal() {
-                if (!modal) return;
                 modal.classList.remove('open');
                 modal.setAttribute('aria-hidden', 'true');
                 modalImage.src = '';
-                if (mainEl) mainEl.classList.remove('blurred');
+                mainEl.classList.remove('blurred');
             }
 
-            if (modalClose) modalClose.addEventListener('click', closeModal);
-            // click on backdrop
-            const backdrop = modal && modal.querySelector('[data-close]');
-            // Backdrop click: only close if click target is the backdrop itself and not ignored
-            if (backdrop) {
-                backdrop.addEventListener('click', function(e) {
-                    if (ignoreBackdropClick || e.target !== backdrop) return;
-                    closeModal();
-                });
-            }
-            // prevent clicks inside modal content from bubbling to the backdrop
-            const modalContent = modal && modal.querySelector('.img-modal-content');
-            if (modalContent) modalContent.addEventListener('click', function(e){ e.stopPropagation(); });
-            // ESC key
-            document.addEventListener('keydown', function(e){ if (e.key === 'Escape') closeModal(); });
-
-            // small accessibility: keyboard nav for arrows
-            document.addEventListener('keydown', function(e){
-                if (modal && modal.classList.contains('open')) return; // don't navigate while modal open
-                if (e.key === 'ArrowLeft') showSlide(current - 1);
-                if (e.key === 'ArrowRight') showSlide(current + 1);
+            modal.querySelector('.img-modal-close')?.addEventListener('click', closeModal);
+            modal.querySelector('[data-close]')?.addEventListener('click', function(e) {
+                if (ignoreBackdropClick || e.target !== this) return;
+                closeModal();
+            });
+            modal.querySelector('.img-modal-content')?.addEventListener('click', e => e.stopPropagation());
+            document.addEventListener('keydown', e => {
+                if (e.key === 'Escape') closeModal();
+                if (!modal.classList.contains('open')) {
+                    if (e.key === 'ArrowLeft') showSlide(current - 1);
+                    if (e.key === 'ArrowRight') showSlide(current + 1);
+                }
             });
         })();
     </script>

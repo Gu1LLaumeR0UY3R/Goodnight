@@ -1,26 +1,25 @@
 <?php
+// Controllers/ReservationController.php
 
 require_once __DIR__ . "/BaseController.php";
 require_once __DIR__ . "/AuthMiddleware.php";
 require_once __DIR__ . "/../Models/ReservationModel.php";
 require_once __DIR__ . "/../Models/BienModel.php";
+require_once __DIR__ . "/../Models/TarifModel.php"; // Ajout pour id_tarif
 
-class ReservationController extends BaseController {
-    private $reservationModel;
+class ReservationController extends BaseController
+{
+    private $model;
     private $bienModel;
 
-    public function __construct() {
-        $this->reservationModel = new ReservationModel();
+    public function __construct()
+    {
+        $this->model = new ReservationModel();
         $this->bienModel = new BienModel();
-        // Le middleware d'authentification sera géré par la méthode appelée si nécessaire
     }
 
-
-
-    /**
-     * Traite la soumission du formulaire de réservation.
-     */
-    public function store() {
+    public function store()
+    {
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
             $this->redirect("/home");
         }
@@ -28,15 +27,15 @@ class ReservationController extends BaseController {
         $id_biens = $_POST['id_biens'] ?? null;
         $date_debut = $_POST['date_debut'] ?? null;
         $date_fin = $_POST['date_fin'] ?? null;
-	        $id_locataire = $_SESSION['user_id'] ?? null;
-	        // Vérification de la connexion
-	        if (!$id_locataire) {
-	            $_SESSION['errors'] = ["Vous devez être connecté pour effectuer une réservation."];
-	            $this->redirect("/login");
-	        }
+        $id_locataire = $_SESSION['user_id'] ?? null;
+
+        if (!$id_locataire) {
+            $_SESSION['errors'] = ["Vous devez être connecté pour effectuer une réservation."];
+            $this->redirect("/login");
+        }
+
         $errors = [];
 
-        // 1. Validation des données
         if (empty($id_biens) || !is_numeric($id_biens)) {
             $errors[] = "Identifiant du bien manquant ou invalide.";
         }
@@ -55,25 +54,20 @@ class ReservationController extends BaseController {
             $errors[] = "Le bien spécifié n'existe pas.";
         }
 
-        // 2. Vérification de chevauchement
         if (empty($errors)) {
-            if ($this->reservationModel->hasOverlap($id_biens, $date_debut, $date_fin)) {
+            if ($this->model->hasOverlap($id_biens, $date_debut, $date_fin)) {
                 $errors[] = "Les dates sélectionnées chevauchent une réservation existante pour ce bien.";
             }
         }
 
-        // 3. Récupération de l'ID du tarif
         if (empty($errors)) {
-            require_once __DIR__ . "/../Models/TarifModel.php";
             $tarifModel = new TarifModel();
             $id_tarif = $tarifModel->getTarifIdByDates($id_biens, $date_debut);
-
             if (!$id_tarif) {
                 $errors[] = "Aucun tarif trouvé pour ce bien à la date de début sélectionnée.";
             }
         }
 
-        // 4. Traitement
         if (!empty($errors)) {
             $_SESSION['errors'] = $errors;
             $_SESSION['old_input'] = $_POST;
@@ -85,27 +79,24 @@ class ReservationController extends BaseController {
                     'id_locataire' => $id_locataire,
                     'date_debut' => $date_debut,
                     'date_fin' => $date_fin,
-                    'id_tarif' => $id_tarif // Utilisation de l'ID du tarif récupéré
+                    'id_tarif' => $id_tarif
                 ];
-                $this->reservationModel->createReservation($data);
-                $_SESSION['success_message'] = "Votre demande de réservation a été envoyée avec succès et est en attente de confirmation.";
+                $this->model->createReservation($data);
+                $_SESSION['success_message'] = "Votre demande de réservation a été envoyée avec succès.";
                 $this->redirect("/home");
             } catch (\Exception $e) {
-                $_SESSION['errors'] = ["Une erreur est survenue lors de l'enregistrement de la réservation: " . $e->getMessage()];
+                $_SESSION['errors'] = ["Une erreur est survenue : " . $e->getMessage()];
                 $_SESSION['old_input'] = $_POST;
                 $this->redirect("/bien/" . $id_biens);
             }
         }
     }
 
-    /**
-     * Affiche les réservations de l'utilisateur.
-     *    public function myReservations() {
-        // Vérification de connexion et de rôle pour les non-admins
-        AuthMiddleware::checkUserRole(["Locataire", "Propriétaire"]); 
+    public function myReservations() {
+        AuthMiddleware::checkUserRole(["Locataire", "Propriétaire"]);
         $id_locataire = $_SESSION['user_id'] ?? null;
         if ($id_locataire) {
-            $reservations = $this->reservationModel->getReservationsByLocataire($id_locataire);
+            $reservations = $this->model->getReservationsByLocataire($id_locataire);
             $this->render("locataire/my_reservations", [
                 "reservations" => $reservations,
                 "success_message" => $_SESSION['success_message'] ?? null,
@@ -117,26 +108,23 @@ class ReservationController extends BaseController {
         }
     }
 
-    /**
-     * Annule une réservation.
-     */
     public function cancel($id_reservation) {
-        // Vérification de connexion et de rôle pour les non-admins
         AuthMiddleware::checkUserRole(["Locataire", "Propriétaire"]);
-        $id_locataire = $_SESSION['user_id'] ?? null;       if (!$id_locataire || !is_numeric($id_reservation)) {
+        $id_locataire = $_SESSION['user_id'] ?? null;       
+        if (!$id_locataire || !is_numeric($id_reservation)) {
             $this->redirect("/login");
         }
 
         try {
-            $reservation = $this->reservationModel->getById($id_reservation);
+            $reservation = $this->model->getById($id_reservation);
             if (!$reservation || $reservation['id_locataire'] != $id_locataire) {
                 $_SESSION['error_message'] = "Réservation introuvable ou vous n'avez pas la permission de l'annuler.";
             } else {
-                $affectedRows = $this->reservationModel->cancelReservation($id_reservation);
+                $affectedRows = $this->model->cancelReservation($id_reservation);
                 if ($affectedRows > 0) {
                     $_SESSION['success_message'] = "La réservation a été annulée avec succès.";
                 } else {
-                    $_SESSION['error_message'] = "Impossible d'annuler la réservation. Elle est peut-être déjà confirmée ou annulée.";
+                    $_SESSION['error_message'] = "Impossible d'annuler la réservation.";
                 }
             }
         } catch (\Exception $e) {
