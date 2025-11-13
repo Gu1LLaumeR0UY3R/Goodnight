@@ -18,7 +18,12 @@ $(function() {
                 }
             });
         },
-        minLength: 2
+        minLength: 2,
+        select: function(event, ui) {
+            // When a commune is selected, use the name instead of the ID
+            $("#commune_search").val(ui.item.label);
+            return false;
+        }
     });
 
     // Autocomplete for registration page
@@ -37,9 +42,7 @@ $(function() {
         },
         minLength: 2,
         select: function(event, ui) {
-            // When a commune is selected, store its value
-            // Note: For better functionality, the backend should return both ID and name
-            // For now, we just use the name
+            // When a commune is selected, store its value and code postal
             $("#commune_search_register").val(ui.item.label);
             $("#id_commune").val(ui.item.value);
             return false;
