@@ -51,49 +51,60 @@ class ReservationModel extends Model {
         return $this->db->lastInsertId();
     }
 
-    public function getReservationsByLocataire($id_locataire) {
-        $sql = "
-            SELECT
-                r.*,
-                b.designation_bien,
-                b.rue_biens,
-                c.ville_nom as commune_nom,
-                l.nom_locataire,
-                l.prenom_locataire,
-                (SELECT lien_photo FROM photos WHERE id_biens = b.id_biens ORDER BY id_photo ASC LIMIT 1) as premiere_photo
-            FROM " . $this->table . " r
-            JOIN biens b ON r.id_biens = b.id_biens
-            JOIN commune c ON b.id_commune = c.id_commune
-            JOIN locataire l ON r.id_locataire = l.id_locataire
-            WHERE r.id_locataire = :id_locataire
-            ORDER BY r.date_debut DESC
-        ";
-        $stmt = $this->db->prepare($sql);
-        $stmt->execute(['id_locataire' => $id_locataire]);
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
-    }
+    public function getReservationsByLocataire($id_locataire)
+{
+    $sql = "
+        SELECT
+            r.*,
+            b.designation_bien,
+            b.rue_biens,
+            c.ville_nom AS commune_nom,
+            l.nom_locataire AS locataire_nom,
+            l.prenom_locataire AS locataire_prenom,
+            p.nom_locataire AS proprietaire_nom,
+            p.prenom_locataire AS proprietaire_prenom,
+            (SELECT lien_photo FROM photos WHERE id_biens = b.id_biens ORDER BY id_photo ASC LIMIT 1) AS premiere_photo
+        FROM " . $this->table . " r
+        JOIN biens b ON r.id_biens = b.id_biens
+        JOIN commune c ON b.id_commune = c.id_commune
+        JOIN locataire l ON r.id_locataire = l.id_locataire
+        JOIN locataire p ON b.id_locataire = p.id_locataire  -- Propriétaire du bien
+        WHERE r.id_locataire = :id_locataire
+        ORDER BY r.date_debut DESC
+    ";
 
-    public function getReservationsByProprietaire($id_locataire) {
-        $sql = "
-            SELECT
-                r.*,
-                b.designation_bien,
-                b.rue_biens,
-                c.ville_nom as commune_nom,
-                l.nom_locataire,
-                l.prenom_locataire,
-                l.RaisonSociale
-            FROM " . $this->table . " r
-            JOIN biens b ON r.id_biens = b.id_biens
-            JOIN commune c ON b.id_commune = c.id_commune
-            JOIN locataire l ON r.id_locataire = l.id_locataire
-            WHERE b.id_locataire = :id_locataire
-            ORDER BY r.date_debut DESC
-        ";
-        $stmt = $this->db->prepare($sql);
-        $stmt->execute(['id_locataire' => $id_locataire]);
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
-    }
+    $stmt = $this->db->prepare($sql);
+    $stmt->execute(['id_locataire' => $id_locataire]);
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+}
+
+    public function getReservationsByProprietaire($id_locataire)
+{
+    $sql = "
+        SELECT
+            r.*,
+            b.designation_bien,
+            b.rue_biens,
+            c.ville_nom AS commune_nom,
+            l.nom_locataire AS locataire_nom,
+            l.prenom_locataire AS locataire_prenom,
+            l.RaisonSociale,
+            p.nom_locataire AS proprietaire_nom,
+            p.prenom_locataire AS proprietaire_prenom,
+            (SELECT lien_photo FROM photos WHERE id_biens = b.id_biens ORDER BY id_photo ASC LIMIT 1) AS premiere_photo
+        FROM " . $this->table . " r
+        JOIN biens b ON r.id_biens = b.id_biens
+        JOIN commune c ON b.id_commune = c.id_commune
+        JOIN locataire l ON r.id_locataire = l.id_locataire
+        JOIN locataire p ON b.id_locataire = p.id_locataire  -- Propriétaire du bien
+        WHERE b.id_locataire = :id_locataire
+        ORDER BY r.date_debut DESC
+    ";
+
+    $stmt = $this->db->prepare($sql);
+    $stmt->execute(['id_locataire' => $id_locataire]);
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+}
 
     public function getAllReservations() {
         $sql = "

@@ -1,51 +1,92 @@
-<?php
-// Vérification de connexion et de rôle pour les non-admins
-if (!isset($_SESSION['user_id']) || isset($_SESSION['is_admin']) || !in_array('Locataire', $_SESSION['user_roles'] ?? [])) {
-    header("Location: /login");
-    exit();
-}
-?>
 <!DOCTYPE html>
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mes Réservations</title>
+    <title>Mes Réservations - Locataire</title>
     <link rel="stylesheet" href="/css/style.css">
     <link rel="stylesheet" href="/css/navbar.css">
-
+    <style>
+        .btn-cancel {
+            background: #dc3545; color: white; border: none;
+            padding: 6px 12px; border-radius: 4px; cursor: pointer;
+            font-size: 0.9em; transition: background 0.2s;
+        }
+        .btn-cancel:hover { background: #c82333; }
+        .alert { padding: 12px; margin: 15px 0; border-radius: 4px; }
+        .alert-success { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+        .alert-error { background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+        .photo-thumb { width: 50px; height: 50px; object-fit: cover; border-radius: 4px; vertical-align: middle; margin-right: 8px; }
+    </style>
 </head>
 <body>
     <?php include __DIR__ . '/../layout/navbar.php'; ?>
 
-    <main class="container">
-        <h1>Mes Réservations</h1>
+    <main>
+        <h2>Mes Réservations</h2>
 
-        <?php if (!empty($success_message)): ?>
-            <div class="alert alert-success"><?php echo htmlspecialchars($success_message); ?></div>
+        <!-- Messages -->
+        <?php if (!empty($_SESSION['success_message'])): ?>
+            <div class="alert alert-success">
+                <?= htmlspecialchars($_SESSION['success_message']) ?>
+            </div>
+            <?php unset($_SESSION['success_message']); ?>
         <?php endif; ?>
-        <?php if (!empty($error_message)): ?>
-            <div class="alert alert-danger"><?php echo htmlspecialchars($error_message); ?></div>
+
+        <?php if (!empty($_SESSION['error_message'])): ?>
+            <div class="alert alert-error">
+                <?= htmlspecialchars($_SESSION['error_message']) ?>
+            </div>
+            <?php unset($_SESSION['error_message']); ?>
         <?php endif; ?>
 
         <?php if (!empty($reservations)): ?>
-            <?php foreach ($reservations as $reservation): ?>
-                <div class="reservation-card">
-                    <img src="<?php echo htmlspecialchars($reservation["premiere_photo"] ?? '/images/default.jpg'); ?>" alt="Photo du bien">
-                    <div class="reservation-details">
-                        <h2><?php echo htmlspecialchars($reservation['designation_bien']); ?></h2>
-                        <p><strong>Adresse :</strong> <?php echo htmlspecialchars($reservation['rue_biens']); ?> (<?php echo htmlspecialchars($reservation['commune_nom']); ?>)</p>
-                        <p><strong>Période :</strong> Du <?php echo date('d/m/Y', strtotime($reservation['date_debut'])); ?> au <?php echo date('d/m/Y', strtotime($reservation['date_fin'])); ?></p>
-                        <!-- La colonne statut n'existe pas dans la BDD -->
-                    </div>
-                    <!-- Actions de réservation (Annuler) - Supprimé car dépend de la colonne statut -->
-                </div>
-            <?php endforeach; ?>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Bien</th>
+                        <th>Propriétaire</th> <!-- AJOUTÉ -->
+                        <th>Date début</th>
+                        <th>Date fin</th>
+                        <th>Commune</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php foreach ($reservations as $reservation): ?>
+                        <tr>
+                            <td>
+                                <?php if (!empty($reservation['premiere_photo'])): ?>
+                                    <img src="<?= htmlspecialchars($reservation['premiere_photo']) ?>" 
+                                         alt="Photo" class="photo-thumb">
+                                <?php endif; ?>
+                                <?= htmlspecialchars($reservation["designation_bien"]) ?>
+                            </td>
+                            <td>
+                                <?= htmlspecialchars($reservation["proprietaire_nom"] . " " . $reservation["proprietaire_prenom"]) ?>
+                            </td>
+                            <td><?= htmlspecialchars($reservation["date_debut"]) ?></td>
+                            <td><?= htmlspecialchars($reservation["date_fin"]) ?></td>
+                            <td><?= htmlspecialchars($reservation["commune_nom"]) ?></td>
+                            <td>
+                                <form action="/reservation/cancel/<?= $reservation['id_reservation'] ?>" 
+                                      method="POST" 
+                                      style="display:inline;"
+                                      onsubmit="return confirm('Annuler cette réservation ?');">
+                                    <button type="submit" class="btn-cancel">Annuler</button>
+                                </form>
+                            </td>
+                        </tr>
+                    <?php endforeach; ?>
+                </tbody>
+            </table>
         <?php else: ?>
-            <p>Vous n'avez effectué aucune réservation pour le moment.</p>
+            <p>Vous n'avez aucune réservation en cours.</p>
         <?php endif; ?>
     </main>
 
-    <?php include __DIR__ . '/../layout/footer.php'; ?>
+    <footer>
+        <p>&copy; <?= date("Y") ?> GlobeNight. Tous droits réservés.</p>
+    </footer>
 </body>
 </html>
