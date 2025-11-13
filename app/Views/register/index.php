@@ -207,6 +207,9 @@
 
         // Initialize intl-tel-input and wire up sanitization + validation
         document.addEventListener('DOMContentLoaded', function() {
+            // Initialize user type on page load
+            toggleUserType();
+            
             const input = document.querySelector('#tel');
             const fullTelInput = document.querySelector('#full_tel');
             if (!input) return;
