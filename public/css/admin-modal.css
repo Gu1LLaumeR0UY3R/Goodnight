@@ -1,0 +1,344 @@
+/* ========================================
+   ADMIN MODAL - Styles pour les boîtes et modales
+   ======================================== */
+
+/* Conteneur principal des boîtes */
+.admin-boxes-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 20px;
+    padding: 20px;
+    margin: 20px 0;
+}
+
+/* Style des boîtes cliquables */
+.admin-box {
+    background: linear-gradient(135deg, #FE9D15 0%, #FEBB5F 100%);
+    border-radius: 12px;
+    padding: 30px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    color: white;
+    text-decoration: none;
+    min-height: 200px;
+    justify-content: center;
+}
+
+.admin-box:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+    background: linear-gradient(135deg, #FE9D15 0%, #FE9D15 100%);
+}
+
+.admin-box:active {
+    transform: translateY(-4px);
+}
+
+/* Icône de la boîte */
+.admin-box-icon {
+    font-size: 3rem;
+    margin-bottom: 15px;
+    display: block;
+}
+
+/* Titre de la boîte */
+.admin-box-title {
+    font-size: 1.3rem;
+    font-weight: bold;
+    margin: 0;
+    color: white;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
+}
+
+/* Description de la boîte */
+.admin-box-description {
+    font-size: 0.9rem;
+    margin-top: 10px;
+    color: rgba(255, 255, 255, 0.9);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.admin-box:hover .admin-box-description {
+    opacity: 1;
+}
+
+/* ========================================
+   MODAL - Styles pour la fenêtre modale
+   ======================================== */
+
+/* Overlay de la modale */
+.modal-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+    animation: fadeIn 0.3s ease;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.modal-overlay.active {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 1;
+}
+
+/* Fenêtre modale - Augmentée en taille */
+.modal-window {
+    background-color: white;
+    border-radius: 12px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+    width: 95%;
+    max-width: 1400px;
+    height: 90vh;
+    max-height: 90vh;
+    display: flex;
+    flex-direction: column;
+    animation: slideUp 0.3s ease;
+    z-index: 1001;
+    transform: scale(0.95);
+    transition: transform 0.3s ease;
+}
+
+.modal-overlay.active .modal-window {
+    transform: scale(1);
+}
+
+/* En-tête de la modale */
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px;
+    border-bottom: 2px solid #f0f0f0;
+    background: linear-gradient(135deg, #FE9D15 0%, #FEBB5F 100%);
+    border-radius: 12px 12px 0 0;
+    color: white;
+    flex-shrink: 0;
+}
+
+.modal-title {
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin: 0;
+    color: white;
+}
+
+/* Bouton de fermeture - Amélioré */
+.modal-close {
+    background: none;
+    border: none;
+    font-size: 2rem;
+    cursor: pointer;
+    color: white;
+    padding: 0;
+    width: 45px;
+    height: 45px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: all 0.3s ease;
+    flex-shrink: 0;
+    margin-left: 15px;
+}
+
+.modal-close:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+    transform: rotate(90deg);
+}
+
+.modal-close:active {
+    transform: rotate(90deg) scale(0.95);
+}
+
+/* Corps de la modale */
+.modal-body {
+    flex: 1;
+    overflow: hidden;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Contenu de l'iframe dans la modale */
+.modal-content {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.modal-iframe {
+    width: 100%;
+    height: 100%;
+    border: none;
+    display: block;
+}
+
+/* ========================================
+   ANIMATIONS
+   ======================================== */
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes slideUp {
+    from {
+        transform: translateY(50px) scale(0.95);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0) scale(1);
+        opacity: 1;
+    }
+}
+
+/* ========================================
+   RESPONSIVE DESIGN
+   ======================================== */
+
+@media (max-width: 1200px) {
+    .modal-window {
+        width: 95%;
+        max-width: 1200px;
+        height: 85vh;
+        max-height: 85vh;
+    }
+}
+
+@media (max-width: 768px) {
+    .admin-boxes-container {
+        grid-template-columns: 1fr;
+        gap: 15px;
+        padding: 15px;
+    }
+
+    .admin-box {
+        min-height: 150px;
+        padding: 20px;
+    }
+
+    .admin-box-icon {
+        font-size: 2.5rem;
+    }
+
+    .admin-box-title {
+        font-size: 1.1rem;
+    }
+
+    .modal-window {
+        width: 95%;
+        max-width: 95%;
+        height: 90vh;
+        max-height: 90vh;
+    }
+
+    .modal-header {
+        padding: 15px;
+    }
+
+    .modal-title {
+        font-size: 1.3rem;
+    }
+
+    .modal-close {
+        width: 40px;
+        height: 40px;
+        font-size: 1.8rem;
+        margin-left: 10px;
+    }
+
+    .modal-body {
+        padding: 0;
+    }
+}
+
+@media (max-width: 480px) {
+    .admin-boxes-container {
+        grid-template-columns: 1fr;
+        gap: 10px;
+        padding: 10px;
+    }
+
+    .admin-box {
+        min-height: 120px;
+        padding: 15px;
+    }
+
+    .admin-box-icon {
+        font-size: 2rem;
+    }
+
+    .admin-box-title {
+        font-size: 1rem;
+    }
+
+    .modal-window {
+        width: 98%;
+        max-width: 98%;
+        height: 95vh;
+        max-height: 95vh;
+    }
+
+    .modal-header {
+        padding: 10px;
+    }
+
+    .modal-title {
+        font-size: 1.1rem;
+    }
+
+    .modal-close {
+        width: 35px;
+        height: 35px;
+        font-size: 1.5rem;
+        margin-left: 5px;
+    }
+
+    .modal-body {
+        padding: 0;
+    }
+}
+
+/* ========================================
+   OPTIMISATIONS POUR LES PERFORMANCES
+   ======================================== */
+
+/* Utiliser will-change pour les animations */
+.modal-overlay {
+    will-change: opacity;
+}
+
+.modal-window {
+    will-change: transform;
+}
+
+/* Désactiver les animations sur les appareils avec préférence de mouvement réduit */
+@media (prefers-reduced-motion: reduce) {
+    .modal-overlay,
+    .modal-window,
+    .admin-box,
+    .modal-close {
+        animation: none !important;
+        transition: none !important;
+    }
+}
+
