@@ -45,7 +45,7 @@
                 <thead>
                     <tr>
                         <th>Bien</th>
-                        <th>Propriétaire</th> <!-- AJOUTÉ -->
+                        <th>Propriétaire</th>
                         <th>Date début</th>
                         <th>Date fin</th>
                         <th>Commune</th>

@@ -45,8 +45,7 @@
                 <thead>
                     <tr>
                         <th>Bien</th>
-                        <th>Propriétaire</th> <!-- AJOUTÉ -->
-                        <th>Locataire</th>
+                        <th>Propriétaire</th>
                         <th>Date début</th>
                         <th>Date fin</th>
                         <th>Commune</th>
@@ -65,12 +64,6 @@
                             </td>
                             <td>
                                 <?= htmlspecialchars($reservation["proprietaire_nom"] . " " . $reservation["proprietaire_prenom"]) ?>
-                            </td>
-                            <td>
-                                <?= htmlspecialchars($reservation["locataire_nom"] . " " . $reservation["locataire_prenom"]) ?>
-                                <?php if (!empty($reservation["RaisonSociale"])): ?>
-                                    <br><small>(<?= htmlspecialchars($reservation["RaisonSociale"]) ?>)</small>
-                                <?php endif; ?>
                             </td>
                             <td><?= htmlspecialchars($reservation["date_debut"]) ?></td>
                             <td><?= htmlspecialchars($reservation["date_fin"]) ?></td>

@@ -86,8 +86,6 @@ class ReservationModel extends Model {
             b.designation_bien,
             b.rue_biens,
             c.ville_nom AS commune_nom,
-            l.nom_locataire AS locataire_nom,
-            l.prenom_locataire AS locataire_prenom,
             l.RaisonSociale,
             p.nom_locataire AS proprietaire_nom,
             p.prenom_locataire AS proprietaire_prenom,
