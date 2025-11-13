@@ -34,9 +34,10 @@ class HomeController extends BaseController {
 
     public function search() {
         $searchTerm = $_GET["q"] ?? "";
-        $biens = [];
         if (!empty($searchTerm)) {
             $biens = $this->bienModel->searchBiensByCommune($searchTerm);
+        } else {
+            $biens = $this->bienModel->getBiensWithDetails();
         }
         $typesBiens = $this->typeBienModel->getAll();
 
@@ -67,12 +68,13 @@ class HomeController extends BaseController {
 
     public function autocompleteCommunes() {
         $term = $_GET["term"] ?? "";
-        $communes = $this->communeModel->findByNom($term);
+        $communes = $this->communeModel->search($term);
         $results = [];
         foreach ($communes as $commune) {
             $results[] = [
-                'label' => $commune["ville_nom"],
-                'value' => $commune["id_commune"]
+                'label' => $commune["ville_nom"] . ' (' . $commune["ville_code_postal"] . ')',
+                'value' => $commune["id_commune"],
+                'codePostal' => $commune["ville_code_postal"]
             ];
         }
         header("Content-Type: application/json");
