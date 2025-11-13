@@ -19,6 +19,11 @@ $(function() {
             });
         },
         minLength: 2,
+        focus: function(event, ui) {
+            // When focusing on a suggestion with arrow keys, show the label instead of the ID
+            $("#commune_search").val(ui.item.label);
+            return false;
+        },
         select: function(event, ui) {
             // When a commune is selected, use the name instead of the ID
             $("#commune_search").val(ui.item.label);

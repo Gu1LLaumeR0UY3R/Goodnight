@@ -90,6 +90,7 @@ main {
     display: flex;
     justify-content: center;
     gap: 10px;
+    position: relative;
 }
 
 .search-bar input[type="text"] {
@@ -98,6 +99,7 @@ main {
     border-radius: 5px;
     width: 60%;
     max-width: 400px;
+    box-sizing: border-box;
 }
 
 .search-bar button {
@@ -218,12 +220,20 @@ footer {
     border: 1px solid #ccc;
     border-radius: 5px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    z-index: 1000;
+    z-index: 1001;
+    width: auto !important;
+    min-width: 250px;
+    margin-top: 0 !important;
+}
+
+.ui-autocomplete.ui-front {
+    z-index: 1001;
 }
 
 .ui-menu-item {
     padding: 8px 10px;
     cursor: pointer;
+    font-size: 0.9rem;
 }
 
 .ui-menu-item:hover {
