@@ -1,15 +1,57 @@
 <?php
+// AuthMiddleware.php
 
-require_once __DIR__ . "/BaseController.php";
-
-class AuthMiddleware extends BaseController {
-    public static function requireLogin() {
-        if (session_status() == PHP_SESSION_NONE) {
+class AuthMiddleware
+{
+    /**
+     * Démarre la session si nécessaire.
+     */
+    private static function ensureSession()
+    {
+        if (session_status() === PHP_SESSION_NONE) {
             session_start();
         }
-        if (!isset($_SESSION["user_id"])) {
-            header("Location: /login");
-            exit();
+    }
+
+    /**
+     * Vérifie que l'utilisateur est connecté.
+     * Redirige vers /login si non.
+     */
+    public static function requireLogin()
+    {
+        self::ensureSession();
+        if (!isset($_SESSION['user_id'])) {
+            header('Location: /login');
+            exit;
+        }
+    }
+
+    /**
+     * Vérifie que l'utilisateur a un des rôles autorisés.
+     * Utilise le champ 'role' dans la session (ex: 'Locataire', 'Propriétaire', 'Administrateur')
+     *
+     * @param string|array $roles Rôle(s) autorisé(s)
+     */
+    public static function checkUserRole($roles)
+    {
+        self::requireLogin();
+
+        // Normaliser en tableau
+        if (!is_array($roles)) {
+            $roles = [$roles];
+        }
+
+        $userRole = $_SESSION['role'] ?? null;
+
+        // Autoriser les admins partout
+        if ($userRole === 'Administrateur') {
+            return;
+        }
+
+        if (!in_array($userRole, $roles, true)) {
+            $_SESSION['error_message'] = "Accès refusé. Vous n'avez pas les permissions nécessaires.";
+            header('Location: /home');
+            exit;
         }
     }
 
