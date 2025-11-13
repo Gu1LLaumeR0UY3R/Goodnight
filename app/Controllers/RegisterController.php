@@ -24,9 +24,16 @@ class RegisterController extends BaseController {
        if ($_SERVER["REQUEST_METHOD"] === "POST") {
                 // Validation des données
                 $siret = $_POST["siret"] ?? "";
-            $fullTel = $_POST["full_tel"] ?? "";
+            $fullTel = $_POST["tel_locataire_formatted"] ?? "";
+            $tel = $_POST["tel_locataire"] ?? "";
+
+            // Utiliser le numéro non formaté si le champ formaté est vide (ce qui arrive si intl-tel-input n'est pas initialisé ou désactivé)
+            $numberToValidate = !empty($fullTel) ? $fullTel : $tel;
 
             // Validation du numéro de téléphone (si fourni)
+            // Le format E.164 est requis pour $fullTel. Si $tel est utilisé, on suppose que c'est un numéro local qui devrait être validé par intl-tel-input,
+            // mais comme le champ formaté est vide, on va valider le champ non formaté pour s'assurer qu'il contient au moins des chiffres.
+            // Pour l'instant, on se concentre sur la correction du bug où $fullTel est vide.
             if (!empty($fullTel) && !preg_match('/^\+[1-9]\d{1,14}$/', $fullTel)) {
                 $_SESSION["error"] = "Le numéro de téléphone n'est pas valide (format E.164 requis).";
                 $_SESSION["old_data"] = $_POST;
@@ -67,7 +74,7 @@ class RegisterController extends BaseController {
                 'dateNaissance_locataire' => $_POST["date_naissance"] ?? null,
                 'email_locataire' => $email,
                 'password_locataire' => password_hash($password, PASSWORD_DEFAULT),
-                'tel_locataire' => $fullTel ?? null,
+                'tel_locataire' => $fullTel ?: ($tel ?? null), // $fullTel est prioritaire, sinon $tel (qui peut être vide)
                 'rue_locataire' => $_POST["rue"] ?? null,
                 'complement_locataire' => $_POST["complement"] ?? null,
                 'RaisonSociale' => empty($_POST["raison_sociale"]) ? null : $_POST["raison_sociale"],

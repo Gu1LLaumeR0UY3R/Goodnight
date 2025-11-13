@@ -28,7 +28,12 @@ class ReservationController extends BaseController {
         $id_biens = $_POST['id_biens'] ?? null;
         $date_debut = $_POST['date_debut'] ?? null;
         $date_fin = $_POST['date_fin'] ?? null;
-        $id_locataire = $_SESSION['user_id'] ?? null;
+	        $id_locataire = $_SESSION['user_id'] ?? null;
+	        // Vérification de la connexion
+	        if (!$id_locataire) {
+	            $_SESSION['errors'] = ["Vous devez être connecté pour effectuer une réservation."];
+	            $this->redirect("/login");
+	        }
         $errors = [];
 
         // 1. Validation des données

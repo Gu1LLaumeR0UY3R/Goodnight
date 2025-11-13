@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Test Zoom Image</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/magnify/2.3.3/jquery.magnify.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/magnify/2.3.3/jquery.magnify.min.js"></script>
+    <style>
+        .test-container {
+            width: 500px;
+            height: 300px;
+            margin: 50px auto;
+            border: 1px solid #ccc;
+            overflow: hidden;
+        }
+        .test-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            cursor: zoom-in;
+        }
+    </style>
+</head>
+<body>
+    <div class="test-container">
+        <img src="/uploads/photo_68f0afc31344e.png" alt="Image à zoomer" data-magnify-src="/uploads/photo_68f0afc31344e.png">
+    </div>
+
+    <script>
+        .ready(function() {
+            .magnify({
+                speed: 200
+            });
+        });
+    </script>
+</body>
+</html>

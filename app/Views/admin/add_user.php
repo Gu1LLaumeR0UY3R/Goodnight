@@ -8,10 +8,22 @@
     <link rel="stylesheet" href="/css/navbar.css">
     <link rel="stylesheet" href="/lib/intl-tel-input/intlTelInput.min.css">
     <link rel="stylesheet" href="https://code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
-    <style>
-        .form-section { margin-bottom: 1em; }
-        .hidden { display: none; }
-    </style>
+<style>
+	        .form-section { margin-bottom: 1em; }
+	        .hidden { display: none; }
+	        /* Correction de positionnement pour intl-tel-input */
+	        .iti {
+	            width: 100% !important; /* Assure que le conteneur intl-tel-input prend toute la largeur disponible */
+	            display: flex !important; /* Utiliser flex pour forcer l'alignement */
+	        }
+	        .iti .iti__country-container {
+	            flex-shrink: 0 !important; /* Empêche le sélecteur de rétrécir */
+	        }
+	        .iti input.iti__tel-input {
+	            flex-grow: 1 !important; /* Permet au champ de saisie de prendre l'espace restant */
+	            padding-right: 0 !important; /* Corrige le padding si nécessaire */
+	        }
+	    </style>
 </head>
 <body>
     <main>
@@ -58,7 +70,7 @@
                 <input type="password" id="confirm_password" name="confirm_password" required>
 
                 <label for="tel_locataire">Téléphone :</label>
-                <input type="tel" id="tel_locataire" name="tel_locataire" value="<?php echo htmlspecialchars($old_data['tel_locataire'] ?? ''); ?>">
+                <input type="tel" id="tel_locataire" name="tel_locataire" value="<?php echo htmlspecialchars($old_data['tel_locataire'] ?? ''); ?>" maxlength="20">
                 <input type="hidden" id="full_tel_locataire" name="full_tel_locataire">
 
                 <label for="rue_locataire">Rue :</label>
@@ -111,30 +123,56 @@
         // Appeler la fonction au chargement pour initialiser l'état
         window.onload = function() {
             toggleUserType();
-            // Initialisation de intl-tel-input
-            const input = document.querySelector("#tel_locataire");
-            const fullTelInput = document.querySelector("#full_tel_locataire");
-            const iti = window.intlTelInput(input, {
-                initialCountry: "fr", // Pays initial par défaut
-                separateDialCode: true,
-                utilsScript: "" // Le script utils.js n'est pas nécessaire pour la validation de base
-            });
 
-            // Mettre à jour le champ caché avec le numéro complet
-            input.addEventListener("change", function() {
-                if (iti.isValidNumber()) {
-                    fullTelInput.value = iti.getNumber();
-                } else {
-                    fullTelInput.value = ""; // Vider si invalide
+            (function(){
+                const input = document.querySelector('#tel_locataire');
+                const fullTelInput = document.querySelector('#full_tel_locataire');
+                if (!input) return;
+
+                // attach digits-only behavior
+                (function attachDigitsOnly(el){
+                    const max = parseInt(el.getAttribute('maxlength') || '0', 10) || null;
+                    // allow digits, +, spaces, parentheses and dashes
+                    el.addEventListener('input', function() {
+                        let v = this.value || '';
+                        const cleaned = v.replace(/[^0-9+\s()\-]/g, '');
+                        this.value = (max ? cleaned.slice(0, max) : cleaned);
+                    });
+                    el.addEventListener('keydown', function(e) {
+                        if (e.ctrlKey || e.metaKey || e.altKey) return;
+                        const allowed = ['Backspace','Tab','ArrowLeft','ArrowRight','Delete','Home','End','Enter'];
+                        if (allowed.includes(e.key)) return;
+                        if (!/^[0-9+\s()\-]$/.test(e.key)) e.preventDefault();
+                    });
+                })(input);
+
+                const iti = window.intlTelInput(input, {
+                    initialCountry: 'fr',
+                    separateDialCode: true,
+                    utilsScript: '/lib/intl-tel-input/utils.js'
+                });
+
+                function updateFullTel(){
+                    try{
+                        if (typeof iti.isValidNumber === 'function' && iti.isValidNumber()){
+                            const full = (window.intlTelInputUtils && window.intlTelInputUtils.numberFormat)
+                                ? iti.getNumber(window.intlTelInputUtils.numberFormat.E164) || ''
+                                : iti.getNumber() || '';
+                            if (fullTelInput) fullTelInput.value = full;
+                            return;
+                        }
+                        if (fullTelInput) fullTelInput.value = '';
+                    }catch(e){
+                        if (fullTelInput) fullTelInput.value = '';
+                    }
                 }
-            });
-            input.addEventListener("keyup", function() {
-                if (iti.isValidNumber()) {
-                    fullTelInput.value = iti.getNumber();
-                } else {
-                    fullTelInput.value = ""; // Vider si invalide
-                }
-            });
+
+                input.addEventListener('change', updateFullTel);
+                input.addEventListener('keyup', updateFullTel);
+                input.addEventListener('blur', updateFullTel);
+                input.addEventListener('countrychange', updateFullTel);
+                setTimeout(updateFullTel, 150);
+            })();
         };
     </script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>

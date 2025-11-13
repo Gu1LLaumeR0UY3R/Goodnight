@@ -6,6 +6,20 @@
     <title>Modifier Utilisateur - Admin</title>
     <link rel="stylesheet" href="/css/style.css">
     <link rel="stylesheet" href="/css/navbar.css">
+    <style>
+	        /* Correction de positionnement pour intl-tel-input */
+	        .iti {
+	            width: 100% !important; /* Assure que le conteneur intl-tel-input prend toute la largeur disponible */
+	            display: flex !important; /* Utiliser flex pour forcer l'alignement */
+	        }
+	        .iti .iti__country-container {
+	            flex-shrink: 0 !important; /* Empêche le sélecteur de rétrécir */
+	        }
+	        .iti input.iti__tel-input {
+	            flex-grow: 1 !important; /* Permet au champ de saisie de prendre l'espace restant */
+	            padding-right: 0 !important; /* Corrige le padding si nécessaire */
+	        }
+    </style>
     <link rel="stylesheet" href="/lib/intl-tel-input/intlTelInput.min.css">
 </head>
 <body>
@@ -31,7 +45,7 @@
             <input type="email" id="email_locataire" name="email_locataire" value="<?php echo htmlspecialchars($user["email_locataire"]); ?>" required>
 
             <label for="tel_locataire">Téléphone :</label>
-            <input type="tel" id="tel_locataire" name="tel_locataire" value="<?php echo htmlspecialchars($user["tel_locataire"] ?? ''); ?>">
+            <input type="tel" id="tel_locataire" name="tel_locataire" value="<?php echo htmlspecialchars($user["tel_locataire"] ?? ''); ?>" maxlength="15">
             <input type="hidden" id="full_tel_locataire" name="full_tel_locataire">
 
             <label for="id_commune">Commune :</label>
@@ -62,31 +76,54 @@
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             // Initialisation de intl-tel-input
-            const input = document.querySelector("#tel_locataire");
-            const fullTelInput = document.querySelector("#full_tel_locataire");
+            const input = document.querySelector('#tel_locataire');
+            const fullTelInput = document.querySelector('#full_tel_locataire');
+            if (!input) return;
+
+            function attachDigitsOnly(el) {
+                const max = parseInt(el.getAttribute('maxlength') || '0', 10) || null;
+                el.addEventListener('input', function() {
+                    let v = this.value || '';
+                    const cleaned = v.replace(/\D+/g, '');
+                    this.value = (max ? cleaned.slice(0, max) : cleaned);
+                });
+                el.addEventListener('keydown', function(e) {
+                    if (e.ctrlKey || e.metaKey || e.altKey) return;
+                    const allowed = ['Backspace','Tab','ArrowLeft','ArrowRight','Delete','Home','End'];
+                    if (allowed.includes(e.key)) return;
+                    if (!/^[0-9]$/.test(e.key)) e.preventDefault();
+                });
+            }
+
+            attachDigitsOnly(input);
+
             const iti = window.intlTelInput(input, {
-                initialCountry: "fr", // Pays initial par défaut
+                initialCountry: 'fr',
                 separateDialCode: true,
-                utilsScript: "" // Le script utils.js n'est pas nécessaire pour la validation de base
+                utilsScript: ''
             });
 
             // Mettre à jour le champ caché avec le numéro complet
             function updateFullTel() {
-                if (iti.isValidNumber()) {
-                    fullTelInput.value = iti.getNumber();
+                if (typeof iti.isValidNumber === 'function' && iti.isValidNumber()) {
+                    fullTelInput.value = (window.intlTelInputUtils && window.intlTelInputUtils.numberFormat)
+                        ? iti.getNumber(window.intlTelInputUtils.numberFormat.E164) || ''
+                        : iti.getNumber() || '';
                 } else {
-                    fullTelInput.value = ""; // Vider si invalide
+                    fullTelInput.value = ''; // Vider si invalide
                 }
             }
 
             // Mettre à jour le champ caché au chargement avec la valeur existante
             if (input.value) {
-                iti.setNumber(input.value);
+                try { iti.setNumber(input.value); } catch (e) {}
                 updateFullTel();
             }
 
-            input.addEventListener("change", updateFullTel);
-            input.addEventListener("keyup", updateFullTel);
+            input.addEventListener('change', updateFullTel);
+            input.addEventListener('keyup', updateFullTel);
+            input.addEventListener('blur', updateFullTel);
+            input.addEventListener('countrychange', updateFullTel);
         });
     </script>
 </body>
