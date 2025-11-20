@@ -22,6 +22,10 @@ abstract class Model {
         return $stmt->fetch();
     }
 
+    public function getDb() {
+        return $this->db;
+    }
+
     // Méthodes abstraites à implémenter par les modèles enfants
     abstract public function create($data);
     abstract public function update($id, $data);

@@ -74,9 +74,17 @@ class BienModel extends Model {
 
     // Récupérer les biens d'un propriétaire
     public function getBiensByProprietaire($proprietaireId) {
-        $stmt = $this->db->prepare("SELECT * FROM " . $this->table . " WHERE id_locataire = :id_locataire");
+        $sql = "
+            SELECT 
+                b.*,
+                (SELECT lien_photo FROM photos WHERE id_biens = b.id_biens ORDER BY id_photo ASC LIMIT 1) as premiere_photo
+            FROM biens b 
+            WHERE b.id_locataire = :id_locataire
+            ORDER BY b.designation_bien
+        ";
+        $stmt = $this->db->prepare($sql);
         $stmt->execute(['id_locataire' => $proprietaireId]);
-        return $stmt->fetchAll();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
     public function getBienWithDetailsById($id) {

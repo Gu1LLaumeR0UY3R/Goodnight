@@ -6,6 +6,8 @@
     <title><?php echo htmlspecialchars($bien["designation_bien"]); ?> - GlobeNight</title>
     <link rel="stylesheet" href="/css/style.css">
     <link rel="stylesheet" href="/css/navbar.css">
+    <link rel="stylesheet" href="/node_modules/@fullcalendar/core/main.min.css">
+    <link rel="stylesheet" href="/node_modules/@fullcalendar/daygrid/main.min.css">
     <!-- Styles du carousel (inchangés) -->
     <style>
         /* ... (ton CSS existant, inchangé) ... */
@@ -84,6 +86,10 @@
             </div>
 
             <div class="bien-info">
+                <div class="info-block">
+                    <h3>Disponibilités</h3>
+                    <div id="calendar"></div>
+                </div>
                 <div class="info-block">
                     <h3>Informations Générales</h3>
                     <p><strong>Type :</strong> <?php echo htmlspecialchars($bien["type_bien_nom"]); ?></p>
@@ -204,8 +210,45 @@
     </footer>
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="/node_modules/@fullcalendar/core/index.global.min.js"></script>
+    <script src="/node_modules/@fullcalendar/daygrid/index.global.min.js"></script>
+    <script src="/node_modules/@fullcalendar/interaction/index.global.min.js"></script>
+    <script src="/node_modules/@fullcalendar/core/locales/fr.global.min.js"></script>
     <script>
         // Ton script carousel + modal (inchangé)
+            
+            // Initialisation de FullCalendar
+            document.addEventListener('DOMContentLoaded', function() {
+                const calendarEl = document.getElementById('calendar');
+                if (calendarEl) {
+                    const calendar = new FullCalendar.Calendar(calendarEl, {
+                        initialView: 'dayGridMonth',
+                        locale: 'fr',
+                        headerToolbar: {
+                            left: 'prev,next today',
+                            center: 'title',
+                            right: 'dayGridMonth,dayGridWeek'
+                        },
+                        // Récupération des événements depuis le script PHP
+                        events: '/get_reservations.php?id_biens=<?php echo htmlspecialchars($bien["id_biens"]); ?>',
+                        
+                        // Personnalisation de l'affichage des événements
+                        eventDidMount: function(info) {
+                            // Masquer le titre de l'événement pour ne pas divulguer d'informations
+                            info.el.querySelector('.fc-event-title').textContent = 'Réservé';
+                        },
+                        
+                        // Désactiver la sélection de date pour la réservation (le formulaire est déjà présent)
+                        selectable: false,
+                        
+                        // Empêcher l'utilisateur de cliquer sur les événements
+                        eventClick: function(info) {
+                            info.jsEvent.preventDefault(); // don't go to the event's url
+                        }
+                    });
+                    calendar.render();
+                }
+            });
         (function(){
             const slidesContainer = document.querySelector('.slides');
             if (!slidesContainer) return;
