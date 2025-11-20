@@ -14,109 +14,51 @@
             --primary-light: #FEBB5F;
             --bg: #F7F7F7;
             --text: #2c3e50;
-            --text-light: #7f8c8d;
         }
         body { background: var(--bg); margin: 0; font-family: 'Segoe UI', sans-serif; }
-        .dashboard { max-width: 1200px; margin: 40px auto; padding: 20px; text-align: center; }
-        h1 { color: var(--text); margin-bottom: 10px; }
-        .subtitle { color: var(--text-light); margin-bottom: 50px; }
+        .dashboard { max-width: 1300px; margin: 40px auto; padding: 20px; text-align: center; }
 
-        /* CARROUSEL CIRCULAIRE 3D */
-        .wheel-container {
-            position: relative;
-            width: 600px;
-            height: 500px;
-            margin: 0 auto 80px;
-            perspective: 1200px;
-        }
-        .wheel {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            transform-style: preserve-3d;
-            transition: transform 0.1s linear;
-        }
-        .wheel-card {
-            position: absolute;
-            width: 280px;
-            height: 380px;
-            left: 160px;
-            top: 60px;
-            background: white;
-            border-radius: 20px;
-            overflow: hidden;
-            box-shadow: 0 15px 40px rgba(0,0,0,0.25);
-            opacity: 0.4;
-            transform-style: preserve-3d;
-            transition: all 0.6s cubic-bezier(0.25, 0.8, 0.25, 1);
-            cursor: grab;
-        }
-        .wheel-card.active {
-            opacity: 1;
-            transform: scale(1.15);
-            box-shadow: 0 25px 60px rgba(254,157,21,0.4);
-            border: 4px solid var(--primary);
-            z-index: 100;
-        }
-        .wheel-card img {
-            width: 100%;
-            height: 180px;
-            object-fit: cover;
-        }
-        .wheel-info {
-            padding: 20px;
-            text-align: center;
-        }
-        .wheel-info h3 {
-            margin: 0 0 10px;
-            font-size: 19px;
-            color: var(--text);
-            font-weight: 600;
-        }
-        .wheel-info p {
-            margin: 0;
-            color: var(--text-light);
-            font-size: 14px;
-        }
-        .all-biens-card {
-            background: linear-gradient(135deg, var(--primary), var(--primary-light));
-            color: white;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-        }
-        .all-biens-card h3 { font-size: 26px; font-weight: 800; }
-        .all-biens-card p { font-size: 18px; opacity: 0.95; }
+        /* Roue 3D (identique à ta dernière version que tu kiffes) */
+        .wheel-container { position: relative; width: 900px; height: 520px; margin: 50px auto 60px; perspective: 1600px; }
+        .wheel { position: absolute; width: 100%; height: 100%; transform-style: preserve-3d; transition: transform 0.9s cubic-bezier(0.3,0.8,0.3,1); }
+        .wheel-card { position: absolute; width: 300px; height: 420px; left: 50%; top: 50%; margin-left: -150px; margin-top: -210px;
+            background: white; border-radius: 24px; overflow: hidden; box-shadow: 0 20px 50px rgba(0,0,0,0.25);
+            transition: all 0.7s ease; opacity: 0.4; }
+        .wheel-card.active { opacity: 1; transform: translateZ(80px) scale(1.25); border: 6px solid var(--primary);
+            box-shadow: 0 40px 90px rgba(254,157,21,0.6); z-index: 100; }
+        .wheel-card img { width: 100%; height: 200px; object-fit: cover; }
+        .wheel-info { padding: 25px; text-align: center; }
+        .wheel-info h3 { margin: 0 0 12px; font-size: 21px; color: var(--text); font-weight: 700; }
+        .all-biens-card { background: linear-gradient(135deg, #FF8C00, #FFB800, #FFD700, #FF8C00); background-size: 300% 300%;
+            animation: gradientShift 12s ease infinite; color: white; display: flex; flex-direction: column;
+            justify-content: center; align-items: center; height: 100%; position: relative; overflow: hidden; }
+        @keyframes gradientShift { 0%{background-position:0% 50%} 50%{background-position:100% 50%} 100%{background-position:0% 50%} }
+        .all-biens-card h3 { font-size: 48px; font-weight: 900; margin: 0 0 20px; text-shadow: 0 4px 12px rgba(0,0,0,0.4); }
+        .all-biens-card p { font-size: 32px; font-weight: 800; }
 
-        #calendar-container {
-            background: white;
-            border-radius: 16px;
-            overflow: hidden;
-            box-shadow: 0 15px 50px rgba(0,0,0,0.15);
-            margin: 0 auto;
-            max-width: 1100px;
-        }
-        #calendar-loader {
-            position: absolute;
-            inset: 0;
-            background: rgba(255,255,255,0.97);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            gap: 20px;
-            z-index: 10;
-            color: var(--primary);
-            font-size: 22px;
-        }
-        .spinner {
-            width: 70px;
-            height: 70px;
-            border: 8px solid #f0f0f0;
-            border-top: 8px solid var(--primary);
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-        }
+        /* Flèches stylées ‹ › */
+        .nav-arrow { position: absolute; top: 50%; transform: translateY(-50%); background: var(--primary); color: white;
+            border: none; width: 70px; height: 70px; border-radius: 50%; font-size: 42px; cursor: pointer; z-index: 200;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.35); transition: all 0.3s ease; }
+        .nav-arrow:hover { background: #e67e22; transform: translateY(-50%) scale(1.2); }
+        .nav-arrow.left { left: -40px; }
+        .nav-arrow.right { right: -40px; }
+
+        /* Bouton bloquer dates */
+        .block-btn {
+            display: inline-block; background: #e74c3c; color: white; padding: 12px 28px; border-radius: 50px;
+            font-weight: bold; cursor: pointer; margin-bottom: 20px; box-shadow: 0 4px 15px rgba(231,76,60,0.4);
+            transition: all 0.3s; }
+        .block-btn:hover { background: #c0392b; transform: translateY(-2px); }
+
+        /* Calendrier + dates bloquées */
+        #calendar-container { position: relative; background: white; border-radius: 18px; overflow: hidden;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.18); max-width: 1200px; margin: 0 auto; }
+        .fc-blocked-event { background: #c0392b !important; border-color: #a93226 !important; opacity: 0.9; }
+        #calendar-loader { position: absolute; inset: 0; background: rgba(255,255,255,0.98); display: flex;
+            flex-direction: column; align-items: center; justify-content: center; gap: 25px; z-index: 10; color: var(--primary); font-size: 24px; }
+        .spinner { width: 80px; height: 80px; border: 9px solid #f0f0f0; border-top: 9px solid var(--primary);
+            border-radius: 50%; animation: spin 1s linear infinite; }
         @keyframes spin { to { transform: rotate(360deg); } }
     </style>
 </head>
@@ -125,29 +67,29 @@
 
     <div class="dashboard">
         <h1>Tableau de bord Propriétaire</h1>
-        <p class="subtitle">Maintenez le clic et faites tourner la roue pour choisir un bien</p>
+        <p class="subtitle">Utilisez les flèches ‹ › pour naviguer entre vos biens</p>
 
-        <!-- ROUE CIRCULAIRE 3D -->
+        <!-- Roue 3D (inchangée) -->
         <div class="wheel-container">
+            <button class="nav-arrow left" id="prevBtn">‹</button>
+            <button class="nav-arrow right" id="nextBtn">›</button>
             <div class="wheel" id="wheel">
-                <!-- Tous les biens -->
-                <div class="wheel-card active" data-bien-id="">
-                    <div class="wheel-info all-biens-card">
-                        <h3>Tous mes biens</h3>
-                        <p>
-                            <?php
-                            $bienModel = new BienModel();
-                            $biens = $bienModel->getBiensByProprietaire($_SESSION['user_id']);
-                            echo count($biens) . ' bien' . (count($biens) > 1 ? 's' : '');
-                            ?>
-                        </p>
-                    </div>
-                </div>
+                <?php
+                $bienModel = new BienModel();
+                $biens = $bienModel->getBiensByProprietaire($_SESSION['user_id']);
+                $total = count($biens) + 1;
+                $angleStep = 360 / $total;
+                $radius = 450;
 
-                <?php foreach ($biens as $i => $bien):
+                echo '<div class="wheel-card active" style="transform: rotateY(0deg) translateZ('.$radius.'px);" data-bien-id="">';
+                echo '  <div class="wheel-info all-biens-card"><h3>TOUS MES BIENS</h3><p>'.count($biens).' bien'.(count($biens)>1?'s':'').'</p></div>';
+                echo '</div>';
+
+                foreach ($biens as $i => $bien):
+                    $angle = ($i + 1) * $angleStep;
                     $photo = !empty($bien['premiere_photo']) ? htmlspecialchars($bien['premiere_photo']) : '/images/no-photo.jpg';
                 ?>
-                    <div class="wheel-card" data-bien-id="<?= $bien['id_biens'] ?>">
+                    <div class="wheel-card" style="transform: rotateY(<?= $angle ?>deg) translateZ(<?= $radius ?>px);" data-bien-id="<?= $bien['id_biens'] ?>">
                         <img src="<?= $photo ?>" alt="<?= htmlspecialchars($bien['designation_bien']) ?>">
                         <div class="wheel-info">
                             <h3><?= htmlspecialchars($bien['designation_bien']) ?></h3>
@@ -158,12 +100,11 @@
             </div>
         </div>
 
-        <!-- CALENDRIER -->
+        <!-- Bouton + Calendrier -->
+        <div onclick="toggleBlockMode()" class="block-btn">Bloquer des dates</div>
+
         <div id="calendar-container">
-            <div id="calendar-loader">
-                <div class="spinner"></div>
-                <div>Chargement des réservations...</div>
-            </div>
+            <div id="calendar-loader"><div class="spinner"></div><div>Chargement...</div></div>
             <div id="calendar"></div>
         </div>
     </div>
@@ -173,102 +114,104 @@
         document.addEventListener('DOMContentLoaded', function () {
             const wheel = document.getElementById('wheel');
             const cards = document.querySelectorAll('.wheel-card');
+            const prevBtn = document.getElementById('prevBtn');
+            const nextBtn = document.getElementById('nextBtn');
             const loader = document.getElementById('calendar-loader');
-            let calendar;
-            let angle = 0;
-            let isDragging = false;
-            let previousX = 0;
-
             const total = cards.length;
             const angleStep = 360 / total;
+            let currentIndex = 0;
+            let currentBienId = '';
+            let calendar;
+            let blockMode = false;
 
-            function positionCards() {
-                cards.forEach((card, i) => {
-                    const cardAngle = i * angleStep;
-                    const rotated = (cardAngle + angle) % 360;
-                    const distance = Math.abs(Math.min(rotated > 180 ? 360 - rotated : rotated, 180));
-                    const scale = 1 - (distance / 180) * 0.5;
-                    const opacity = 0.3 + (1 - distance / 180) * 0.7;
-                    const zIndex = Math.round(1000 - distance);
-
-                    card.style.transform = `rotateY(${rotated}deg) translateZ(300px) scale(${scale})`;
-                    card.style.opacity = opacity;
-                    card.style.zIndex = zIndex;
-                    card.classList.toggle('active', distance < 30);
-                });
+            // Mise à jour roue + filtre calendrier
+            function updateWheel() {
+                wheel.style.transform = `rotateY(${-currentIndex * angleStep}deg)`;
+                cards.forEach((c,i) => c.classList.toggle('active', i===currentIndex));
+                const bienId = cards[currentIndex].dataset.bienId || '';
+                if (bienId !== currentBienId) { currentBienId = bienId; loadEvents(bienId); }
             }
 
+            // Chargement événements + dates bloquées
             function loadEvents(bienId = '') {
                 loader.style.display = 'flex';
                 const url = bienId ? `/proprietaire/calendar/events?bien=${bienId}` : '/proprietaire/calendar/events';
-                fetch(url)
-                    .then(r => r.json())
-                    .then(data => {
-                        loader.style.display = 'none';
-                        calendar.getEventSources().forEach(s => s.remove());
-                        calendar.addEventSource(data.events.map(e => ({
-                            ...e,
-                            backgroundColor: '#FE9D15',
-                            borderColor: '#e67e22',
-                            textColor: 'white'
-                        })));
-                    });
+                fetch(url).then(r => r.json()).then(data => {
+                    loader.style.display = 'none';
+                    calendar.getEventSources().forEach(s => s.remove());
+                    calendar.addEventSource(data.events.map(e => ({
+                        ...e,
+                        backgroundColor: e.title.includes('Bloquée') ? '#c0392b' : '#FE9D15',
+                        borderColor: e.title.includes('Bloquée') ? '#a93226' : '#e67e22',
+                        textColor: 'white',
+                        classNames: e.title.includes('Bloquée') ? 'fc-blocked-event' : ''
+                    })));
+                });
             }
 
             // FullCalendar
             calendar = new FullCalendar.Calendar(document.getElementById('calendar'), {
                 initialView: 'dayGridMonth',
                 locale: 'fr',
-                buttonText: { today: 'Aujourd’hui', month: 'Mois', week: 'Semaine', day: 'Jour' },
                 headerToolbar: { left: 'prev,next today', center: 'title', right: 'dayGridMonth,timeGridWeek,timeGridDay' },
+                buttonText: { today: 'Aujourd’hui', month: 'Mois', week: 'Semaine', day: 'Jour' },
                 height: 'auto',
-                eventClick: info => {
-                    info.jsEvent.preventDefault();
-                    if (confirm(`Réservation #${info.event.id.replace('res-', '')}\n${info.event.title}\n\nVoir la liste ?`)) {
-                        location.href = '/proprietaire/myReservations';
+                selectable: true,
+                selectOverlap: false,
+                select: function(info) {
+                    if (!blockMode) return;
+                    if (confirm(`Bloquer du ${info.startStr} au ${info.endStr} ?`)) {
+                        fetch('/proprietaire/calendar/block', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({
+                                bien_id: currentBienId || null,
+                                start: info.startStr,
+                                end: info.endStr
+                            })
+                        }).then(() => {
+                            calendar.addEvent({
+                                title: 'Bloquée par le propriétaire',
+                                start: info.startStr,
+                                end: info.endStr,
+                                backgroundColor: '#c0392b',
+                                borderColor: '#a93226',
+                                classNames: 'fc-blocked-event'
+                            });
+                        });
+                    }
+                    calendar.unselect();
+                },
+                eventClick: function(info) {
+                    if (info.event.title.includes('Bloquée') && confirm('Supprimer ce blocage ?')) {
+                        info.event.remove();
+                        fetch('/proprietaire/calendar/unblock', {
+                            method: 'POST',
+                            body: JSON.stringify({ eventId: info.event.id })
+                        });
+                    } else {
+                        if (confirm(`Réservation #${info.event.id.replace('res-','')}\n${info.event.title}\nVoir la liste ?`)) {
+                            location.href = '/proprietaire/myReservations';
+                        }
                     }
                 }
             });
             calendar.render();
             loadEvents();
 
-            // Drag & rotation
-            wheel.addEventListener('mousedown', e => {
-                isDragging = true;
-                previousX = e.clientX;
-                wheel.style.cursor = 'grabbing';
-            });
-            document.addEventListener('mousemove', e => {
-                if (!isDragging) return;
-                const delta = e.clientX - previousX;
-                angle -= delta * 0.4;
-                previousX = e.clientX;
-                positionCards();
-                // Trouver la carte active
-                let activeCard = null;
-                cards.forEach(card => {
-                    if (card.classList.contains('active')) activeCard = card;
-                });
-                if (activeCard) loadEvents(activeCard.dataset.bienId || '');
-            });
-            document.addEventListener('mouseup', () => {
-                isDragging = false;
-                wheel.style.cursor = 'grab';
-            });
+            // Navigation flèches
+            prevBtn.onclick = () => { currentIndex = currentIndex > 0 ? currentIndex - 1 : total - 1; updateWheel(); };
+            nextBtn.onclick = () => { currentIndex = (currentIndex + 1) % total; updateWheel(); };
 
-            // Mobile
-            let touchStart = 0;
-            wheel.addEventListener('touchstart', e => { touchStart = e.touches[0].clientX; });
-            wheel.addEventListener('touchmove', e => {
-                const delta = e.touches[0].clientX - touchStart;
-                angle -= delta * 0.6;
-                touchStart = e.touches[0].clientX;
-                positionCards();
-                let activeCard = document.querySelector('.wheel-card.active');
-                if (activeCard) loadEvents(activeCard.dataset.bienId || '');
-            });
+            // Mode blocage
+            window.toggleBlockMode = function() {
+                blockMode = !blockMode;
+                document.querySelector('.block-btn').textContent = blockMode ? "Mode blocage activé – Cliquez pour quitter" : "Bloquer des dates";
+                document.querySelector('.block-btn').style.background = blockMode ? '#27ae60' : '#e74c3c';
+                calendar.setOption('selectable', blockMode);
+            };
 
-            positionCards();
+            updateWheel();
         });
     </script>
 </body>
