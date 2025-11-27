@@ -1,6 +1,7 @@
 <?php
 
 require_once __DIR__ . "/BaseController.php";
+require_once __DIR__ . "/AuthMiddleware.php";
 require_once __DIR__ . "/../Models/BienModel.php";
 require_once __DIR__ . "/../Models/TypeBienModel.php";
 require_once __DIR__ . "/../Models/CommuneModel.php";
@@ -8,6 +9,7 @@ require_once __DIR__ . "/../Models/ReservationModel.php";
 require_once __DIR__ . "/../Models/PhotoModel.php";
 require_once __DIR__ . "/../Models/SaisonModel.php";
 require_once __DIR__ . "/../Models/TarifModel.php";
+require_once __DIR__ . "/../Models/BlocageModel.php";
 
 class ProprietaireController extends BaseController {
     private $bienModel;
@@ -31,7 +33,8 @@ class ProprietaireController extends BaseController {
     }
 
     public function index() {
-        $this->render("proprietaire/index");
+        $biens = $this->bienModel->getBiensByProprietaire($_SESSION['user_id']);
+        $this->render("proprietaire/index", ["biens" => $biens]);
     }
 
     public function myBiens() {
@@ -188,6 +191,199 @@ class ProprietaireController extends BaseController {
         // Affiche les réservations faites par l'utilisateur connecté (le propriétaire)
         $reservations = $this->reservationModel->getReservationsByLocataire($_SESSION["user_id"]);
         $this->render("proprietaire/my_reservations", ["reservations" => $reservations]);
+    }
+
+    // Retourne les événements (réservations + blocages) au format FullCalendar
+    public function calendarEvents() {
+        // Le constructeur a déjà vérifié le rôle du propriétaire via AuthMiddleware
+        header('Content-Type: application/json; charset=utf-8');
+
+        // Support single 'bien' or multiple 'biens' (comma-separated or array)
+        $bien = isset($_GET['bien']) ? intval($_GET['bien']) : null;
+        $biensFilter = null;
+        if (isset($_GET['biens'])) {
+            // can be '1,2,3' or biens[]=1&biens[]=2
+            if (is_array($_GET['biens'])) {
+                $biensFilter = array_map('intval', $_GET['biens']);
+            } else {
+                $biensFilter = array_filter(array_map('intval', explode(',', $_GET['biens'])));
+            }
+        } elseif ($bien !== null) {
+            $biensFilter = [$bien];
+        }
+
+        // Récupérer les réservations du propriétaire
+        $allReservations = $this->reservationModel->getReservationsByProprietaire($_SESSION['user_id']);
+        $events = [];
+
+        foreach ($allReservations as $r) {
+            if ($biensFilter !== null && !in_array(intval($r['id_biens']), $biensFilter)) continue;
+
+            // FullCalendar attend end en tant qu'exclusive pour allDay events -> ajouter 1 jour
+            $end = date('Y-m-d', strtotime($r['date_fin'] . ' +1 day'));
+
+            // Construire le nom du locataire (personne physique ou raison sociale)
+            $locataireName = '';
+            if (!empty($r['RaisonSociale'])) {
+                $locataireName = $r['RaisonSociale'];
+            } else {
+                $locataireName = trim(($r['nom_locataire'] ?? '') . ' ' . ($r['prenom_locataire'] ?? ''));
+                if (empty($locataireName)) {
+                    $locataireName = 'Locataire';
+                }
+            }
+
+            $events[] = [
+                'id' => 'res-' . $r['id_reservation'],
+                'title' => 'Réservation: ' . $locataireName,
+                'start' => $r['date_debut'],
+                'end' => $end,
+                'color' => '#3788d8',
+                'extendedProps' => [
+                    'type' => 'reservation',
+                    'bien_id' => $r['id_biens'],
+                    'bien_name' => $r['designation_bien'],
+                    'reservation_id' => $r['id_reservation'],
+                    'locataire_nom' => $r['nom_locataire'] ?? '',
+                    'locataire_prenom' => $r['prenom_locataire'] ?? '',
+                    'locataire_raison_sociale' => $r['RaisonSociale'] ?? '',
+                    'locataire_email' => $r['email_locataire'] ?? '',
+                    'locataire_tel' => $r['tel_locataire'] ?? '',
+                    'date_debut' => $r['date_debut'],
+                    'date_fin' => $r['date_fin'],
+                    'commune' => $r['commune_nom'] ?? ''
+                ]
+            ];
+        }
+
+        // Récupérer les blocages
+        $blocageModel = new BlocageModel();
+        // If filtering by a single bien, fetch blocages for that bien directly for efficiency.
+        if (is_array($biensFilter) && count($biensFilter) === 1) {
+            $blocages = $blocageModel->getBlocagesByBien($biensFilter[0]);
+        } else {
+            // get all blocages for proprietor then filter in PHP if needed
+            $blocages = $blocageModel->getBlocagesByProprietaire($_SESSION['user_id']);
+            if (is_array($biensFilter)) {
+                $blocages = array_filter($blocages, function($b) use ($biensFilter) {
+                    return in_array(intval($b['id_biens']), $biensFilter);
+                });
+            }
+        }
+
+        foreach ($blocages as $b) {
+            // envoyer end comme exclusive
+            $end = date('Y-m-d', strtotime($b['date_fin'] . ' +1 day'));
+            $events[] = [
+                'id' => 'block-' . $b['id_blocage'],
+                'title' => 'Blocage',
+                'start' => $b['date_debut'],
+                'end' => $end,
+                'color' => '#ff7f50',
+                'extendedProps' => [
+                    'type' => 'blocage',
+                    'motif' => $b['motif'],
+                    'commentaire' => $b['commentaire'] ?? null,
+                    'bien_id' => $b['id_biens']
+                ]
+            ];
+        }
+
+        echo json_encode($events);
+        exit;
+    }
+
+    // Créer un blocage (POST JSON)
+    public function calendarBlock() {
+        header('Content-Type: application/json; charset=utf-8');
+        $input = json_decode(file_get_contents('php://input'), true);
+        if (!$input) {
+            http_response_code(400);
+            echo json_encode(['success' => false, 'error' => 'Données invalides']);
+            exit;
+        }
+
+        $bienId = isset($input['bien_id']) ? intval($input['bien_id']) : null;
+        $start = $input['start'] ?? null;
+        $end = $input['end'] ?? null;
+        $motif = $input['motif'] ?? 'personnel';
+        $commentaire = $input['commentaire'] ?? null;
+
+        if (!$bienId || !$start || !$end) {
+            http_response_code(400);
+            echo json_encode(['success' => false, 'error' => 'Paramètres manquants']);
+            exit;
+        }
+
+        // Vérifier que le bien appartient bien au propriétaire connecté
+        $bien = $this->bienModel->getById($bienId);
+        if (!$bien || $bien['id_locataire'] != $_SESSION['user_id']) {
+            http_response_code(403);
+            echo json_encode(['success' => false, 'error' => 'Vous n\'avez pas la permission']);
+            exit;
+        }
+
+        $blocageModel = new BlocageModel();
+        try {
+            $id = $blocageModel->createBlocage([
+                'id_biens' => $bienId,
+                'date_debut' => $start,
+                'date_fin' => $end,
+                'motif' => $motif,
+                'commentaire' => $commentaire
+            ]);
+
+            echo json_encode(['success' => true, 'id' => $id, 'message' => 'Blocage créé']);
+        } catch (Exception $e) {
+            http_response_code(500);
+            echo json_encode(['success' => false, 'error' => $e->getMessage()]);
+        }
+        exit;
+    }
+
+    // Supprimer un blocage (POST JSON) : { eventId: 'block-123' }
+    public function calendarUnblock() {
+        header('Content-Type: application/json; charset=utf-8');
+        $input = json_decode(file_get_contents('php://input'), true);
+        if (!$input || !isset($input['eventId'])) {
+            http_response_code(400);
+            echo json_encode(['success' => false, 'error' => 'Paramètres manquants']);
+            exit;
+        }
+
+        $eventId = $input['eventId'];
+        if (strpos($eventId, 'block-') !== 0) {
+            http_response_code(400);
+            echo json_encode(['success' => false, 'error' => 'ID invalide']);
+            exit;
+        }
+
+        $id = intval(substr($eventId, strlen('block-')));
+        $blocageModel = new BlocageModel();
+
+        // Vérifier que le blocage appartient au propriétaire via le bien
+        $blocage = $blocageModel->getById($id);
+        if (!$blocage) {
+            http_response_code(404);
+            echo json_encode(['success' => false, 'error' => 'Blocage introuvable']);
+            exit;
+        }
+
+        $bien = $this->bienModel->getById($blocage['id_biens']);
+        if (!$bien || $bien['id_locataire'] != $_SESSION['user_id']) {
+            http_response_code(403);
+            echo json_encode(['success' => false, 'error' => 'Permission refusée']);
+            exit;
+        }
+
+        $deleted = $blocageModel->deleteBlocage($id);
+        if ($deleted) {
+            echo json_encode(['success' => true]);
+        } else {
+            http_response_code(500);
+            echo json_encode(['success' => false, 'error' => 'Impossible de supprimer']);
+        }
+        exit;
     }
 
     private function handlePhotoUpload($bienId, $files) {
