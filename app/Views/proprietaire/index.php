@@ -594,8 +594,17 @@
                 });
             });
 
-            // initial visual state - no selection => all blurred
-            updateCardsVisuals();
+            // initial visual state - hide all cards
+            hideAllCards();
+        }
+
+        // Cacher toutes les cartes au départ
+        function hideAllCards() {
+            const cards = Array.from(document.querySelectorAll('.card'));
+            cards.forEach(card => {
+                card.style.display = 'none';
+                card.style.opacity = '0';
+            });
         }
 
         function escapeHtml(str) {
@@ -616,14 +625,49 @@
         function syncSelectionFromCheckbox(id, checked) {
             const card = document.querySelector('.card[data-bien-id="' + id + '"]');
             if (!card) return;
-            if (checked) card.classList.add('selected'); else card.classList.remove('selected');
+            
+            if (checked) {
+                // Afficher la carte (nette)
+                card.style.display = '';
+                card.style.opacity = '1';
+                card.style.filter = 'none';
+                card.classList.add('selected');
+                card.classList.remove('dimmed');
+                card.classList.remove('slide-out');
+            } else {
+                // Animation de sortie
+                card.classList.add('slide-out');
+                card.classList.remove('selected');
+                
+                // Cacher la carte après l'animation
+                setTimeout(() => {
+                    if (!card.classList.contains('selected')) {
+                        card.style.display = 'none';
+                        card.style.opacity = '0';
+                    }
+                }, 500);
+            }
 
             // Update currentBienId when a single bien is selected
             const selected = Array.from(document.querySelectorAll('.filter-checkbox:checked')).map(i => i.dataset.bienId);
             if (selected.length === 1) currentBienId = selected[0];
             else currentBienId = null;
 
-            updateCardsVisuals();
+            updateCardsVisualsForSelection();
+        }
+
+        // Mise à jour visuelle pour la sélection manuelle
+        function updateCardsVisualsForSelection() {
+            const selected = Array.from(document.querySelectorAll('.filter-checkbox:checked')).map(i => i.dataset.bienId);
+            
+            // If many selected, make a horizontal auto-scroll
+            manageSelectedCarousel(selected);
+
+            // Trigger calendar refresh to apply the new filter
+            try { 
+                if (window.fcCalendar && typeof window.fcCalendar.refetchEvents === 'function') 
+                    window.fcCalendar.refetchEvents(); 
+            } catch(e){}
         }
 
         function updateCardsVisuals() {
@@ -882,9 +926,10 @@
 
         // Fonctions de filtrage rapide
         function selectAllBiens() {
-            const checkboxes = document.querySelectorAll('.filter-checkbox');
+            const checkboxes = document.querySelectorAll('.filter-checkbox:not([style*="display: none"])');
             checkboxes.forEach(cb => {
-                if (!cb.checked) {
+                const parentItem = cb.closest('.filter-item');
+                if (parentItem && parentItem.style.display !== 'none') {
                     cb.checked = true;
                     syncSelectionFromCheckbox(cb.dataset.bienId, true);
                 }
@@ -902,22 +947,28 @@
         }
 
         function filterByType(typeId) {
-            // Afficher/masquer les items de la liste selon le type
+            // Décocher toutes les checkboxes
+            document.querySelectorAll('.filter-checkbox').forEach(cb => {
+                cb.checked = false;
+            });
+
             const allItems = document.querySelectorAll('.filter-item');
             const allCards = document.querySelectorAll('.cards-grid .card');
             
             if (typeId === null || typeId === 'all') {
-                // Afficher tous les biens (liste et cartes)
+                // Cacher toutes les cartes
+                allCards.forEach(card => {
+                    card.style.display = 'none';
+                    card.style.opacity = '0';
+                    card.classList.remove('selected');
+                    card.classList.remove('dimmed');
+                });
+                // Afficher tous les items de filtre
                 allItems.forEach(item => {
                     item.style.display = '';
                 });
-                allCards.forEach(card => {
-                    card.style.display = '';
-                    card.style.opacity = '1';
-                    card.style.pointerEvents = 'auto';
-                });
             } else {
-                // Afficher uniquement les biens du type sélectionné
+                // Filtrer les items de la liste
                 allItems.forEach(item => {
                     const checkbox = item.querySelector('.filter-checkbox');
                     if (checkbox && checkbox.dataset.typeId === String(typeId)) {
@@ -927,16 +978,21 @@
                     }
                 });
                 
-                // Afficher uniquement les cartes du type sélectionné
+                // Afficher les cartes du type sélectionné (nettes et visibles)
                 allCards.forEach(card => {
                     if (card.dataset.typeId === String(typeId)) {
                         card.style.display = '';
                         card.style.opacity = '1';
                         card.style.pointerEvents = 'auto';
+                        card.style.filter = 'none';
+                        card.classList.add('selected');
+                        card.classList.remove('dimmed');
                     } else {
                         card.style.display = 'none';
                         card.style.opacity = '0';
                         card.style.pointerEvents = 'none';
+                        card.classList.remove('selected');
+                        card.classList.remove('dimmed');
                     }
                 });
             }
@@ -949,6 +1005,12 @@
             if (activeBtn) {
                 activeBtn.classList.add('active');
             }
+
+            // Rafraîchir le calendrier
+            try { 
+                if (window.fcCalendar && typeof window.fcCalendar.refetchEvents === 'function') 
+                    window.fcCalendar.refetchEvents(); 
+            } catch(e){}
         }
     </script>
 </body>

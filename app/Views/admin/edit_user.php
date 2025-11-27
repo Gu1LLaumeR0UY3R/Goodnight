@@ -6,21 +6,36 @@
     <title>Modifier Utilisateur - Admin</title>
     <link rel="stylesheet" href="/css/style.css">
     <link rel="stylesheet" href="/css/navbar.css">
-    <style>
-	        /* Correction de positionnement pour intl-tel-input */
-	        .iti {
-	            width: 100% !important; /* Assure que le conteneur intl-tel-input prend toute la largeur disponible */
-	            display: flex !important; /* Utiliser flex pour forcer l'alignement */
-	        }
-	        .iti .iti__country-container {
-	            flex-shrink: 0 !important; /* Empêche le sélecteur de rétrécir */
-	        }
-	        .iti input.iti__tel-input {
-	            flex-grow: 1 !important; /* Permet au champ de saisie de prendre l'espace restant */
-	            padding-right: 0 !important; /* Corrige le padding si nécessaire */
-	        }
-    </style>
     <link rel="stylesheet" href="/lib/intl-tel-input/intlTelInput.min.css">
+    <style>
+        /* Correction de positionnement pour intl-tel-input */
+        .iti {
+            width: 100% !important;
+            display: flex !important;
+        }
+        .iti .iti__country-container {
+            flex-shrink: 0 !important;
+        }
+        .iti input.iti__tel-input {
+            flex-grow: 1 !important;
+            padding-right: 0 !important;
+        }
+        .iti__country-list, .iti__flag-list, .iti__country {
+            z-index: 200000 !important;
+        }
+        .tel-error {
+            color: #dc3545;
+            font-size: 0.875rem;
+            margin-top: 0.25rem;
+            margin-bottom: 0.5rem;
+        }
+        input.error {
+            border-color: #dc3545;
+        }
+        input.error:focus {
+            box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, 0.25);
+        }
+    </style>
 </head>
 <body>
 
@@ -45,8 +60,8 @@
             <input type="email" id="email_locataire" name="email_locataire" value="<?php echo htmlspecialchars($user["email_locataire"]); ?>" required>
 
             <label for="tel_locataire">Téléphone :</label>
-            <input type="tel" id="tel_locataire" name="tel_locataire" value="<?php echo htmlspecialchars($user["tel_locataire"] ?? ''); ?>" maxlength="15">
-            <input type="hidden" id="full_tel_locataire" name="full_tel_locataire">
+            <input type="tel" id="tel_locataire" name="tel_locataire" value="<?php echo htmlspecialchars($user["tel_locataire"] ?? ''); ?>" maxlength="20">
+            <input type="hidden" id="full_tel_locataire" name="full_tel_locataire" value="<?php echo htmlspecialchars($user["tel_locataire"] ?? ''); ?>">
 
             <label for="id_commune">Commune :</label>
             <select id="id_commune" name="id_commune">
@@ -74,56 +89,155 @@
 
     <script src="/lib/intl-tel-input/intlTelInput.min.js"></script>
     <script>
+        // Afficher un message d'erreur sous le champ de téléphone
+        function showError(input, message) {
+            let errorMsg = input.parentNode.querySelector('.tel-error');
+            if (!errorMsg) {
+                errorMsg = document.createElement('p');
+                errorMsg.className = 'tel-error error';
+                input.parentNode.insertBefore(errorMsg, input.nextSibling);
+            }
+            errorMsg.textContent = message;
+        }
+
+        function removeError(input) {
+            const errorMsg = input.parentNode.querySelector('.tel-error');
+            if (errorMsg) errorMsg.remove();
+        }
+
+        // Map intl-tel-input validation error codes to user-friendly messages
+        function getErrorMessage(errorCode) {
+            if (!window.intlTelInputUtils || !window.intlTelInputUtils.validationError) return 'Numéro de téléphone invalide';
+            const v = window.intlTelInputUtils.validationError;
+            switch (errorCode) {
+                case v.INVALID_COUNTRY_CODE:
+                    return 'Code pays invalide';
+                case v.TOO_SHORT:
+                    return 'Numéro trop court';
+                case v.TOO_LONG:
+                    return 'Numéro trop long';
+                case v.NOT_A_NUMBER:
+                    return 'Ce n\'est pas un numéro de téléphone';
+                default:
+                    return 'Numéro de téléphone invalide';
+            }
+        }
+
+        // Utility: sanitize input but allow international prefixes (+) and common separators
+        function attachDigitsOnlyBehavior(el) {
+            if (!el) return;
+            const max = parseInt(el.getAttribute('maxlength') || '0', 10) || null;
+
+            // sanitize on input: keep digits, plus sign, spaces, parentheses and dashes
+            el.addEventListener('input', function() {
+                let v = this.value || '';
+                // remove any characters except digits and +, space, (), -
+                const cleaned = v.replace(/[^0-9+\s()\-]/g, '');
+                this.value = (max ? cleaned.slice(0, max) : cleaned);
+            });
+
+            // allow navigation and numeric characters + plus and separators
+            el.addEventListener('keydown', function(e) {
+                if (e.ctrlKey || e.metaKey || e.altKey) return; // allow shortcuts
+                const allowed = ['Backspace','Tab','ArrowLeft','ArrowRight','Delete','Home','End','Enter'];
+                if (allowed.includes(e.key)) return;
+                // allow digits, +, space, parentheses and dash
+                if (!/^[0-9+\s()\-]$/.test(e.key)) {
+                    e.preventDefault();
+                }
+            });
+        }
+
+        // Initialize intl-tel-input and wire up sanitization + validation
         document.addEventListener('DOMContentLoaded', function() {
-            // Initialisation de intl-tel-input
             const input = document.querySelector('#tel_locataire');
             const fullTelInput = document.querySelector('#full_tel_locataire');
             if (!input) return;
 
-            function attachDigitsOnly(el) {
-                const max = parseInt(el.getAttribute('maxlength') || '0', 10) || null;
-                el.addEventListener('input', function() {
-                    let v = this.value || '';
-                    const cleaned = v.replace(/\D+/g, '');
-                    this.value = (max ? cleaned.slice(0, max) : cleaned);
-                });
-                el.addEventListener('keydown', function(e) {
-                    if (e.ctrlKey || e.metaKey || e.altKey) return;
-                    const allowed = ['Backspace','Tab','ArrowLeft','ArrowRight','Delete','Home','End'];
-                    if (allowed.includes(e.key)) return;
-                    if (!/^[0-9]$/.test(e.key)) e.preventDefault();
-                });
-            }
+            attachDigitsOnlyBehavior(input);
 
-            attachDigitsOnly(input);
-
+            // init iti
             const iti = window.intlTelInput(input, {
                 initialCountry: 'fr',
                 separateDialCode: true,
-                utilsScript: ''
+                // load utils so that isValidNumber, getNumber, getValidationError work
+                utilsScript: '/lib/intl-tel-input/utils.js'
             });
 
-            // Mettre à jour le champ caché avec le numéro complet
-            function updateFullTel() {
-                if (typeof iti.isValidNumber === 'function' && iti.isValidNumber()) {
-                    fullTelInput.value = (window.intlTelInputUtils && window.intlTelInputUtils.numberFormat)
-                        ? iti.getNumber(window.intlTelInputUtils.numberFormat.E164) || ''
-                        : iti.getNumber() || '';
-                } else {
-                    fullTelInput.value = ''; // Vider si invalide
+            function updatePhoneNumber() {
+                const raw = input.value.trim();
+                if (!raw) {
+                    input.classList.remove('error');
+                    input.setCustomValidity('');
+                    removeError(input);
+                    if (fullTelInput) fullTelInput.value = '';
+                    return;
+                }
+
+                try {
+                    if (typeof iti.isValidNumber === 'function' && iti.isValidNumber()) {
+                        const number = (window.intlTelInputUtils && window.intlTelInputUtils.numberFormat)
+                            ? iti.getNumber(window.intlTelInputUtils.numberFormat.E164) || ''
+                            : iti.getNumber() || '';
+                        if (fullTelInput) fullTelInput.value = number;
+                        input.classList.remove('error');
+                        input.setCustomValidity('');
+                        removeError(input);
+                        return;
+                    }
+
+                    let errorCode = null;
+                    if (typeof iti.getValidationError === 'function') {
+                        errorCode = iti.getValidationError();
+                    }
+                    const errorMsg = (typeof errorCode !== 'number') ? 'Numéro de téléphone invalide' : getErrorMessage(errorCode);
+                    input.classList.add('error');
+                    input.setCustomValidity(errorMsg);
+                    showError(input, errorMsg);
+                    if (fullTelInput) fullTelInput.value = '';
+                } catch (err) {
+                    console.warn('Phone validation error', err);
+                    input.classList.add('error');
+                    input.setCustomValidity('Numéro de téléphone invalide');
+                    showError(input, 'Numéro de téléphone invalide');
+                    if (fullTelInput) fullTelInput.value = '';
                 }
             }
 
-            // Mettre à jour le champ caché au chargement avec la valeur existante
+            // Si un numéro existe déjà, le définir
             if (input.value) {
-                try { iti.setNumber(input.value); } catch (e) {}
-                updateFullTel();
+                try {
+                    iti.setNumber(input.value);
+                } catch (e) {
+                    console.warn('Error setting number', e);
+                }
             }
 
-            input.addEventListener('change', updateFullTel);
-            input.addEventListener('keyup', updateFullTel);
-            input.addEventListener('blur', updateFullTel);
-            input.addEventListener('countrychange', updateFullTel);
+            input.addEventListener('blur', updatePhoneNumber);
+            input.addEventListener('change', updatePhoneNumber);
+            input.addEventListener('keyup', updatePhoneNumber);
+
+            if (iti && iti.promise && typeof iti.promise.then === 'function') {
+                iti.promise.then(function() {
+                    input.addEventListener('countrychange', updatePhoneNumber);
+                    updatePhoneNumber();
+                });
+            } else {
+                input.addEventListener('countrychange', updatePhoneNumber);
+                setTimeout(updatePhoneNumber, 200);
+            }
+
+            // form submit
+            const form = document.querySelector('form');
+            if (form) {
+                form.addEventListener('submit', function(e) {
+                    updatePhoneNumber();
+                    if (typeof iti.isValidNumber === 'function' && !iti.isValidNumber() && input.value.trim()) {
+                        e.preventDefault();
+                        input.focus();
+                    }
+                });
+            }
         });
     </script>
 </body>

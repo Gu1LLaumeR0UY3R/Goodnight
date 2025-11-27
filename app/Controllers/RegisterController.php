@@ -95,13 +95,21 @@ class RegisterController extends BaseController {
             if ($userId) {
                 // Assigner les rôles.
                 $roleChoice = $_POST["role_choice"] ?? "locataire";
+                
+                // Debug: Log pour vérifier la valeur
+                error_log("RegisterController - role_choice reçu: " . $roleChoice);
+                error_log("RegisterController - POST data: " . json_encode($_POST));
+                
                 if ($roleChoice === "proprietaire") {
-                    $this->userModel->assignRole($userId, 2); // ID 2 = Propriétaire
+                    error_log("RegisterController - Attribution du rôle Propriétaire (ID 2)");
+                    $this->userModel->assignRole($userId, 1); // ID 2 = Propriétaire
                 } else if ($roleChoice === "locataire") {
-                    $this->userModel->assignRole($userId, 3); // ID 3 = Locataire
+                    error_log("RegisterController - Attribution du rôle Locataire (ID 3)");
+                    $this->userModel->assignRole($userId, 2); // ID 3 = Locataire
                 } else {
+                    error_log("RegisterController - Rôle non reconnu, attribution Locataire par défaut (ID 3)");
                     // Gérer le cas où le rôle n'est ni propriétaire ni locataire, par défaut locataire
-                    $this->userModel->assignRole($userId, 3); // ID 3 = Locataire
+                    $this->userModel->assignRole($userId, 2); // ID 3 = Locataire
                 }
 
                 $_SESSION["success"] = "Inscription réussie ! Vous pouvez maintenant vous connecter.";

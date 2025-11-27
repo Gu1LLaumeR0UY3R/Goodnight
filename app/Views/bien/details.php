@@ -519,6 +519,19 @@
         <!-- Calendrier des réservations -->
         <div class="bien-calendar-container">
           <h2>Calendrier des réservations</h2>
+          
+          <!-- Légende -->
+          <div style="background: white; padding: 1rem; border-radius: 8px; margin-bottom: 1rem; display: flex; gap: 2rem; justify-content: center; align-items: center;">
+              <div style="display: flex; align-items: center; gap: 0.5rem;">
+                  <span style="display: inline-block; width: 20px; height: 20px; background: #4caf50; border-radius: 4px;"></span>
+                  <span style="color: var(--text-dark); font-weight: 500;">Réservations</span>
+              </div>
+              <div style="display: flex; align-items: center; gap: 0.5rem;">
+                  <span style="display: inline-block; width: 20px; height: 20px; background: #ff7f50; border-radius: 4px;"></span>
+                  <span style="color: var(--text-dark); font-weight: 500;">Périodes bloquées</span>
+              </div>
+          </div>
+          
           <div id="bienCalendar"></div>
         </div>
 

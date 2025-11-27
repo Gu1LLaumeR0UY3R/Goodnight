@@ -92,8 +92,8 @@
             </div>
 
             <label for="id_commune">Commune :</label>
-            <input type="text" id="commune_search_register" name="commune_nom" value="<?php echo htmlspecialchars($old_data['commune_nom'] ?? ''); ?>" placeholder="Commencez à taper le nom de la commune...">
-            <input type="hidden" id="id_commune" name="id_commune" value="<?php echo htmlspecialchars($old_data['id_commune'] ?? ''); ?>">
+            <input type="text" id="commune_search_register" name="commune_nom" value="<?php echo htmlspecialchars($communeNom ?? ''); ?>" placeholder="Commencez à taper le nom de la commune..." required>
+            <input type="hidden" id="id_commune" name="id_commune" value="<?php echo htmlspecialchars($bien['id_commune'] ?? ''); ?>">
             
         <button type="submit">Mettre à jour le bien</button>
         </form>

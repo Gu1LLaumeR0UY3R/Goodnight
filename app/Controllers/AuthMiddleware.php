@@ -70,16 +70,23 @@ class AuthMiddleware
 
         $hasRole = false;
         foreach ($roles as $role) {
-            if (isset($_SESSION["user_roles"]) && is_array($_SESSION["user_roles"]) && in_array($role, $_SESSION["user_roles"])) {
+            if (isset($_SESSION["user_roles"]) && is_array($_SESSION["user_roles"]) && in_array($role, $_SESSION["user_roles"], true)) {
                 $hasRole = true;
                 break;
             }
         }
 
         if (!$hasRole) {
+            // Debug: Afficher les rôles de l'utilisateur et les rôles requis
+            error_log("Access denied - Required roles: " . json_encode($roles));
+            error_log("User roles: " . json_encode($_SESSION["user_roles"] ?? []));
+            error_log("User ID: " . ($_SESSION["user_id"] ?? "not set"));
+            
             // Rediriger vers une page d'erreur ou d'accès refusé
             header("HTTP/1.0 403 Forbidden");
-            echo "Accès refusé. Vous n'avez pas les permissions nécessaires.";
+            echo "Accès refusé. Vous n'avez pas les permissions nécessaires.<br>";
+            echo "Rôles requis: " . implode(", ", $roles) . "<br>";
+            echo "Vos rôles: " . (isset($_SESSION["user_roles"]) ? implode(", ", $_SESSION["user_roles"]) : "aucun") . "<br>";
             exit();
         }
     }

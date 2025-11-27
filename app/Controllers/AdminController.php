@@ -189,13 +189,36 @@ class AdminController extends BaseController {
                 'complement_biens' => $_POST["complement_biens"] ?? null,
                 'superficie_biens' => $_POST["superficie_biens"],
                 'description_biens' => $_POST["description_biens"] ?? null,
-                'animaux_biens' => $_POST["animaux_biens"] ?? 0,
+                'animaux_biens' => isset($_POST["animaux_biens"]) ? 1 : 0,
                 'nb_couchage' => $_POST["nb_couchage"],
                 'id_TypeBien' => $_POST["id_TypeBien"],
                 'id_commune' => $_POST["id_commune"],
                 'id_locataire' => $_POST["id_locataire"] // Le propriétaire
             ];
-            $this->bienModel->create($data);
+            $bienId = $this->bienModel->create($data);
+            
+            // Gérer l'upload de photos si nécessaire
+            if ($bienId) {
+                // Gérer l'upload de photos
+                if (isset($_FILES["photos"]) && !empty($_FILES["photos"]["name"][0])) {
+                    $this->handlePhotoUpload($bienId, $_FILES["photos"]);
+                }
+
+                // Gérer l'ajout des tarifs
+                if (isset($_POST["tarifs"]) && is_array($_POST["tarifs"])) {
+                    foreach ($_POST["tarifs"] as $tarif) {
+                        if (!empty($tarif["prix_semaine"]) && !empty($tarif["annee"]) && !empty($tarif["id_saison"])) {
+                            $this->tarifModel->create([
+                                "prix_semaine" => $tarif["prix_semaine"],
+                                "annee" => $tarif["annee"],
+                                "id_biens" => $bienId,
+                                "id_saison" => $tarif["id_saison"]
+                            ]);
+                        }
+                    }
+                }
+            }
+            
             $this->redirect("/admin/biens");
         }
 
@@ -204,13 +227,15 @@ class AdminController extends BaseController {
         $communes = $this->communeModel->getAll();
         $personnesPhysiques = $this->userModel->getUsersByRole(2, 'physique');
         $personnesMorales = $this->userModel->getUsersByRole(2, 'morale');
+        $saisons = $this->saisonModel->getAll();
 
         // Passer les données à la vue
         $this->render("admin/add_bien", [
             "typesBiens" => $typesBiens,
             "communes" => $communes,
             "personnesPhysiques" => $personnesPhysiques,
-            "personnesMorales" => $personnesMorales
+            "personnesMorales" => $personnesMorales,
+            "saisons" => $saisons
         ], ["style.css"]);
     }
 
@@ -229,6 +254,38 @@ class AdminController extends BaseController {
                 'id_locataire' => $_POST["id_locataire"] ?? null // S'assurer que id_locataire est toujours défini, même si vide
             ];
             $this->bienModel->update($id, $data);
+
+            // Gérer la mise à jour des tarifs
+            if (isset($_POST["tarifs"]) && is_array($_POST["tarifs"])) {
+                foreach ($_POST["tarifs"] as $tarif) {
+                    if (!empty($tarif["prix_semaine"]) && !empty($tarif["annee"]) && !empty($tarif["id_saison"])) {
+                        // Vérifier si un tarif existe déjà pour ce bien, cette saison et cette année
+                        $existingTarif = $this->tarifModel->getTarifByBienSaisonAnnee($id, $tarif["id_saison"], $tarif["annee"]);
+                        if ($existingTarif) {
+                            // Mettre à jour le tarif existant
+                            $this->tarifModel->update($existingTarif["id_tarif"], [
+                                "prix_semaine" => $tarif["prix_semaine"],
+                                "annee" => $tarif["annee"],
+                                "id_saison" => $tarif["id_saison"]
+                            ]);
+                        } else {
+                            // Créer un nouveau tarif
+                            $this->tarifModel->create([
+                                "prix_semaine" => $tarif["prix_semaine"],
+                                "annee" => $tarif["annee"],
+                                "id_biens" => $id,
+                                "id_saison" => $tarif["id_saison"]
+                            ]);
+                        }
+                    }
+                }
+            }
+            
+            // Gérer l'upload de photos si nécessaire
+            if (isset($_FILES["photos"]) && !empty($_FILES["photos"]["name"][0])) {
+                $this->handlePhotoUpload($id, $_FILES["photos"]);
+            }
+
             $this->redirect("/admin/biens");
         }
 
@@ -240,9 +297,9 @@ class AdminController extends BaseController {
         $communeBien = $this->communeModel->getById($bien['id_commune']);
         $communeNom = '';
         if ($communeBien) {
-            $nomCommune = $communeBien['nom_commune'] ?? '';
-            $codePostal = $communeBien['code_postal'] ?? '';
-            $communeNom = $nomCommune . ' (' . $codePostal . ')';
+            $nomCommune = $communeBien['ville_nom'] ?? '';
+            $codePostal = $communeBien['ville_code_postal'] ?? '';
+            $communeNom = $nomCommune . (!empty($codePostal) ? ' (' . $codePostal . ')' : '');
         }
 
         // Récupérer le propriétaire associé au bien pour le pré-remplissage
@@ -265,6 +322,9 @@ class AdminController extends BaseController {
             $tarifsMapped[$tarif['id_saison'] . '_' . $tarif['annee']] = $tarif['prix_semaine'];
         }
 
+        // Récupérer les photos du bien
+        $photos = $this->photoModel->getPhotosByBien($id);
+
         // Passer les données à la vue
         $this->render("admin/edit_bien", [
             "bien" => $bien,
@@ -272,7 +332,8 @@ class AdminController extends BaseController {
             "communeNom" => $communeNom,
             "proprietaireNom" => $proprietaireNom,
             "saisons" => $saisons,
-            "tarifsMapped" => $tarifsMapped
+            "tarifsMapped" => $tarifsMapped,
+            "photos" => $photos
         ], ["style.css"]);
     }
 
@@ -490,15 +551,44 @@ class AdminController extends BaseController {
         $this->redirect("/admin/reservations");
     }
 
+    // --- Gestion des Photos ---
+    private function handlePhotoUpload($bienId, $files) {
+        if (!is_dir(UPLOAD_DIR)) {
+            mkdir(UPLOAD_DIR, 0777, true);
+        }
 
+        foreach ($files["name"] as $key => $name) {
+            if ($files["error"][$key] == UPLOAD_ERR_OK) {
+                $tmp_name = $files["tmp_name"][$key];
+                $extension = pathinfo($name, PATHINFO_EXTENSION);
+                $newFileName = uniqid("photo_") . "." . $extension;
+                $targetFile = UPLOAD_DIR . $newFileName;
 
+                if (move_uploaded_file($tmp_name, $targetFile)) {
+                    $this->photoModel->create([
+                        "nom_photo" => $name,
+                        "lien_photo" => UPLOAD_URL . $newFileName,
+                        "id_biens" => $bienId
+                    ]);
+                }
+            }
+        }
+    }
 
-
-
-
-
-
-
+    public function deletePhoto($photoId) {
+        $photo = $this->photoModel->getById($photoId);
+        if ($photo) {
+            // Supprimer le fichier physique
+            $filePath = str_replace(UPLOAD_URL, UPLOAD_DIR, $photo["lien_photo"]);
+            if (file_exists($filePath)) {
+                unlink($filePath);
+            }
+            $this->photoModel->delete($photoId);
+            $this->redirect("/admin/editBien/" . $photo["id_biens"]);
+            return;
+        }
+        $this->redirect("/admin/biens");
+    }
 
     // --- API Endpoints for Autocomplete ---
     public function searchUsers() {
