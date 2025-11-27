@@ -89,9 +89,9 @@ $routes = [
     "proprietaire/deleteBien/([0-9]+)" => ["controller" => "ProprietaireController", "action" => "deleteBien"],
     "proprietaire/myReservations" => ["controller" => "ProprietaireController", "action" => "myReservations"],
     "proprietaire/deletePhoto/([0-9]+)" => ["controller" => "ProprietaireController", "action" => "deletePhoto"],
-
-    // API pour le calendrier FullCalendar
-    "proprietaire/calendar/events"  => ["controller" => "CalendarController", "action" => "events"],
+    "proprietaire/calendar/events" => ["controller" => "ProprietaireController", "action" => "calendarEvents"],
+    "proprietaire/calendar/block" => ["controller" => "ProprietaireController", "action" => "calendarBlock"],
+    "proprietaire/calendar/unblock" => ["controller" => "ProprietaireController", "action" => "calendarUnblock"],
 
     // Routes Locataire
     "locataire" => ["controller" => "LocataireController", "action" => "index"],

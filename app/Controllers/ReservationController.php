@@ -115,12 +115,12 @@ class ReservationController extends BaseController
             $this->redirect("/login");
         }
 
-        try {
+            try {
             $reservation = $this->model->getById($id_reservation);
             if (!$reservation || $reservation['id_locataire'] != $id_locataire) {
                 $_SESSION['error_message'] = "Réservation introuvable ou vous n'avez pas la permission de l'annuler.";
             } else {
-                $affectedRows = $this->model->cancelReservation($id_reservation);
+                $affectedRows = $this->model->cancelReservation($id_reservation, $id_locataire);
                 if ($affectedRows > 0) {
                     $_SESSION['success_message'] = "La réservation a été annulée avec succès.";
                 } else {
