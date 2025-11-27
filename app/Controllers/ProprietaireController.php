@@ -34,7 +34,11 @@ class ProprietaireController extends BaseController {
 
     public function index() {
         $biens = $this->bienModel->getBiensByProprietaire($_SESSION['user_id']);
-        $this->render("proprietaire/index", ["biens" => $biens]);
+        $typesBiens = $this->typeBienModel->getAllTypesBiens();
+        $this->render("proprietaire/index", [
+            "biens" => $biens,
+            "typesBiens" => $typesBiens
+        ]);
     }
 
     public function myBiens() {

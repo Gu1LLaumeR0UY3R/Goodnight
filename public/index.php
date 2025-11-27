@@ -99,6 +99,11 @@ $routes = [
     
     "reservation/store" => ["controller" => "ReservationController", "action" => "store"],
     "reservation/cancel/([0-9]+)" => ["controller" => "ReservationController", "action" => "cancel"],
+
+    // Routes Profil
+    "profile" => ["controller" => "ProfileController", "action" => "index"],
+    "profile/uploadProfilePicture" => ["controller" => "ProfileController", "action" => "uploadProfilePicture"],
+    "profile/deleteProfilePicture" => ["controller" => "ProfileController", "action" => "deleteProfilePicture"],
 ];
 
 $matchedRoute = null;

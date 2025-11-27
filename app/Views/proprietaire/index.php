@@ -38,10 +38,45 @@
         <div class="filter-cards-area">
             <aside class="filter-panel">
                 <h3>Filtres - Biens</h3>
+                
+                <!-- Boutons de sélection rapide -->
+                <div class="filter-actions">
+                    <button class="btn-filter-action" onclick="selectAllBiens()" title="Tout sélectionner">
+                        <span>✓</span> Tout sélectionner
+                    </button>
+                    <button class="btn-filter-action" onclick="unselectAllBiens()" title="Tout désélectionner">
+                        <span>✗</span> Tout désélectionner
+                    </button>
+                </div>
+
+                <!-- Filtres par type de bien -->
+                <?php if (!empty($typesBiens)): ?>
+                <div class="filter-by-type">
+                    <h4>Par type</h4>
+                    <div class="type-filter-buttons">
+                        <button class="btn-type-filter active" 
+                                data-type-id="all"
+                                onclick="filterByType('all')">
+                            📋 Tous
+                        </button>
+                        <?php foreach($typesBiens as $type): ?>
+                            <button class="btn-type-filter" 
+                                    data-type-id="<?php echo $type['id_typebien']; ?>"
+                                    onclick="filterByType(<?php echo $type['id_typebien']; ?>)">
+                                <?php echo htmlspecialchars($type['desc_type_bien']); ?>
+                            </button>
+                        <?php endforeach; ?>
+                    </div>
+                </div>
+                <?php endif; ?>
+
                 <div class="filter-list">
                     <?php foreach($biens ?? [] as $b): ?>
                         <label class="filter-item">
-                            <input type="checkbox" class="filter-checkbox" data-bien-id="<?php echo $b['id_biens']; ?>">
+                            <input type="checkbox" 
+                                   class="filter-checkbox" 
+                                   data-bien-id="<?php echo $b['id_biens']; ?>"
+                                   data-type-id="<?php echo $b['id_TypeBien']; ?>">
                             <span class="filter-name"><?php echo htmlspecialchars($b['designation_bien']); ?></span>
                         </label>
                     <?php endforeach; ?>
@@ -530,6 +565,7 @@
                 const card = document.createElement('div');
                 card.className = 'card';
                 card.dataset.bienId = b.id_biens;
+                card.dataset.typeId = b.id_TypeBien;
 
                 const imgSrc = b.premiere_photo || '/img/default.jpg';
                 card.innerHTML = `
@@ -841,6 +877,77 @@
             } catch (err) {
                 alert('Erreur réseau: ' + err.message);
                 console.error(err);
+            }
+        }
+
+        // Fonctions de filtrage rapide
+        function selectAllBiens() {
+            const checkboxes = document.querySelectorAll('.filter-checkbox');
+            checkboxes.forEach(cb => {
+                if (!cb.checked) {
+                    cb.checked = true;
+                    syncSelectionFromCheckbox(cb.dataset.bienId, true);
+                }
+            });
+        }
+
+        function unselectAllBiens() {
+            const checkboxes = document.querySelectorAll('.filter-checkbox');
+            checkboxes.forEach(cb => {
+                if (cb.checked) {
+                    cb.checked = false;
+                    syncSelectionFromCheckbox(cb.dataset.bienId, false);
+                }
+            });
+        }
+
+        function filterByType(typeId) {
+            // Afficher/masquer les items de la liste selon le type
+            const allItems = document.querySelectorAll('.filter-item');
+            const allCards = document.querySelectorAll('.cards-grid .card');
+            
+            if (typeId === null || typeId === 'all') {
+                // Afficher tous les biens (liste et cartes)
+                allItems.forEach(item => {
+                    item.style.display = '';
+                });
+                allCards.forEach(card => {
+                    card.style.display = '';
+                    card.style.opacity = '1';
+                    card.style.pointerEvents = 'auto';
+                });
+            } else {
+                // Afficher uniquement les biens du type sélectionné
+                allItems.forEach(item => {
+                    const checkbox = item.querySelector('.filter-checkbox');
+                    if (checkbox && checkbox.dataset.typeId === String(typeId)) {
+                        item.style.display = '';
+                    } else {
+                        item.style.display = 'none';
+                    }
+                });
+                
+                // Afficher uniquement les cartes du type sélectionné
+                allCards.forEach(card => {
+                    if (card.dataset.typeId === String(typeId)) {
+                        card.style.display = '';
+                        card.style.opacity = '1';
+                        card.style.pointerEvents = 'auto';
+                    } else {
+                        card.style.display = 'none';
+                        card.style.opacity = '0';
+                        card.style.pointerEvents = 'none';
+                    }
+                });
+            }
+
+            // Mettre en surbrillance le bouton de type actif
+            document.querySelectorAll('.btn-type-filter').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            const activeBtn = document.querySelector('.btn-type-filter[data-type-id="' + typeId + '"]');
+            if (activeBtn) {
+                activeBtn.classList.add('active');
             }
         }
     </script>
