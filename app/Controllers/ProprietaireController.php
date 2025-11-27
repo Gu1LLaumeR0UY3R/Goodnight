@@ -323,6 +323,41 @@ class ProprietaireController extends BaseController {
             exit;
         }
 
+        // Vérifier qu'il n'y a pas de chevauchement avec des réservations existantes
+        $allReservations = $this->reservationModel->getReservationsByProprietaire($_SESSION['user_id']);
+        $existingReservations = array_filter($allReservations, function($r) use ($bienId) {
+            return intval($r['id_biens']) === $bienId;
+        });
+        
+        $blocageStartDate = new DateTime($start);
+        $blocageEndDate = new DateTime($end);
+
+        foreach ($existingReservations as $res) {
+            $resStartDate = new DateTime($res['date_debut']);
+            $resEndDate = new DateTime($res['date_fin']);
+            
+            // Vérifier le chevauchement : blocage [start, end] vs réservation [res_start, res_end]
+            // Chevauchement si : start < res_end ET end > res_start
+            // Exception : un chevauchement d'un jour seulement est autorisé
+            if ($blocageStartDate < $resEndDate && $blocageEndDate > $resStartDate) {
+                // Calculer le nombre de jours de chevauchement
+                $overlapStart = max($blocageStartDate, $resStartDate);
+                $overlapEnd = min($blocageEndDate, $resEndDate);
+                $interval = $overlapStart->diff($overlapEnd);
+                $overlapDays = $interval->days;
+
+                // Si chevauchement > 1 jour, refuser
+                if ($overlapDays > 1) {
+                    http_response_code(409);
+                    echo json_encode([
+                        'success' => false,
+                        'error' => 'Ce blocage chevauche une réservation existante (chevauchement de ' . $overlapDays . ' jours). Un chevauchement d\'un jour seulement est autorisé.'
+                    ]);
+                    exit;
+                }
+            }
+        }
+
         $blocageModel = new BlocageModel();
         try {
             $id = $blocageModel->createBlocage([

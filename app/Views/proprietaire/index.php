@@ -749,6 +749,44 @@
         </div>
     </div>
 
+    <!-- Modal pour afficher les détails d'un blocage existant -->
+    <div id="blocageDetailsModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Détails du blocage</h2>
+                <button class="close-btn" onclick="closeBlocageDetailsModal()">&times;</button>
+            </div>
+
+            <div class="modal-body">
+                <div class="fiche-item">
+                    <div class="fiche-label">Motif</div>
+                    <div class="fiche-value" id="modal-blocage-motif">-</div>
+                </div>
+
+                <div class="fiche-row">
+                    <div>
+                        <div class="fiche-label">Date de début</div>
+                        <div class="fiche-value" id="modal-blocage-debut">-</div>
+                    </div>
+                    <div>
+                        <div class="fiche-label">Date de fin</div>
+                        <div class="fiche-value" id="modal-blocage-fin">-</div>
+                    </div>
+                </div>
+
+                <div class="fiche-item">
+                    <div class="fiche-label">Commentaire</div>
+                    <div class="fiche-value" id="modal-blocage-commentaire">-</div>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button class="btn btn-danger" onclick="deleteBlocageFromModal()">Supprimer</button>
+                <button class="btn-close-modal" onclick="closeBlocageDetailsModal()">Fermer</button>
+            </div>
+        </div>
+    </div>
+
     <footer>
         <p>&copy; 2024 Goodnight. Tous droits réservés.</p>
     </footer>
@@ -921,7 +959,7 @@
                     if (ext.type === 'reservation') {
                         openReservationModal(ext);
                     } else if (ext.type === 'blocage') {
-                        alert('Blocage\nMotif: ' + (ext.motif || '') + '\nCommentaire: ' + (ext.commentaire || ''));
+                        openBlocageDetailsModal(info.event);
                     }
                 }
             });
@@ -968,6 +1006,61 @@
 
         function closeReservationModal() {
             document.getElementById('reservationModal').style.display = 'none';
+        }
+
+        // Blocage details modal functions
+        let currentBlocageEventId = null; // Store the event ID for deletion
+        function openBlocageDetailsModal(event) {
+            const ext = event.extendedProps || {};
+            // Populate modal fields
+            document.getElementById('modal-blocage-motif').textContent = (ext.motif || '-').toUpperCase();
+            
+            // Format dates
+            const dateDebut = new Date(event.start);
+            const dateFin = new Date(event.end);
+            dateFin.setDate(dateFin.getDate() - 1); // end is exclusive, adjust for display
+            document.getElementById('modal-blocage-debut').textContent = formatDateFR(dateDebut);
+            document.getElementById('modal-blocage-fin').textContent = formatDateFR(dateFin);
+            
+            document.getElementById('modal-blocage-commentaire').textContent = ext.commentaire ? ext.commentaire : 'Aucun';
+            
+            // Store event ID for deletion
+            currentBlocageEventId = event.id;
+            
+            // Show modal
+            document.getElementById('blocageDetailsModal').style.display = 'block';
+        }
+
+        function closeBlocageDetailsModal() {
+            document.getElementById('blocageDetailsModal').style.display = 'none';
+            currentBlocageEventId = null;
+        }
+
+        async function deleteBlocageFromModal() {
+            if (!currentBlocageEventId) return;
+            if (!confirm('Êtes-vous sûr de vouloir supprimer ce blocage ?')) return;
+
+            try {
+                const response = await fetch('/proprietaire/calendar/unblock', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ eventId: currentBlocageEventId })
+                });
+
+                const result = await response.json();
+                
+                if (response.ok && result.success) {
+                    closeBlocageDetailsModal();
+                    if (window.fcCalendar) {
+                        window.fcCalendar.refetchEvents();
+                    }
+                } else {
+                    alert('Erreur: ' + (result.error || 'Impossible de supprimer le blocage'));
+                }
+            } catch (err) {
+                alert('Erreur réseau: ' + err.message);
+                console.error(err);
+            }
         }
 
         // Build cards grid and wire checkbox interactions
@@ -1210,6 +1303,10 @@
             const blocageModal = document.getElementById('blocageModal');
             if (event.target === blocageModal) {
                 blocageModal.style.display = 'none';
+            }
+            const blocageDetailsModal = document.getElementById('blocageDetailsModal');
+            if (event.target === blocageDetailsModal) {
+                blocageDetailsModal.style.display = 'none';
             }
         });
 
