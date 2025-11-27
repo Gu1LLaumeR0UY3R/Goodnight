@@ -10,6 +10,7 @@ $userRoles = $_SESSION['user_roles'] ?? [];
 $userName = $_SESSION['user_nom'] ?? '';
 $userFirstName = $_SESSION['user_prenom'] ?? '';
 $userEmail = $_SESSION['user_email'] ?? null;
+$userPfp = $_SESSION['user_pfp'] ?? null;
 ?>
 
 <header class="navbar-sticky">
@@ -52,6 +53,16 @@ $userEmail = $_SESSION['user_email'] ?? null;
                         echo htmlspecialchars($displayName);
                     ?>
                 </span>
+                <a href="/profile" class="navbar-btn navbar-btn-profile">
+                    <?php if (!empty($userPfp)): ?>
+                        <img src="<?php echo htmlspecialchars($userPfp); ?>" alt="Photo de profil" class="navbar-profile-img">
+                    <?php else: ?>
+                        <span class="navbar-profile-placeholder">
+                            <?php echo !empty($userFirstName) ? strtoupper(substr($userFirstName, 0, 1)) : '👤'; ?>
+                        </span>
+                    <?php endif; ?>
+                    <span>Mon Profil</span>
+                </a>
                 <a href="/logout" class="navbar-btn navbar-btn-logout">Déconnexion</a>
             <?php else: ?>
                 <a href="/login" class="navbar-btn navbar-btn-login">Connexion</a>
@@ -132,6 +143,44 @@ $userEmail = $_SESSION['user_email'] ?? null;
     .toast .toast-close { margin-left: auto; background: transparent; border: none; font-size: 16px; cursor: pointer; }
 </style>
 
+<!-- Dark Mode CSS -->
+<link rel="stylesheet" href="/css/dark-mode.css">
+
+<style>
+    /* Profile picture in navbar */
+    .navbar-profile-img {
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 2px solid white;
+        vertical-align: middle;
+        margin-right: 8px;
+    }
+
+    .navbar-profile-placeholder {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.3);
+        color: white;
+        font-weight: bold;
+        font-size: 14px;
+        border: 2px solid white;
+        vertical-align: middle;
+        margin-right: 8px;
+    }
+
+    .navbar-btn-profile {
+        display: inline-flex;
+        align-items: center;
+        gap: 0;
+    }
+</style>
+
 <div class="toast-container" id="toast-container" aria-live="polite" aria-atomic="true"></div>
 
 <script>
@@ -183,3 +232,5 @@ $userEmail = $_SESSION['user_email'] ?? null;
     })();
 </script>
 
+<!-- Dark Mode JavaScript -->
+<script src="/js/dark-mode.js"></script>

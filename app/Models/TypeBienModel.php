@@ -28,6 +28,12 @@ class TypeBienModel extends Model {
         $stmt->execute(['id_typebien' => $id]);
         return $stmt->rowCount();
     }
+
+    public function getAllTypesBiens() {
+        $stmt = $this->db->prepare("SELECT * FROM " . $this->table . " ORDER BY desc_type_bien");
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
 }
 
 ?>

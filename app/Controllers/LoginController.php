@@ -69,6 +69,7 @@ class LoginController extends BaseController
             $_SESSION["user_email"] = $user["email_locataire"];
             $_SESSION["user_nom"] = $user["nom_locataire"];
             $_SESSION["user_prenom"] = $user["prenom_locataire"];
+            $_SESSION["user_pfp"] = $user["pfp_loca"] ?? null;
             $_SESSION["SESSION_USERS"] = $user;
 
             // Récupérer les rôles

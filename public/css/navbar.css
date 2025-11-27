@@ -150,6 +150,17 @@
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
+.navbar-btn-profile {
+    background-color: rgba(255, 255, 255, 0.15);
+    color: white;
+    border-color: white;
+}
+
+.navbar-btn-profile:hover {
+    background-color: rgba(255, 255, 255, 0.3);
+    transform: translateY(-2px);
+}
+
 .navbar-btn-logout {
     background-color: rgba(255, 255, 255, 0.2);
     color: white;

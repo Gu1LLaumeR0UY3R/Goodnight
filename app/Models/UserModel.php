@@ -183,6 +183,15 @@ class UserModel extends Model {
         ]);
         return $stmt->rowCount();
     }
+
+    public function updateProfilePicture($userId, $pfpPath) {
+        $stmt = $this->db->prepare("UPDATE " . $this->table . " SET pfp_loca = :pfp_loca WHERE id_locataire = :id_locataire");
+        $stmt->execute([
+            'pfp_loca' => $pfpPath,
+            'id_locataire' => $userId
+        ]);
+        return $stmt->rowCount();
+    }
 }
 
 ?>
