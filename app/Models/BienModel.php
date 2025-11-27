@@ -106,10 +106,14 @@ class BienModel extends Model {
                 b.*,
                 tb.desc_type_bien as type_bien_nom,
                 c.ville_nom as commune_nom,
+                l.nom_locataire as proprietaire_nom,
+                l.prenom_locataire as proprietaire_prenom,
+                l.RaisonSociale as proprietaire_raison_sociale,
                 IFNULL((SELECT prix_semaine FROM tarifs WHERE id_biens = b.id_biens AND annee = :currentYear AND id_saison = :currentSaisonId LIMIT 1), NULL) as prix_semaine
             FROM biens b 
             LEFT JOIN Type_Bien tb ON b.id_TypeBien = tb.id_typebien 
             LEFT JOIN commune c ON b.id_commune = c.id_commune
+            LEFT JOIN locataire l ON b.id_locataire = l.id_locataire
             WHERE b.id_biens = :id
         ";
         

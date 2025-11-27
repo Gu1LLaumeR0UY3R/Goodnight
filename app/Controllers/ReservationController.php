@@ -131,7 +131,7 @@ class ReservationController extends BaseController
             $_SESSION['error_message'] = "Une erreur est survenue lors de l'annulation: " . $e->getMessage();
         }
 
-        $this->redirect("/locataire/my_reservations");
+        $this->redirect("/locataire/myReservations");
     }
 }
 ?>
