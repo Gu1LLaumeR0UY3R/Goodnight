@@ -895,11 +895,19 @@
             const calendarEl = document.getElementById('calendar');
             let calendar = new FullCalendar.Calendar(calendarEl, {
                 initialView: 'dayGridMonth',
+                firstDay: 1, // semaine commence lundi
+                locale: 'fr',
                 height: 650,
                 headerToolbar: {
                     left: 'prev,next today',
                     center: 'title',
                     right: 'dayGridMonth,timeGridWeek,timeGridDay'
+                },
+                buttonText: {
+                    today: "Aujourd'hui",
+                    month: 'Mois',
+                    week: 'Semaine',
+                    day: 'Jour'
                 },
                 events: function(fetchInfo, successCallback, failureCallback) {
                     // Build filter from selected checkboxes (multi-selection)
