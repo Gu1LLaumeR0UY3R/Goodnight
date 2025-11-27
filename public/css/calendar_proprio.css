@@ -1,7 +1,8 @@
 :root {
-            --primary: #FE9D15;
-            --bg: #F7F7F7;
-            --text: #2c3e50;
+            /* Palette jour (light) mise à jour */
+            --primary: #291527; /* Couleur principale (prune foncé) */
+            --bg: #EEECF2;      /* Fond clair doux */
+            --text: #393D3A;    /* Texte principal */
         }
         
         body {

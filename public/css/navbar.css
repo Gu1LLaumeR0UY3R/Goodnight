@@ -334,3 +334,33 @@ body {
     }
 }
 
+/* ==========================
+   Palette Jour (Light Theme)
+   ==========================
+   Overrides pour adopter la nouvelle palette
+*/
+.navbar-sticky {
+    background: linear-gradient(135deg, var(--color-primary, #291527) 0%, var(--color-accent, #9D8099) 100%);
+    color: var(--color-primary-contrast, #EEECF2);
+}
+
+.navbar-link:hover {
+    background-color: #fff;
+    color: var(--color-primary, #291527);
+}
+
+.navbar-btn-login:hover,
+.navbar-btn-logout:hover {
+    background-color: #fff;
+    color: var(--color-primary, #291527);
+}
+
+.navbar-btn-register {
+    background-color: #fff;
+    color: var(--color-primary, #291527);
+}
+
+.navbar-toggle-icon {
+    background-color: #fff;
+}
+

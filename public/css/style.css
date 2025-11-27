@@ -767,4 +767,160 @@ img {
     border-radius: 6px;
 }
 
+/* ==========================
+   Palette Jour (Light Theme)
+   ==========================
+   Application de la nouvelle palette:
+   - #000000 (noir)
+   - #291527 (prune foncé)
+   - #393D3A (gris foncé neutre)
+   - #EEECF2 (fond clair)
+   - #9D8099 (mauve doux)
+*/
+:root {
+    --color-bg: #EEECF2;
+    --color-surface: #FFFFFF;
+    --color-text: #393D3A;
+    --color-primary: #291527;
+    --color-primary-contrast: #EEECF2;
+    --color-accent: #9D8099;
+    --color-border: #9D8099;
+}
+
+/* Fond et texte global */
+body {
+    background-color: var(--color-bg);
+    color: var(--color-text);
+}
+
+/* En-tête: gradient primaire -> accent */
+header {
+    background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-accent) 100%);
+    color: var(--color-primary-contrast);
+}
+
+header nav ul li a {
+    background-color: rgba(255, 255, 255, 0.12);
+}
+
+header nav ul li a:hover,
+header nav ul li a.active {
+    background-color: #fff;
+    color: var(--color-primary);
+}
+
+/* Contenu principal (cartes, surfaces blanches) */
+main,
+.type-item,
+.bien-card,
+form,
+table {
+    background-color: var(--color-surface);
+    color: var(--color-text);
+}
+
+/* Hero */
+.hero {
+    background-color: #F4F1F7; /* proche de #EEECF2, un peu plus contrasté */
+}
+.hero h2 {
+    color: var(--color-primary);
+}
+
+/* Boutons principaux */
+.btn-primary,
+button[type="submit"],
+.search-bar button,
+.bien-card a,
+main a:not(.bien-card a):not(table a) {
+    background-color: var(--color-primary);
+    color: var(--color-primary-contrast);
+}
+
+.btn-primary:hover,
+button[type="submit"]:hover,
+.search-bar button:hover,
+.bien-card a:hover,
+main a:not(.bien-card a):not(table a):hover {
+    background-color: #3B2A39; /* assombri de la primaire */
+    color: var(--color-primary-contrast);
+}
+
+/* Liens */
+table a,
+main a.link,
+a {
+    color: var(--color-primary);
+}
+table a:hover,
+main a.link:hover,
+a:hover {
+    color: var(--color-accent);
+}
+
+/* Table header */
+thead {
+    background-color: var(--color-primary);
+    color: var(--color-primary-contrast);
+}
+
+/* Inputs focus */
+input[type="text"]:focus,
+input[type="email"]:focus,
+input[type="password"]:focus,
+input[type="tel"]:focus,
+input[type="date"]:focus,
+input[type="number"]:focus,
+textarea:focus,
+select:focus {
+    border-color: var(--color-primary);
+    box-shadow: 0 0 5px rgba(41, 21, 39, 0.35);
+}
+
+/* Choix rôle / type compte */
+.role-choice-buttons label,
+.type-account-buttons label {
+    border-color: var(--color-primary);
+    color: var(--color-primary);
+}
+.role-choice-buttons input[type="radio"]:checked + label,
+.type-account-buttons input[type="radio"]:checked + label {
+    background-color: var(--color-primary);
+    color: var(--color-primary-contrast);
+    box-shadow: 0 4px 8px rgba(41, 21, 39, 0.3);
+}
+.role-choice-buttons label:hover,
+.type-account-buttons label:hover {
+    background-color: #F4F1F7;
+    color: var(--color-primary);
+}
+
+/* Sections formulaire spécifiques */
+.form-title {
+    color: var(--color-primary);
+    border-bottom: 2px solid var(--color-primary);
+}
+.tarif-group {
+    border-color: var(--color-primary);
+    background-color: #F4F1F7;
+}
+.tarif-group h4 {
+    color: var(--color-primary);
+    border-bottom: 1px solid var(--color-primary);
+}
+
+/* Bouton de soumission vert remplacé par primaire pour cohérence visuelle */
+.submit-button {
+    background-color: var(--color-primary);
+}
+.submit-button:hover {
+    background-color: #3B2A39;
+}
+
+/* Pied de page */
+footer {
+    background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-accent) 100%);
+    color: var(--color-primary-contrast);
+}
+
 
