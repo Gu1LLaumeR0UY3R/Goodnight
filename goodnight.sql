@@ -2,10 +2,10 @@
 -- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
--- Host: 127.0.0.1
--- Generation Time: Nov 26, 2025 at 04:47 PM
--- Server version: 10.4.32-MariaDB
--- PHP Version: 8.2.12
+-- Hôte : 127.0.0.1:3306
+-- Généré le : lun. 01 déc. 2025 à 16:11
+-- Version du serveur : 9.1.0
+-- Version de PHP : 8.3.14
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -18,417 +18,364 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Database: `goodnight`
+-- Base de données : `goodnight`
 --
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `admin`
+-- Structure de la table `admin`
 --
 
-CREATE TABLE `admin` (
-  `id_admin` int(11) NOT NULL,
-  `nom_admin` varchar(50) NOT NULL,
-  `prenom_admin` varchar(50) NOT NULL,
-  `email_admin` varchar(100) NOT NULL,
-  `mot_de_passe_admin` varchar(255) NOT NULL,
-  `is_admin` tinyint(1) DEFAULT 1
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+DROP TABLE IF EXISTS `admin`;
+CREATE TABLE IF NOT EXISTS `admin` (
+  `id_admin` int NOT NULL AUTO_INCREMENT,
+  `nom_admin` varchar(50) COLLATE utf8mb4_general_ci NOT NULL,
+  `prenom_admin` varchar(50) COLLATE utf8mb4_general_ci NOT NULL,
+  `email_admin` varchar(100) COLLATE utf8mb4_general_ci NOT NULL,
+  `mot_de_passe_admin` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
+  `is_admin` tinyint(1) DEFAULT '1',
+  PRIMARY KEY (`id_admin`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Déchargement des données de la table `admin`
+--
+
+INSERT INTO `admin` (`id_admin`, `nom_admin`, `prenom_admin`, `email_admin`, `mot_de_passe_admin`, `is_admin`) VALUES
+(1, 'admin', 'test', 'admin@example.com', '$2y$10$qagrgyFpGbj9Wr1.6fwIfOVwgQvs6v8NcBd6okrMkFN.z1mHkn1Ue', 1); -- password123
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `biens`
+-- Structure de la table `biens`
 --
 
-CREATE TABLE `biens` (
-  `id_biens` int(10) UNSIGNED NOT NULL,
-  `designation_bien` varchar(255) DEFAULT NULL,
-  `rue_biens` varchar(255) NOT NULL,
-  `complement_biens` varchar(255) DEFAULT NULL,
+DROP TABLE IF EXISTS `biens`;
+CREATE TABLE IF NOT EXISTS `biens` (
+  `id_biens` int UNSIGNED NOT NULL AUTO_INCREMENT,
+  `designation_bien` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `rue_biens` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
+  `complement_biens` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
   `superficie_biens` decimal(10,2) NOT NULL,
-  `description_biens` text DEFAULT NULL,
-  `animaux_biens` tinyint(1) DEFAULT 0,
-  `nb_couchage` int(11) NOT NULL,
-  `id_TypeBien` int(11) NOT NULL,
-  `id_commune` mediumint(8) UNSIGNED NOT NULL,
-  `id_locataire` int(10) UNSIGNED DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+  `description_biens` text COLLATE utf8mb4_general_ci,
+  `animaux_biens` tinyint(1) DEFAULT '0',
+  `nb_couchage` int NOT NULL,
+  `id_TypeBien` int NOT NULL,
+  `id_commune` mediumint UNSIGNED NOT NULL,
+  `id_locataire` int UNSIGNED DEFAULT NULL,
+  PRIMARY KEY (`id_biens`),
+  KEY `id_TypeBien` (`id_TypeBien`),
+  KEY `id_commune` (`id_commune`),
+  KEY `idx_proprietaire` (`id_locataire`)
+) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `blocages`
+-- Structure de la table `blocages`
 --
 
-CREATE TABLE `blocages` (
-  `id_blocage` int(10) UNSIGNED NOT NULL,
-  `id_biens` int(10) UNSIGNED NOT NULL,
+DROP TABLE IF EXISTS `blocages`;
+CREATE TABLE IF NOT EXISTS `blocages` (
+  `id_blocage` int UNSIGNED NOT NULL,
+  `id_biens` int UNSIGNED NOT NULL,
   `date_debut` date NOT NULL,
   `date_fin` date NOT NULL,
-  `motif` enum('personnel','entretien','fermeture','autre') DEFAULT 'personnel',
-  `commentaire` text DEFAULT NULL,
-  `created_at` datetime DEFAULT current_timestamp()
+  `motif` enum('personnel','entretien','fermeture','autre') COLLATE utf8mb4_general_ci DEFAULT 'personnel',
+  `commentaire` text COLLATE utf8mb4_general_ci,
+  `created_at` datetime DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `commune`
+-- Structure de la table `commune`
 --
 
-CREATE TABLE `commune` (
-  `id_commune` mediumint(8) UNSIGNED NOT NULL,
-  `ville_departement` varchar(3) DEFAULT NULL,
-  `ville_slug` varchar(255) DEFAULT NULL,
-  `ville_nom` varchar(45) DEFAULT NULL,
-  `ville_nom_simple` varchar(45) DEFAULT NULL,
-  `ville_nom_reel` varchar(45) DEFAULT NULL,
-  `ville_nom_soundex` varchar(20) DEFAULT NULL,
-  `ville_nom_metaphone` varchar(22) DEFAULT NULL,
-  `ville_code_postal` varchar(255) DEFAULT NULL,
-  `ville_commune` varchar(3) DEFAULT NULL,
-  `ville_code_commune` varchar(5) NOT NULL,
-  `ville_arrondissement` smallint(5) UNSIGNED DEFAULT NULL,
-  `ville_canton` varchar(4) DEFAULT NULL,
-  `ville_amdi` smallint(5) UNSIGNED DEFAULT NULL,
-  `ville_population_2010` mediumint(8) UNSIGNED DEFAULT NULL,
-  `ville_population_1999` mediumint(8) UNSIGNED DEFAULT NULL,
-  `ville_population_2012` mediumint(8) UNSIGNED DEFAULT NULL,
-  `ville_densite_2010` int(11) DEFAULT NULL,
+DROP TABLE IF EXISTS `commune`;
+CREATE TABLE IF NOT EXISTS `commune` (
+  `id_commune` mediumint UNSIGNED NOT NULL AUTO_INCREMENT,
+  `ville_departement` varchar(3) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `ville_slug` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `ville_nom` varchar(45) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `ville_nom_simple` varchar(45) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `ville_nom_reel` varchar(45) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `ville_nom_soundex` varchar(20) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `ville_nom_metaphone` varchar(22) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `ville_code_postal` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `ville_commune` varchar(3) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `ville_code_commune` varchar(5) COLLATE utf8mb4_general_ci NOT NULL,
+  `ville_arrondissement` smallint UNSIGNED DEFAULT NULL,
+  `ville_canton` varchar(4) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `ville_amdi` smallint UNSIGNED DEFAULT NULL,
+  `ville_population_2010` mediumint UNSIGNED DEFAULT NULL,
+  `ville_population_1999` mediumint UNSIGNED DEFAULT NULL,
+  `ville_population_2012` mediumint UNSIGNED DEFAULT NULL,
+  `ville_densite_2010` int DEFAULT NULL,
   `ville_surface` float DEFAULT NULL,
   `ville_longitude_deg` float DEFAULT NULL,
   `ville_latitude_deg` float DEFAULT NULL,
-  `ville_longitude_grd` varchar(9) DEFAULT NULL,
-  `ville_latitude_grd` varchar(8) DEFAULT NULL,
-  `ville_longitude_dms` varchar(9) DEFAULT NULL,
-  `ville_latitude_dms` varchar(8) DEFAULT NULL,
-  `ville_zmin` mediumint(9) DEFAULT NULL,
-  `ville_zmax` mediumint(9) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+  `ville_longitude_grd` varchar(9) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `ville_latitude_grd` varchar(8) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `ville_longitude_dms` varchar(9) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `ville_latitude_dms` varchar(8) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `ville_zmin` mediumint DEFAULT NULL,
+  `ville_zmax` mediumint DEFAULT NULL,
+  PRIMARY KEY (`id_commune`),
+  UNIQUE KEY `ville_code_commune_2` (`ville_code_commune`),
+  UNIQUE KEY `ville_slug` (`ville_slug`),
+  KEY `ville_departement` (`ville_departement`),
+  KEY `ville_nom` (`ville_nom`),
+  KEY `ville_code_postal` (`ville_code_postal`)
+) ENGINE=InnoDB AUTO_INCREMENT=36831 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `locataire`
+-- Structure de la table `locataire`
 --
 
-CREATE TABLE `locataire` (
-  `id_locataire` int(10) UNSIGNED NOT NULL,
-  `nom_locataire` varchar(100) DEFAULT NULL,
-  `prenom_locataire` varchar(100) DEFAULT NULL,
+DROP TABLE IF EXISTS `locataire`;
+CREATE TABLE IF NOT EXISTS `locataire` (
+  `id_locataire` int UNSIGNED NOT NULL AUTO_INCREMENT,
+  `nom_locataire` varchar(100) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `prenom_locataire` varchar(100) COLLATE utf8mb4_general_ci DEFAULT NULL,
   `dateNaissance_locataire` date DEFAULT NULL,
-  `email_locataire` varchar(255) NOT NULL,
-  `password_locataire` varchar(255) NOT NULL,
-  `tel_locataire` varchar(20) DEFAULT NULL,
-  `rue_locataire` varchar(255) DEFAULT NULL,
-  `complement_locataire` varchar(255) DEFAULT NULL,
-  `RaisonSociale` varchar(255) DEFAULT NULL,
-  `Siret` varchar(14) DEFAULT NULL,
-  `id_commune` mediumint(8) UNSIGNED DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+  `email_locataire` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
+  `password_locataire` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
+  `tel_locataire` varchar(20) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `rue_locataire` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `complement_locataire` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `RaisonSociale` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `Siret` varchar(14) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `id_commune` mediumint UNSIGNED DEFAULT NULL,
+  `pfp_loca` varchar(500) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  PRIMARY KEY (`id_locataire`),
+  UNIQUE KEY `email_locataire` (`email_locataire`),
+  KEY `id_commune` (`id_commune`)
+) ENGINE=InnoDB AUTO_INCREMENT=54 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `photos`
+-- Structure de la table `photos`
 --
 
-CREATE TABLE `photos` (
-  `id_photo` int(11) NOT NULL,
-  `nom_photo` varchar(255) DEFAULT NULL,
-  `lien_photo` varchar(255) NOT NULL,
-  `id_biens` int(10) UNSIGNED NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+DROP TABLE IF EXISTS `photos`;
+CREATE TABLE IF NOT EXISTS `photos` (
+  `id_photo` int NOT NULL AUTO_INCREMENT,
+  `nom_photo` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `lien_photo` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
+  `id_biens` int UNSIGNED NOT NULL,
+  PRIMARY KEY (`id_photo`),
+  KEY `id_biens` (`id_biens`)
+) ENGINE=InnoDB AUTO_INCREMENT=25 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `prestataire`
+-- Structure de la table `prestation`
 --
 
-CREATE TABLE `prestataire` (
-  `id_prestataire` int(11) NOT NULL,
-  `lib_prestataire` varchar(255) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+DROP TABLE IF EXISTS `prestation`;
+CREATE TABLE IF NOT EXISTS `prestation` (
+  `id_prestation` int NOT NULL AUTO_INCREMENT,
+  `lib_prestation` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  PRIMARY KEY (`id_prestation`)
+) ENGINE=InnoDB AUTO_INCREMENT=31 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Déchargement des données de la table `prestation`
+--
+
+INSERT INTO `prestation` (`id_prestation`, `lib_prestation`) VALUES
+(1, 'WiFi'),
+(2, 'Salle de bain'),
+(3, 'Salle à manger'),
+(4, 'Cuisine équipée'),
+(5, 'Chambre'),
+(6, 'Salon'),
+(7, 'Terrasse'),
+(8, 'Jardin'),
+(9, 'Piscine'),
+(10, 'Parking'),
+(11, 'Garage'),
+(12, 'Climatisation'),
+(13, 'Chauffage'),
+(14, 'Télévision'),
+(15, 'Lave-linge'),
+(16, 'Lave-vaisselle'),
+(17, 'Four'),
+(18, 'Micro-ondes'),
+(19, 'Réfrigérateur'),
+(20, 'Congélateur'),
+(21, 'Machine à café'),
+(22, 'Barbecue'),
+(23, 'Balcon'),
+(24, 'Cheminée'),
+(25, 'Jacuzzi'),
+(26, 'Sauna'),
+(27, 'Salle de sport'),
+(28, 'Bureau'),
+(29, 'WC séparé'),
+(30, 'Baignoire');
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `reservations`
+-- Structure de la table `reservations`
 --
 
-CREATE TABLE `reservations` (
-  `id_reservation` int(11) NOT NULL,
+DROP TABLE IF EXISTS `reservations`;
+CREATE TABLE IF NOT EXISTS `reservations` (
+  `id_reservation` int NOT NULL AUTO_INCREMENT,
   `date_debut` date NOT NULL,
   `date_fin` date NOT NULL,
-  `id_locataire` int(10) UNSIGNED NOT NULL,
-  `id_biens` int(10) UNSIGNED NOT NULL,
-  `id_tarif` int(11) NOT NULL
+  `id_locataire` int UNSIGNED NOT NULL,
+  `id_biens` int UNSIGNED NOT NULL,
+  `id_tarif` int NOT NULL,
+  PRIMARY KEY (`id_reservation`),
+  KEY `id_locataire` (`id_locataire`),
+  KEY `id_biens` (`id_biens`),
+  KEY `id_tarif` (`id_tarif`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `roles`
+-- Structure de la table `roles`
 --
 
-CREATE TABLE `roles` (
-  `id_roles` int(11) NOT NULL,
-  `nom_roles` varchar(255) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+DROP TABLE IF EXISTS `roles`;
+CREATE TABLE IF NOT EXISTS `roles` (
+  `id_roles` int NOT NULL AUTO_INCREMENT,
+  `nom_roles` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
+  PRIMARY KEY (`id_roles`)
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Déchargement des données de la table `roles`
+--
+
+INSERT INTO `roles` (`id_roles`, `nom_roles`) VALUES
+(1, 'Propriétaire'),
+(2, 'Locataire');
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `saison`
+-- Structure de la table `saison`
 --
 
-CREATE TABLE `saison` (
-  `id_saison` int(11) NOT NULL,
-  `lib_saison` varchar(100) NOT NULL,
+DROP TABLE IF EXISTS `saison`;
+CREATE TABLE IF NOT EXISTS `saison` (
+  `id_saison` int NOT NULL AUTO_INCREMENT,
+  `lib_saison` varchar(100) COLLATE utf8mb4_general_ci NOT NULL,
   `date_debut` date DEFAULT NULL,
-  `date_fin` date DEFAULT NULL
+  `date_fin` date DEFAULT NULL,
+  PRIMARY KEY (`id_saison`)
+) ENGINE=InnoDB AUTO_INCREMENT=20 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Déchargement des données de la table `saison`
+--
+
+INSERT INTO `saison` (`id_saison`, `lib_saison`, `date_debut`, `date_fin`) VALUES
+(1, 'Moyenne saison printemps', '2025-03-01', '2025-05-31'),
+(2, 'Haute saison été', '2025-06-01', '2025-08-31'),
+(3, 'Basse saison', '2025-09-01', '2025-11-30'),
+(4, 'Moyenne saison hiver', '2025-12-01', '2026-02-28'),
+(5, 'Moyenne saison printemps', '2026-03-01', '2026-06-30'),
+(6, 'Haute saison été', '2026-07-01', '2026-08-31'),
+(10, 'Vacances de Noël 2025-2026', '2025-12-20', '2026-01-04'),
+(11, 'Vacances d\'hiver 2026 (zone C)', '2026-02-07', '2026-02-23'),
+(12, 'Vacances d\'hiver 2026 (zone A)', '2026-02-14', '2026-03-02'),
+(13, 'Vacances d\'hiver 2026 (zone B)', '2026-02-21', '2026-03-09'),
+(14, 'Vacances de printemps 2026 (zone C)', '2026-04-04', '2026-04-20'),
+(15, 'Vacances de printemps 2026 (zone A)', '2026-04-11', '2026-04-27'),
+(16, 'Vacances de printemps 2026 (zone B)', '2026-04-18', '2026-05-04'),
+(17, 'Vacances d\'été 2026', '2026-07-04', '2026-08-31'),
+(18, 'Vacances de la Toussaint 2026', '2026-10-17', '2026-11-02'),
+(19, 'Vacances de Noël 2026-2027', '2026-12-19', '2027-01-04');
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `se_compose`
+--
+
+DROP TABLE IF EXISTS `se_compose`;
+CREATE TABLE IF NOT EXISTS `se_compose` (
+  `id_prestation` int NOT NULL,
+  `id_biens` int UNSIGNED NOT NULL,
+  `quantite_prestation` int DEFAULT NULL,
+  PRIMARY KEY (`id_prestation`,`id_biens`),
+  KEY `id_biens` (`id_biens`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `se_compose`
+-- Structure de la table `tarifs`
 --
 
-CREATE TABLE `se_compose` (
-  `id_prestataire` int(11) NOT NULL,
-  `id_biens` int(10) UNSIGNED NOT NULL,
-  `quantite_prestataire` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `tarifs`
---
-
-CREATE TABLE `tarifs` (
-  `id_tarif` int(11) NOT NULL,
+DROP TABLE IF EXISTS `tarifs`;
+CREATE TABLE IF NOT EXISTS `tarifs` (
+  `id_tarif` int NOT NULL AUTO_INCREMENT,
   `prix_semaine` decimal(10,2) NOT NULL,
-  `annee` int(11) NOT NULL,
-  `id_biens` int(10) UNSIGNED NOT NULL,
-  `id_saison` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+  `annee` int NOT NULL,
+  `id_biens` int UNSIGNED NOT NULL,
+  `id_saison` int NOT NULL,
+  PRIMARY KEY (`id_tarif`),
+  KEY `id_biens` (`id_biens`),
+  KEY `id_saison` (`id_saison`)
+) ENGINE=InnoDB AUTO_INCREMENT=37 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `type_bien`
+-- Structure de la table `type_bien`
 --
 
-CREATE TABLE `type_bien` (
-  `id_typebien` int(11) NOT NULL,
-  `desc_type_bien` varchar(100) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+DROP TABLE IF EXISTS `type_bien`;
+CREATE TABLE IF NOT EXISTS `type_bien` (
+  `id_typebien` int NOT NULL AUTO_INCREMENT,
+  `desc_type_bien` varchar(100) COLLATE utf8mb4_general_ci NOT NULL,
+  PRIMARY KEY (`id_typebien`)
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Déchargement des données de la table `type_bien`
+--
+
+INSERT INTO `type_bien` (`id_typebien`, `desc_type_bien`) VALUES
+(1, 'Villa'),
+(2, 'Maison'),
+(3, 'Appartement'),
+(4, 'Cabane'),
+(5, 'Terrain');
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `user_role`
+-- Structure de la table `user_role`
 --
 
-CREATE TABLE `user_role` (
-  `id_roles` int(11) NOT NULL,
-  `id_locataire` int(10) UNSIGNED NOT NULL
+DROP TABLE IF EXISTS `user_role`;
+CREATE TABLE IF NOT EXISTS `user_role` (
+  `id_roles` int NOT NULL,
+  `id_locataire` int UNSIGNED NOT NULL,
+  PRIMARY KEY (`id_roles`,`id_locataire`),
+  KEY `id_locataire` (`id_locataire`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Indexes for dumped tables
+-- Contraintes pour les tables déchargées
 --
 
 --
--- Indexes for table `admin`
---
-ALTER TABLE `admin`
-  ADD PRIMARY KEY (`id_admin`);
-
---
--- Indexes for table `biens`
---
-ALTER TABLE `biens`
-  ADD PRIMARY KEY (`id_biens`),
-  ADD KEY `id_TypeBien` (`id_TypeBien`),
-  ADD KEY `id_commune` (`id_commune`),
-  ADD KEY `idx_proprietaire` (`id_locataire`);
-
---
--- Indexes for table `blocages`
---
-ALTER TABLE `blocages`
-  ADD PRIMARY KEY (`id_blocage`),
-  ADD KEY `idx_biens_dates` (`id_biens`,`date_debut`,`date_fin`);
-
---
--- Indexes for table `commune`
---
-ALTER TABLE `commune`
-  ADD PRIMARY KEY (`id_commune`),
-  ADD UNIQUE KEY `ville_code_commune_2` (`ville_code_commune`),
-  ADD UNIQUE KEY `ville_slug` (`ville_slug`),
-  ADD KEY `ville_departement` (`ville_departement`),
-  ADD KEY `ville_nom` (`ville_nom`),
-  ADD KEY `ville_code_postal` (`ville_code_postal`);
-
---
--- Indexes for table `locataire`
---
-ALTER TABLE `locataire`
-  ADD PRIMARY KEY (`id_locataire`),
-  ADD UNIQUE KEY `email_locataire` (`email_locataire`),
-  ADD KEY `id_commune` (`id_commune`);
-
---
--- Indexes for table `photos`
---
-ALTER TABLE `photos`
-  ADD PRIMARY KEY (`id_photo`),
-  ADD KEY `id_biens` (`id_biens`);
-
---
--- Indexes for table `prestataire`
---
-ALTER TABLE `prestataire`
-  ADD PRIMARY KEY (`id_prestataire`);
-
---
--- Indexes for table `reservations`
---
-ALTER TABLE `reservations`
-  ADD PRIMARY KEY (`id_reservation`),
-  ADD KEY `id_locataire` (`id_locataire`),
-  ADD KEY `id_biens` (`id_biens`),
-  ADD KEY `id_tarif` (`id_tarif`);
-
---
--- Indexes for table `roles`
---
-ALTER TABLE `roles`
-  ADD PRIMARY KEY (`id_roles`);
-
---
--- Indexes for table `saison`
---
-ALTER TABLE `saison`
-  ADD PRIMARY KEY (`id_saison`);
-
---
--- Indexes for table `se_compose`
---
-ALTER TABLE `se_compose`
-  ADD PRIMARY KEY (`id_prestataire`,`id_biens`),
-  ADD KEY `id_biens` (`id_biens`);
-
---
--- Indexes for table `tarifs`
---
-ALTER TABLE `tarifs`
-  ADD PRIMARY KEY (`id_tarif`),
-  ADD KEY `id_biens` (`id_biens`),
-  ADD KEY `id_saison` (`id_saison`);
-
---
--- Indexes for table `type_bien`
---
-ALTER TABLE `type_bien`
-  ADD PRIMARY KEY (`id_typebien`);
-
---
--- Indexes for table `user_role`
---
-ALTER TABLE `user_role`
-  ADD PRIMARY KEY (`id_roles`,`id_locataire`),
-  ADD KEY `id_locataire` (`id_locataire`);
-
---
--- AUTO_INCREMENT for dumped tables
---
-
---
--- AUTO_INCREMENT for table `admin`
---
-ALTER TABLE `admin`
-  MODIFY `id_admin` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `biens`
---
-ALTER TABLE `biens`
-  MODIFY `id_biens` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `blocages`
---
-ALTER TABLE `blocages`
-  MODIFY `id_blocage` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `commune`
---
-ALTER TABLE `commune`
-  MODIFY `id_commune` mediumint(8) UNSIGNED NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `locataire`
---
-ALTER TABLE `locataire`
-  MODIFY `id_locataire` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `photos`
---
-ALTER TABLE `photos`
-  MODIFY `id_photo` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `prestataire`
---
-ALTER TABLE `prestataire`
-  MODIFY `id_prestataire` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `reservations`
---
-ALTER TABLE `reservations`
-  MODIFY `id_reservation` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `roles`
---
-ALTER TABLE `roles`
-  MODIFY `id_roles` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `saison`
---
-ALTER TABLE `saison`
-  MODIFY `id_saison` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `tarifs`
---
-ALTER TABLE `tarifs`
-  MODIFY `id_tarif` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `type_bien`
---
-ALTER TABLE `type_bien`
-  MODIFY `id_typebien` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- Constraints for dumped tables
---
-
---
--- Constraints for table `biens`
+-- Contraintes pour la table `biens`
 --
 ALTER TABLE `biens`
   ADD CONSTRAINT `biens_ibfk_1` FOREIGN KEY (`id_TypeBien`) REFERENCES `type_bien` (`id_typebien`),
@@ -436,47 +383,41 @@ ALTER TABLE `biens`
   ADD CONSTRAINT `biens_ibfk_3` FOREIGN KEY (`id_locataire`) REFERENCES `locataire` (`id_locataire`) ON DELETE SET NULL;
 
 --
--- Constraints for table `blocages`
---
-ALTER TABLE `blocages`
-  ADD CONSTRAINT `fk_blocage_bien` FOREIGN KEY (`id_biens`) REFERENCES `biens` (`id_biens`) ON DELETE CASCADE;
-
---
--- Constraints for table `locataire`
+-- Contraintes pour la table `locataire`
 --
 ALTER TABLE `locataire`
   ADD CONSTRAINT `locataire_ibfk_1` FOREIGN KEY (`id_commune`) REFERENCES `commune` (`id_commune`);
 
 --
--- Constraints for table `photos`
+-- Contraintes pour la table `photos`
 --
 ALTER TABLE `photos`
   ADD CONSTRAINT `photos_ibfk_1` FOREIGN KEY (`id_biens`) REFERENCES `biens` (`id_biens`) ON DELETE CASCADE;
 
 --
--- Constraints for table `reservations`
+-- Contraintes pour la table `reservations`
 --
 ALTER TABLE `reservations`
   ADD CONSTRAINT `reservations_ibfk_1` FOREIGN KEY (`id_locataire`) REFERENCES `locataire` (`id_locataire`) ON DELETE CASCADE,
   ADD CONSTRAINT `reservations_ibfk_2` FOREIGN KEY (`id_biens`) REFERENCES `biens` (`id_biens`) ON DELETE CASCADE,
-  ADD CONSTRAINT `reservations_ibfk_3` FOREIGN KEY (`id_tarif`) REFERENCES `tarifs` (`id_tarif`);
+  ADD CONSTRAINT `reservations_ibfk_3` FOREIGN KEY (`id_tarif`) REFERENCES `tarifs` (`id_tarif`) ON DELETE CASCADE;
 
 --
--- Constraints for table `se_compose`
+-- Contraintes pour la table `se_compose`
 --
 ALTER TABLE `se_compose`
-  ADD CONSTRAINT `se_compose_ibfk_1` FOREIGN KEY (`id_prestataire`) REFERENCES `prestataire` (`id_prestataire`) ON DELETE CASCADE,
+  ADD CONSTRAINT `se_compose_ibfk_1` FOREIGN KEY (`id_prestation`) REFERENCES `prestation` (`id_prestation`) ON DELETE CASCADE,
   ADD CONSTRAINT `se_compose_ibfk_2` FOREIGN KEY (`id_biens`) REFERENCES `biens` (`id_biens`) ON DELETE CASCADE;
 
 --
--- Constraints for table `tarifs`
+-- Contraintes pour la table `tarifs`
 --
 ALTER TABLE `tarifs`
   ADD CONSTRAINT `tarifs_ibfk_1` FOREIGN KEY (`id_biens`) REFERENCES `biens` (`id_biens`) ON DELETE CASCADE,
-  ADD CONSTRAINT `tarifs_ibfk_2` FOREIGN KEY (`id_saison`) REFERENCES `saison` (`id_saison`);
+  ADD CONSTRAINT `tarifs_ibfk_2` FOREIGN KEY (`id_saison`) REFERENCES `saison` (`id_saison`) ON DELETE CASCADE;
 
 --
--- Constraints for table `user_role`
+-- Contraintes pour la table `user_role`
 --
 ALTER TABLE `user_role`
   ADD CONSTRAINT `user_role_ibfk_1` FOREIGN KEY (`id_roles`) REFERENCES `roles` (`id_roles`) ON DELETE CASCADE,

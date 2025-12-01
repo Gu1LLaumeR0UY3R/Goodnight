@@ -85,8 +85,11 @@ $routes = [
     "proprietaire" => ["controller" => "ProprietaireController", "action" => "index"],
     "proprietaire/myBiens" => ["controller" => "ProprietaireController", "action" => "myBiens"],
     "proprietaire/addBien" => ["controller" => "ProprietaireController", "action" => "addBien"],
+    "proprietaire/viewBien/([0-9]+)" => ["controller" => "ProprietaireController", "action" => "viewBien"],
     "proprietaire/editBien/([0-9]+)" => ["controller" => "ProprietaireController", "action" => "editBien"],
     "proprietaire/deleteBien/([0-9]+)" => ["controller" => "ProprietaireController", "action" => "deleteBien"],
+    "proprietaire/managePrestations/([0-9]+)" => ["controller" => "ProprietaireController", "action" => "managePrestations"],
+    "proprietaire/prestationsList" => ["controller" => "ProprietaireController", "action" => "prestationsList"],
     "proprietaire/myReservations" => ["controller" => "ProprietaireController", "action" => "myReservations"],
     "proprietaire/deletePhoto/([0-9]+)" => ["controller" => "ProprietaireController", "action" => "deletePhoto"],
     "proprietaire/calendar/events" => ["controller" => "ProprietaireController", "action" => "calendarEvents"],
@@ -104,6 +107,7 @@ $routes = [
     "profile" => ["controller" => "ProfileController", "action" => "index"],
     "profile/uploadProfilePicture" => ["controller" => "ProfileController", "action" => "uploadProfilePicture"],
     "profile/deleteProfilePicture" => ["controller" => "ProfileController", "action" => "deleteProfilePicture"],
+    "profile/updateProfile" => ["controller" => "ProfileController", "action" => "updateProfile"],
 ];
 
 $matchedRoute = null;
