@@ -10,6 +10,7 @@ require_once __DIR__ . "/../Models/PhotoModel.php";
 require_once __DIR__ . "/../Models/SaisonModel.php";
 require_once __DIR__ . "/../Models/TarifModel.php";
 require_once __DIR__ . "/../Models/BlocageModel.php";
+require_once __DIR__ . "/../Models/PrestationModel.php";
 
 class ProprietaireController extends BaseController {
     private $bienModel;
@@ -19,6 +20,7 @@ class ProprietaireController extends BaseController {
     private $photoModel;
     private $saisonModel;
     private $tarifModel;
+    private $prestationModel;
 
     public function __construct() {
         AuthMiddleware::requireRole("Propriétaire");
@@ -30,6 +32,7 @@ class ProprietaireController extends BaseController {
         $this->photoModel = new PhotoModel();
         $this->saisonModel = new SaisonModel();
         $this->tarifModel = new TarifModel();
+        $this->prestationModel = new PrestationModel();
     }
 
     public function index() {
@@ -466,6 +469,96 @@ class ProprietaireController extends BaseController {
             }
         }
         $this->redirect("/proprietaire/myBiens");
+    }
+
+    public function managePrestations($id_biens) {
+        // Récupérer le bien
+        $bien = $this->bienModel->getById($id_biens);
+        
+        // Vérifier que le bien existe et appartient au propriétaire connecté
+        if (!$bien || $bien["id_locataire"] != $_SESSION["user_id"]) {
+            $this->redirect("/proprietaire/myBiens");
+            return;
+        }
+
+        if ($_SERVER["REQUEST_METHOD"] === "POST") {
+            // Traiter la soumission du formulaire
+            $prestationsData = $_POST['prestations'] ?? [];
+            $prestationsToSave = [];
+
+            // Debug: voir ce qui arrive en POST
+            error_log("POST reçu: " . print_r($_POST, true));
+
+            foreach ($prestationsData as $id_prestation => $data) {
+                if (isset($data['active']) && $data['active'] == '1') {
+                    $quantite = isset($data['quantite']) && is_numeric($data['quantite']) ? intval($data['quantite']) : 1;
+                    if ($quantite > 0) {
+                        $prestationsToSave[$id_prestation] = $quantite;
+                    }
+                }
+            }
+
+            // Debug: afficher les données reçues (à supprimer après)
+            error_log("Prestations à sauvegarder: " . print_r($prestationsToSave, true));
+
+            // Mettre à jour les prestations
+            if ($this->prestationModel->updateBienPrestations($id_biens, $prestationsToSave)) {
+                // Recharger la page avec un message de succès
+                $prestations = $this->prestationModel->getAllWithBienStatus($id_biens);
+                $this->render("proprietaire/manage_prestations", [
+                    "bien" => $bien,
+                    "prestations" => $prestations,
+                    "success" => true
+                ]);
+                return;
+            } else {
+                // En cas d'erreur
+                $prestations = $this->prestationModel->getAllWithBienStatus($id_biens);
+                $this->render("proprietaire/manage_prestations", [
+                    "bien" => $bien,
+                    "prestations" => $prestations,
+                    "error" => "Une erreur est survenue lors de la mise à jour des prestations."
+                ]);
+                return;
+            }
+        }
+
+        // Affichage du formulaire (GET)
+        $prestations = $this->prestationModel->getAllWithBienStatus($id_biens);
+        $this->render("proprietaire/manage_prestations", [
+            "bien" => $bien,
+            "prestations" => $prestations
+        ]);
+    }
+
+    public function prestationsList() {
+        $prestations = $this->prestationModel->getAll();
+        $this->render("proprietaire/prestations_list", [
+            "prestations" => $prestations
+        ]);
+    }
+
+    public function viewBien($id_biens) {
+        // Récupérer le bien avec ses informations complètes
+        $bien = $this->bienModel->getBienWithDetailsById($id_biens);
+        
+        // Vérifier que le bien existe et appartient au propriétaire connecté
+        if (!$bien || $bien["id_locataire"] != $_SESSION["user_id"]) {
+            $this->redirect("/proprietaire/myBiens");
+            return;
+        }
+
+        // Récupérer les prestations associées au bien
+        $prestations = $this->prestationModel->getPrestationsByBien($id_biens);
+        // Filtrer pour ne garder que celles qui sont effectivement associées
+        $prestations = array_filter($prestations, function($p) {
+            return isset($p["quantite_prestation"]) && $p["quantite_prestation"] !== null;
+        });
+
+        $this->render("proprietaire/view_bien", [
+            "bien" => $bien,
+            "prestations" => $prestations
+        ]);
     }
 }
 

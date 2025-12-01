@@ -40,22 +40,46 @@ class UserModel extends Model {
     }
 
     public function update($id, $data) {
-        $sql = "UPDATE " . $this->table . " \n            SET \n                nom_locataire = :nom_locataire, \n                prenom_locataire = :prenom_locataire, \n                dateNaissance_locataire = :dateNaissance_locataire, \n                email_locataire = :email_locataire, \n                tel_locataire = :tel_locataire, \n                rue_locataire = :rue_locataire, \n                complement_locataire = :complement_locataire, \n                RaisonSociale = :RaisonSociale, \n                Siret = :Siret, \n                id_commune = :id_commune \n            WHERE id_locataire = :id_locataire";
-        $stmt = $this->db->prepare($sql);
-        $stmt->execute([
-            'nom_locataire' => $data['nom_locataire'] ?? null,
-            'prenom_locataire' => $data['prenom_locataire'] ?? null,
-            'dateNaissance_locataire' => $data['dateNaissance_locataire'] ?? null,
-            'email_locataire' => $data['email_locataire'],
-            'tel_locataire' => $data['tel_locataire'] ?? null,
-            'rue_locataire' => $data['rue_locataire'] ?? null,
-            'complement_locataire' => $data['complement_locataire'] ?? null,
-            'RaisonSociale' => $data['RaisonSociale'] ?? null,
-            'Siret' => $data['Siret'] ?? null,
-            'id_commune' => $data['id_commune'] ?? null,
-            'id_locataire' => $id
-        ]);
-        return $stmt->rowCount();
+        $sql = "UPDATE " . $this->table . " 
+            SET 
+                nom_locataire = :nom_locataire, 
+                prenom_locataire = :prenom_locataire, 
+                dateNaissance_locataire = :dateNaissance_locataire, 
+                email_locataire = :email_locataire, 
+                tel_locataire = :tel_locataire, 
+                rue_locataire = :rue_locataire, 
+                complement_locataire = :complement_locataire, 
+                RaisonSociale = :RaisonSociale, 
+                Siret = :Siret, 
+                id_commune = :id_commune 
+            WHERE id_locataire = :id_locataire";
+        
+        try {
+            $stmt = $this->db->prepare($sql);
+            $result = $stmt->execute([
+                'nom_locataire' => $data['nom_locataire'] ?? null,
+                'prenom_locataire' => $data['prenom_locataire'] ?? null,
+                'dateNaissance_locataire' => $data['dateNaissance_locataire'] ?? null,
+                'email_locataire' => $data['email_locataire'],
+                'tel_locataire' => $data['tel_locataire'] ?? null,
+                'rue_locataire' => $data['rue_locataire'] ?? null,
+                'complement_locataire' => $data['complement_locataire'] ?? null,
+                'RaisonSociale' => $data['RaisonSociale'] ?? null,
+                'Siret' => $data['Siret'] ?? null,
+                'id_commune' => $data['id_commune'] ?? null,
+                'id_locataire' => $id
+            ]);
+            
+            if (!$result) {
+                $errorInfo = $stmt->errorInfo();
+                throw new PDOException("Erreur SQL: " . $errorInfo[2]);
+            }
+            
+            return $stmt->rowCount();
+        } catch (PDOException $e) {
+            error_log("Erreur dans UserModel::update - " . $e->getMessage());
+            throw $e;
+        }
     }
 
     public function delete($id) {

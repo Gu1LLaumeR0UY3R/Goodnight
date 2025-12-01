@@ -25,6 +25,7 @@
                         <th>Superficie</th>
                         <th>Couchages</th>
                         <th>Animaux</th>
+                        <th>Prestations</th>
                         <th>Actions</th>
                     </tr>
                 </thead>
@@ -36,7 +37,11 @@
                             <td><?php echo htmlspecialchars($bien["superficie_biens"]); ?> m²</td>
                             <td><?php echo htmlspecialchars($bien["nb_couchage"]); ?></td>
                             <td><?php echo $bien["animaux_biens"] ? "Oui" : "Non"; ?></td>
+                            <td>
+                                <a href="/proprietaire/managePrestations/<?php echo htmlspecialchars($bien["id_biens"]); ?>" class="btn btn-secondary">Gérer</a>
+                            </td>
                             <td class="actions">
+                                <a href="/proprietaire/viewBien/<?php echo htmlspecialchars($bien["id_biens"]); ?>" class="btn-view">Voir</a>
                                 <a href="/proprietaire/editBien/<?php echo htmlspecialchars($bien["id_biens"]); ?>" class="btn-edit">Modifier</a>
                                 <a href="/proprietaire/deleteBien/<?php echo htmlspecialchars($bien["id_biens"]); ?>" class="btn-delete" onclick="return confirm('Êtes-vous sûr de vouloir supprimer ce bien ?');">Supprimer</a>
                             </td>
