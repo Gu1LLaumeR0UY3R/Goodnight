@@ -36,11 +36,11 @@
             <label for="date_fin">Date de fin :</label>
             <input type="date" id="date_fin" name="date_fin" required>
 
-            <label for="id_tarif">Tarif :</label>
+            <label for="id_tarif">Tarif (prix jour) :</label>
             <select id="id_tarif" name="id_tarif" required>
                 <option value="">Sélectionnez un tarif</option>
                 <?php foreach ($tarifs as $tarif): ?>
-                    <option value="<?php echo htmlspecialchars($tarif['id_tarif']); ?>"><?php echo htmlspecialchars($tarif['prix_semaine'] . ' €/semaine (Saison ' . $tarif['id_saison'] . ', Année ' . $tarif['annee'] . ')'); ?></option>
+                    <option value="<?php echo htmlspecialchars($tarif['id_tarif']); ?>"><?php echo htmlspecialchars($tarif['prix_semaine'] . ' €/jour (Saison ' . $tarif['id_saison'] . ', Année ' . $tarif['annee'] . ')'); ?></option>
                 <?php endforeach; ?>
             </select>
 

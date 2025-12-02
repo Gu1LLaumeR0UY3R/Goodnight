@@ -492,7 +492,7 @@
                     <p><strong>Superficie :</strong> <?php echo htmlspecialchars($bien["superficie_biens"]); ?> m²</p>
                     <p><strong>Nombre de couchages :</strong> <?php echo htmlspecialchars($bien["nb_couchage"]); ?></p>
                     <p><strong>Animaux acceptés :</strong> <?php echo $bien["animaux_biens"] ? 'Oui' : 'Non'; ?></p>
-                    <p><strong>Prix semaine actuel :</strong> 
+                    <p><strong>Prix jour actuel :</strong> 
                         <?php echo ($bien["prix_semaine"] ?? null) 
                             ? number_format($bien["prix_semaine"], 2, ',', ' ') . ' €' 
                             : 'Non renseigné'; ?>
@@ -570,7 +570,7 @@
                     </div>
                 <?php endif; ?>
                             
-                <form action="/reservation/store" method="POST" class="form-reservation">
+                <form action="/reservation/store" method="POST" class="form-reservation" id="reservationForm">
                     <input type="hidden" name="id_biens" value="<?php echo htmlspecialchars($bien['id_biens']); ?>">
                             
                     <div class="form-group">
@@ -673,6 +673,35 @@
                         }
                     });
                     bienCalendar.render();
+                }
+
+                // Popup confirmation calcul prix total (prix jour * nb jours)
+                const dailyPrice = <?php echo json_encode($bien['prix_semaine'] ?? null); ?>; // Interprété comme prix/jour
+                const form = document.getElementById('reservationForm');
+                if (form) {
+                    form.addEventListener('submit', function(e){
+                        const startEl = document.getElementById('date_debut');
+                        const endEl = document.getElementById('date_fin');
+                        if (!startEl || !endEl) return;
+                        const startDate = new Date(startEl.value);
+                        const endDate = new Date(endEl.value);
+                        if (isNaN(startDate.getTime()) || isNaN(endDate.getTime()) || endDate < startDate) {
+                            return; // Laisser la validation HTML faire son travail
+                        }
+                        const diffMs = endDate.getTime() - startDate.getTime();
+                        const dayCount = Math.round(diffMs / (1000*60*60*24)) + 1; // Inclusif
+                        if (!dailyPrice) {
+                            if (!confirm(`Durée: ${dayCount} jour(s)\nPrix: Non renseigné\nConfirmer la réservation ?`)) {
+                                e.preventDefault();
+                            }
+                            return;
+                        }
+                        const total = dailyPrice * dayCount;
+                        const message = `Durée: ${dayCount} jour(s)\nPrix jour: ${Number(dailyPrice).toFixed(2)} €\nTotal: ${total.toFixed(2)} €\n\nConfirmer la réservation ?`;
+                        if (!confirm(message)) {
+                            e.preventDefault();
+                        }
+                    });
                 }
             });
         (function(){
