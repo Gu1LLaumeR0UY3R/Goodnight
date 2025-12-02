@@ -93,7 +93,7 @@
             <h2>Calendrier des réservations</h2>
 
             <div style="margin-bottom:12px; display:flex; gap:12px; align-items:center;">
-                <div style="padding:6px 0; color:#333; font-size:14px;"><strong>Sélectionnez un ou plusieurs biens via la colonne de gauche</strong></div>
+                <div class="calendar-instruction"><strong>Sélectionnez un ou plusieurs biens via la colonne de gauche</strong></div>
                 <div style="margin-left:auto; font-size:14px; color:#666">
                     <span style="display:inline-block;margin-right:8px;"><span style="display:inline-block;width:12px;height:12px;background:#3788d8;margin-right:6px;"></span>Réservations</span>
                     <span style="display:inline-block;margin-left:8px;"><span style="display:inline-block;width:12px;height:12px;background:#ff7f50;margin-right:6px;"></span>Blocages</span>
@@ -787,7 +787,14 @@
                 slot.className = 'wheel-slot';
                 const b = biens[i % biens.length];
                 const img = b.premiere_photo || '/img/default.jpg';
-                slot.innerHTML = `<img src="${img}" alt="${escapeHtml(b.designation_bien)}"><div class="slot-body">${escapeHtml(b.designation_bien)}</div>`;
+                slot.innerHTML = `
+                    <img src="${img}" alt="${escapeHtml(b.designation_bien)}">
+                    <div class="slot-body">
+                        <div class="card-title">${escapeHtml(b.designation_bien)}</div>
+                        <div class="card-desc">${escapeHtml((b.description_biens || '').slice(0,120))}</div>
+                        <div class="card-price">${b.prix ?? ''}</div>
+                    </div>
+                `;
 
                 const angle = (i / slotCount) * 360; // degrees
                 // position around Y-axis in 3D

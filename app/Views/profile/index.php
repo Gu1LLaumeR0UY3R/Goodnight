@@ -6,254 +6,16 @@
     <title>Mon Profil - GlobeNight</title>
     <link rel="stylesheet" href="/css/style.css">
     <link rel="stylesheet" href="/css/navbar.css">
-    <style>
-        :root {
-            --primary: #ff9800;
-            --primary-dark: #fb8c00;
-            --secondary: #4caf50;
-            --text-dark: #2c3e50;
-            --text-light: #666;
-            --bg-light: #f9f9f9;
-            --shadow-sm: 0 2px 8px rgba(0,0,0,0.08);
-            --shadow-md: 0 4px 16px rgba(0,0,0,0.12);
-            --shadow-lg: 0 8px 32px rgba(0,0,0,0.16);
-            --radius: 12px;
-        }
-
-        * { box-sizing: border-box; }
-
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #fff8f0 0%, #ffffff 100%);
-            margin: 0;
-            color: var(--text-dark);
-            padding-top: 80px;
-        }
-
-        main {
-            max-width: 1200px;
-            margin: 2rem auto;
-            padding: 0 1rem;
-        }
-
-        .profile-container {
-            background: white;
-            border-radius: var(--radius);
-            box-shadow: var(--shadow-md);
-            padding: 2.5rem;
-            margin-bottom: 2rem;
-        }
-
-        .profile-header {
-            text-align: center;
-            margin-bottom: 3rem;
-            padding-bottom: 2rem;
-            border-bottom: 2px solid var(--primary);
-        }
-
-        .profile-header h1 {
-            color: var(--primary);
-            font-size: 2.2rem;
-            margin: 0 0 0.5rem 0;
-        }
-
-        .profile-picture-section {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 1.5rem;
-            margin-bottom: 3rem;
-        }
-
-        .pfp-container {
-            position: relative;
-            width: 200px;
-            height: 200px;
-            border-radius: 50%;
-            overflow: hidden;
-            box-shadow: var(--shadow-lg);
-            border: 4px solid var(--primary);
-        }
-
-        .pfp-container img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-        .pfp-placeholder {
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-size: 4rem;
-            font-weight: bold;
-        }
-
-        .pfp-actions {
-            display: flex;
-            gap: 1rem;
-            flex-wrap: wrap;
-            justify-content: center;
-        }
-
-        .btn-upload {
-            background: var(--primary);
-            color: white;
-            padding: 0.75rem 1.5rem;
-            border: none;
-            border-radius: var(--radius);
-            cursor: pointer;
-            font-size: 1rem;
-            font-weight: 600;
-            transition: all 0.3s ease;
-            box-shadow: var(--shadow-sm);
-        }
-
-        .btn-upload:hover {
-            background: var(--primary-dark);
-            transform: translateY(-2px);
-            box-shadow: var(--shadow-md);
-        }
-
-        .btn-delete {
-            background: #dc3545;
-            color: white;
-            padding: 0.75rem 1.5rem;
-            border: none;
-            border-radius: var(--radius);
-            cursor: pointer;
-            font-size: 1rem;
-            font-weight: 600;
-            transition: all 0.3s ease;
-            box-shadow: var(--shadow-sm);
-        }
-
-        .btn-delete:hover {
-            background: #c82333;
-            transform: translateY(-2px);
-            box-shadow: var(--shadow-md);
-        }
-
-        #pfpFileInput {
-            display: none;
-        }
-
-        .profile-info {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 2rem;
-            margin-top: 2rem;
-        }
-
-        .info-card {
-            background: var(--bg-light);
-            padding: 1.5rem;
-            border-radius: var(--radius);
-            box-shadow: var(--shadow-sm);
-        }
-
-        .info-card h3 {
-            color: var(--primary);
-            margin: 0 0 1rem 0;
-            font-size: 1.3rem;
-            border-bottom: 2px solid var(--primary);
-            padding-bottom: 0.5rem;
-        }
-
-        .info-row {
-            display: flex;
-            justify-content: space-between;
-            padding: 0.75rem 0;
-            border-bottom: 1px solid #ddd;
-        }
-
-        .info-row:last-child {
-            border-bottom: none;
-        }
-
-        .info-label {
-            font-weight: 600;
-            color: var(--text-dark);
-        }
-
-        .info-value {
-            color: var(--text-light);
-            text-align: right;
-        }
-
-        .alert {
-            padding: 1rem 1.5rem;
-            border-radius: var(--radius);
-            margin-bottom: 1.5rem;
-            font-weight: 500;
-        }
-
-        .alert-success {
-            background: #d4edda;
-            color: #155724;
-            border: 1px solid #c3e6cb;
-        }
-
-        .alert-error {
-            background: #f8d7da;
-            color: #721c24;
-            border: 1px solid #f5c6cb;
-        }
-
-        .alert-info {
-            background: #d1ecf1;
-            color: #0c5460;
-            border: 1px solid #bee5eb;
-        }
-
-        footer {
-            text-align: center;
-            padding: 2rem;
-            color: var(--text-light);
-            font-size: 0.9rem;
-        }
-
-        @media (max-width: 768px) {
-            .profile-container {
-                padding: 1.5rem;
-            }
-
-            .profile-header h1 {
-                font-size: 1.8rem;
-            }
-
-            .pfp-container {
-                width: 150px;
-                height: 150px;
-            }
-
-            .pfp-placeholder {
-                font-size: 3rem;
-            }
-
-            .info-row {
-                flex-direction: column;
-                gap: 0.5rem;
-            }
-
-            .info-value {
-                text-align: left;
-            }
-        }
-    </style>
+    <link rel="stylesheet" href="/css/profile.css">
 </head>
-<body>
+<body class="profile-page">
     <?php include __DIR__ . '/../layout/navbar.php'; ?>
 
-    <main>
+    <main class="profile-main">
         <div class="profile-container">
             <div class="profile-header">
                 <h1>Mon Profil</h1>
-                <p style="color: var(--text-light); font-size: 1.1rem;">Gérez vos informations personnelles</p>
+                <p class="profile-subtitle">Gérez vos informations personnelles</p>
             </div>
 
             <!-- Alerts -->
@@ -293,33 +55,50 @@
                 </div>
             </div>
 
+            <!-- Boutons d'action -->
+            <div class="profile-actions">
+                <button id="editBtn" class="btn-edit" onclick="toggleEditMode()">
+                    ✏️ Modifier mes informations
+                </button>
+                <button id="saveBtn" class="btn-save" style="display: none;" onclick="saveProfile()">
+                    💾 Enregistrer
+                </button>
+                <button id="cancelBtn" class="btn-cancel" style="display: none;" onclick="cancelEdit()">
+                    ❌ Annuler
+                </button>
+            </div>
+
             <!-- Informations utilisateur -->
-            <div class="profile-info">
+            <div class="profile-info" id="profileInfo">
                 <div class="info-card">
                     <h3>Informations Personnelles</h3>
                     <?php if (!empty($user['RaisonSociale'])): ?>
                         <!-- Personne morale -->
                         <div class="info-row">
                             <span class="info-label">Raison Sociale:</span>
-                            <span class="info-value"><?php echo htmlspecialchars($user['RaisonSociale']); ?></span>
+                            <span class="info-value" data-field="RaisonSociale"><?php echo htmlspecialchars($user['RaisonSociale']); ?></span>
+                            <input type="text" class="info-input" data-field="RaisonSociale" value="<?php echo htmlspecialchars($user['RaisonSociale']); ?>" style="display: none;">
                         </div>
                         <div class="info-row">
                             <span class="info-label">SIRET:</span>
-                            <span class="info-value"><?php echo htmlspecialchars($user['Siret'] ?? 'Non renseigné'); ?></span>
+                            <span class="info-value" data-field="Siret"><?php echo htmlspecialchars($user['Siret'] ?? 'Non renseigné'); ?></span>
+                            <input type="text" class="info-input" data-field="Siret" value="<?php echo htmlspecialchars($user['Siret'] ?? ''); ?>" placeholder="14 chiffres" maxlength="14" style="display: none;">
                         </div>
                     <?php else: ?>
                         <!-- Personne physique -->
                         <div class="info-row">
                             <span class="info-label">Nom:</span>
-                            <span class="info-value"><?php echo htmlspecialchars($user['nom_locataire'] ?? 'Non renseigné'); ?></span>
+                            <span class="info-value" data-field="nom_locataire"><?php echo htmlspecialchars($user['nom_locataire'] ?? 'Non renseigné'); ?></span>
+                            <input type="text" class="info-input" data-field="nom_locataire" value="<?php echo htmlspecialchars($user['nom_locataire'] ?? ''); ?>" style="display: none;">
                         </div>
                         <div class="info-row">
                             <span class="info-label">Prénom:</span>
-                            <span class="info-value"><?php echo htmlspecialchars($user['prenom_locataire'] ?? 'Non renseigné'); ?></span>
+                            <span class="info-value" data-field="prenom_locataire"><?php echo htmlspecialchars($user['prenom_locataire'] ?? 'Non renseigné'); ?></span>
+                            <input type="text" class="info-input" data-field="prenom_locataire" value="<?php echo htmlspecialchars($user['prenom_locataire'] ?? ''); ?>" style="display: none;">
                         </div>
                         <div class="info-row">
                             <span class="info-label">Date de naissance:</span>
-                            <span class="info-value">
+                            <span class="info-value" data-field="dateNaissance_locataire">
                                 <?php 
                                     if (!empty($user['dateNaissance_locataire'])) {
                                         echo date('d/m/Y', strtotime($user['dateNaissance_locataire']));
@@ -328,6 +107,7 @@
                                     }
                                 ?>
                             </span>
+                            <input type="date" class="info-input" data-field="dateNaissance_locataire" value="<?php echo htmlspecialchars($user['dateNaissance_locataire'] ?? ''); ?>" style="display: none;">
                         </div>
                     <?php endif; ?>
                 </div>
@@ -336,34 +116,34 @@
                     <h3>Contact</h3>
                     <div class="info-row">
                         <span class="info-label">Email:</span>
-                        <span class="info-value"><?php echo htmlspecialchars($user['email_locataire']); ?></span>
+                        <span class="info-value" data-field="email_locataire"><?php echo htmlspecialchars($user['email_locataire']); ?></span>
+                        <input type="email" class="info-input" data-field="email_locataire" value="<?php echo htmlspecialchars($user['email_locataire']); ?>" style="display: none;">
                     </div>
                     <div class="info-row">
                         <span class="info-label">Téléphone:</span>
-                        <span class="info-value"><?php echo htmlspecialchars($user['tel_locataire'] ?? 'Non renseigné'); ?></span>
+                        <span class="info-value" data-field="tel_locataire"><?php echo htmlspecialchars($user['tel_locataire'] ?? 'Non renseigné'); ?></span>
+                        <input type="tel" class="info-input" data-field="tel_locataire" value="<?php echo htmlspecialchars($user['tel_locataire'] ?? ''); ?>" placeholder="+33 6 12 34 56 78" style="display: none;">
                     </div>
                 </div>
 
-                <?php if (!empty($user['rue_locataire'])): ?>
                 <div class="info-card">
                     <h3>Adresse</h3>
                     <div class="info-row">
                         <span class="info-label">Rue:</span>
-                        <span class="info-value"><?php echo htmlspecialchars($user['rue_locataire']); ?></span>
+                        <span class="info-value" data-field="rue_locataire"><?php echo htmlspecialchars($user['rue_locataire'] ?? 'Non renseignée'); ?></span>
+                        <input type="text" class="info-input" data-field="rue_locataire" value="<?php echo htmlspecialchars($user['rue_locataire'] ?? ''); ?>" style="display: none;">
                     </div>
-                    <?php if (!empty($user['complement_locataire'])): ?>
                     <div class="info-row">
                         <span class="info-label">Complément:</span>
-                        <span class="info-value"><?php echo htmlspecialchars($user['complement_locataire']); ?></span>
+                        <span class="info-value" data-field="complement_locataire"><?php echo htmlspecialchars($user['complement_locataire'] ?? 'Non renseigné'); ?></span>
+                        <input type="text" class="info-input" data-field="complement_locataire" value="<?php echo htmlspecialchars($user['complement_locataire'] ?? ''); ?>" placeholder="Appartement, étage..." style="display: none;">
                     </div>
-                    <?php endif; ?>
                 </div>
-                <?php endif; ?>
             </div>
         </div>
     </main>
 
-    <footer>
+    <footer class="profile-footer">
         <p>© <?php echo date("Y"); ?> GlobeNight. Tous droits réservés.</p>
     </footer>
 
@@ -451,10 +231,187 @@
                 </div>
             `;
 
+            // Faire défiler vers le haut pour voir l'alerte
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+
             // Faire disparaître l'alerte après 5 secondes
             setTimeout(() => {
                 alertContainer.innerHTML = '';
             }, 5000);
+        }
+
+        // Mode édition
+        let isEditMode = false;
+        let originalValues = {};
+
+        function toggleEditMode() {
+            isEditMode = true;
+            
+            // Sauvegarder les valeurs originales
+            document.querySelectorAll('.info-input').forEach(input => {
+                originalValues[input.dataset.field] = input.value;
+            });
+
+            // Masquer les valeurs en lecture seule et afficher les inputs
+            document.querySelectorAll('.info-value').forEach(el => el.style.display = 'none');
+            document.querySelectorAll('.info-input').forEach(el => el.style.display = 'block');
+
+            // Basculer les boutons
+            document.getElementById('editBtn').style.display = 'none';
+            document.getElementById('saveBtn').style.display = 'inline-block';
+            document.getElementById('cancelBtn').style.display = 'inline-block';
+        }
+
+        function cancelEdit() {
+            isEditMode = false;
+
+            // Restaurer les valeurs originales
+            document.querySelectorAll('.info-input').forEach(input => {
+                input.value = originalValues[input.dataset.field] || '';
+            });
+
+            // Masquer les inputs et afficher les valeurs en lecture seule
+            document.querySelectorAll('.info-value').forEach(el => el.style.display = 'block');
+            document.querySelectorAll('.info-input').forEach(el => el.style.display = 'none');
+
+            // Réactiver les boutons
+            document.getElementById('saveBtn').disabled = false;
+            document.getElementById('cancelBtn').disabled = false;
+
+            // Basculer les boutons
+            document.getElementById('editBtn').style.display = 'inline-block';
+            document.getElementById('saveBtn').style.display = 'none';
+            document.getElementById('cancelBtn').style.display = 'none';
+
+            // Effacer les messages d'erreur
+            document.getElementById('alertContainer').innerHTML = '';
+        }
+
+        function saveProfile() {
+            // Collecter les données du formulaire
+            const formData = {};
+            document.querySelectorAll('.info-input').forEach(input => {
+                formData[input.dataset.field] = input.value;
+            });
+
+            // Validation côté client
+            const errors = [];
+            
+            // Email obligatoire
+            if (!formData.email_locataire || !formData.email_locataire.trim()) {
+                errors.push('L\'email est obligatoire');
+            } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email_locataire)) {
+                errors.push('Format d\'email invalide');
+            }
+
+            // Validation selon le type de personne
+            if (formData.RaisonSociale !== undefined) {
+                // Personne morale
+                if (!formData.RaisonSociale || !formData.RaisonSociale.trim()) {
+                    errors.push('La raison sociale est obligatoire');
+                }
+                if (formData.Siret && !/^\d{14}$/.test(formData.Siret.replace(/\s/g, ''))) {
+                    errors.push('Le SIRET doit contenir 14 chiffres');
+                }
+            } else {
+                // Personne physique
+                if (!formData.nom_locataire || !formData.nom_locataire.trim()) {
+                    errors.push('Le nom est obligatoire');
+                }
+                if (!formData.prenom_locataire || !formData.prenom_locataire.trim()) {
+                    errors.push('Le prénom est obligatoire');
+                }
+            }
+
+            // Validation du téléphone
+            if (formData.tel_locataire && !/^[0-9\s\+\-\(\)]+$/.test(formData.tel_locataire)) {
+                errors.push('Numéro de téléphone invalide');
+            }
+
+            // Afficher les erreurs si présentes
+            if (errors.length > 0) {
+                showAlert(errors.join('<br>'), 'error');
+                return;
+            }
+
+            // Désactiver les boutons pendant l'envoi
+            document.getElementById('saveBtn').disabled = true;
+            document.getElementById('cancelBtn').disabled = true;
+
+            // Envoyer les données au serveur
+            console.log('Envoi des données:', formData);
+            
+            fetch('/profile/updateProfile', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(formData)
+            })
+            .then(response => {
+                console.log('Response status:', response.status);
+                console.log('Response headers:', response.headers);
+                return response.text().then(text => {
+                    console.log('Response text:', text);
+                    try {
+                        return JSON.parse(text);
+                    } catch (e) {
+                        console.error('Erreur de parsing JSON:', e);
+                        throw new Error('La réponse du serveur n\'est pas du JSON valide: ' + text);
+                    }
+                });
+            })
+            .then(data => {
+                console.log('Data reçue:', data);
+                
+                if (data.success) {
+                    showAlert(data.message, 'success');
+                    
+                    // Mettre à jour les valeurs affichées
+                    document.querySelectorAll('.info-input').forEach(input => {
+                        const field = input.dataset.field;
+                        const value = input.value;
+                        const displayValue = value || 'Non renseigné';
+                        
+                        // Mise à jour de la valeur affichée
+                        const valueSpan = document.querySelector(`.info-value[data-field="${field}"]`);
+                        if (valueSpan) {
+                            // Formatage spécial pour la date
+                            if (field === 'dateNaissance_locataire' && value) {
+                                const date = new Date(value);
+                                valueSpan.textContent = date.toLocaleDateString('fr-FR');
+                            } else {
+                                valueSpan.textContent = displayValue;
+                            }
+                        }
+                    });
+
+                    // Quitter le mode édition
+                    setTimeout(() => {
+                        cancelEdit();
+                    }, 1500);
+                } else {
+                    // Afficher les erreurs serveur
+                    if (data.errors) {
+                        const errorMessages = Object.values(data.errors).join('<br>');
+                        showAlert(errorMessages, 'error');
+                    } else {
+                        showAlert(data.error || 'Erreur lors de la mise à jour', 'error');
+                    }
+                    
+                    // Réactiver les boutons
+                    document.getElementById('saveBtn').disabled = false;
+                    document.getElementById('cancelBtn').disabled = false;
+                }
+            })
+            .catch(error => {
+                console.error('Erreur complète:', error);
+                showAlert('Erreur lors de la mise à jour du profil: ' + error.message, 'error');
+                
+                // Réactiver les boutons
+                document.getElementById('saveBtn').disabled = false;
+                document.getElementById('cancelBtn').disabled = false;
+            });
         }
     </script>
 </body>

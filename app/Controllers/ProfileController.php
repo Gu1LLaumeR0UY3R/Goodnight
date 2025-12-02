@@ -168,5 +168,152 @@ class ProfileController extends BaseController {
             'message' => 'Photo de profil supprimée avec succès'
         ]);
     }
+
+    public function updateProfile() {
+        // Vérifier que l'utilisateur est connecté
+        if (!isset($_SESSION['user_id'])) {
+            http_response_code(401);
+            echo json_encode(['success' => false, 'error' => 'Non authentifié']);
+            return;
+        }
+
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            http_response_code(405);
+            echo json_encode(['success' => false, 'error' => 'Méthode non autorisée']);
+            return;
+        }
+
+        $userId = $_SESSION['user_id'];
+        $user = $this->userModel->getById($userId);
+
+        if (!$user) {
+            http_response_code(404);
+            echo json_encode(['success' => false, 'error' => 'Utilisateur non trouvé']);
+            return;
+        }
+
+        // Récupérer les données du formulaire
+        $data = json_decode(file_get_contents('php://input'), true);
+
+        if (!$data) {
+            http_response_code(400);
+            echo json_encode(['success' => false, 'error' => 'Données invalides']);
+            return;
+        }
+
+        // Validation des données selon le type de personne
+        $errors = [];
+        
+        // Email obligatoire et unique
+        if (empty($data['email_locataire'])) {
+            $errors['email'] = 'L\'email est obligatoire';
+        } elseif (!filter_var($data['email_locataire'], FILTER_VALIDATE_EMAIL)) {
+            $errors['email'] = 'Format d\'email invalide';
+        } elseif ($data['email_locataire'] !== $user['email_locataire'] && $this->userModel->emailExists($data['email_locataire'])) {
+            $errors['email'] = 'Cet email est déjà utilisé';
+        }
+
+        // Déterminer le type de personne basé sur les données existantes
+        $isPersonneMorale = !empty($user['RaisonSociale']);
+        
+        // Validation selon le type (personne physique ou morale)
+        if ($isPersonneMorale) {
+            // Personne morale
+            if (empty($data['RaisonSociale'])) {
+                $errors['RaisonSociale'] = 'La raison sociale est obligatoire';
+            }
+            // Siret optionnel mais doit être valide si fourni
+            if (!empty($data['Siret']) && !preg_match('/^\d{14}$/', str_replace(' ', '', $data['Siret']))) {
+                $errors['Siret'] = 'Le SIRET doit contenir 14 chiffres';
+            }
+        } else {
+            // Personne physique
+            if (empty($data['nom_locataire'])) {
+                $errors['nom'] = 'Le nom est obligatoire';
+            }
+            if (empty($data['prenom_locataire'])) {
+                $errors['prenom'] = 'Le prénom est obligatoire';
+            }
+            // Date de naissance optionnelle mais doit être valide si fournie
+            if (!empty($data['dateNaissance_locataire'])) {
+                $date = DateTime::createFromFormat('Y-m-d', $data['dateNaissance_locataire']);
+                if (!$date || $date->format('Y-m-d') !== $data['dateNaissance_locataire']) {
+                    $errors['dateNaissance'] = 'Date de naissance invalide';
+                }
+            }
+        }
+
+        // Validation du téléphone (optionnel)
+        if (!empty($data['tel_locataire']) && !preg_match('/^[0-9\s\+\-\(\)]+$/', $data['tel_locataire'])) {
+            $errors['tel'] = 'Numéro de téléphone invalide';
+        }
+
+        // Si des erreurs existent, les retourner
+        if (!empty($errors)) {
+            http_response_code(400);
+            echo json_encode(['success' => false, 'errors' => $errors]);
+            return;
+        }
+
+        // Préparer les données pour la mise à jour
+        $updateData = [
+            'email_locataire' => trim($data['email_locataire']),
+            'tel_locataire' => !empty($data['tel_locataire']) ? trim($data['tel_locataire']) : null,
+            'rue_locataire' => !empty($data['rue_locataire']) ? trim($data['rue_locataire']) : null,
+            'complement_locataire' => !empty($data['complement_locataire']) ? trim($data['complement_locataire']) : null,
+            'id_commune' => $user['id_commune'] ?? null
+        ];
+
+        // Ajouter les champs spécifiques selon le type
+        if ($isPersonneMorale) {
+            // Personne morale
+            $updateData['RaisonSociale'] = trim($data['RaisonSociale']);
+            $updateData['Siret'] = !empty($data['Siret']) ? str_replace(' ', '', trim($data['Siret'])) : null;
+            $updateData['nom_locataire'] = null;
+            $updateData['prenom_locataire'] = null;
+            $updateData['dateNaissance_locataire'] = null;
+        } else {
+            // Personne physique
+            $updateData['nom_locataire'] = trim($data['nom_locataire']);
+            $updateData['prenom_locataire'] = trim($data['prenom_locataire']);
+            $updateData['dateNaissance_locataire'] = !empty($data['dateNaissance_locataire']) ? $data['dateNaissance_locataire'] : null;
+            $updateData['RaisonSociale'] = null;
+            $updateData['Siret'] = null;
+        }
+
+        // Effectuer la mise à jour
+        try {
+            // Log des données avant mise à jour pour débogage
+            error_log("UserID: " . $userId);
+            error_log("UpdateData: " . print_r($updateData, true));
+            
+            $updated = $this->userModel->update($userId, $updateData);
+
+            // Mettre à jour la session si l'email a changé
+            if ($data['email_locataire'] !== $user['email_locataire']) {
+                $_SESSION['user_email'] = $data['email_locataire'];
+            }
+
+            echo json_encode([
+                'success' => true,
+                'message' => 'Profil mis à jour avec succès'
+            ]);
+        } catch (PDOException $e) {
+            error_log("Erreur PDO lors de la mise à jour du profil : " . $e->getMessage());
+            error_log("Code erreur: " . $e->getCode());
+            http_response_code(500);
+            echo json_encode([
+                'success' => false,
+                'error' => 'Erreur de base de données : ' . $e->getMessage()
+            ]);
+        } catch (Exception $e) {
+            error_log("Erreur lors de la mise à jour du profil : " . $e->getMessage());
+            http_response_code(500);
+            echo json_encode([
+                'success' => false,
+                'error' => 'Erreur lors de la mise à jour du profil : ' . $e->getMessage()
+            ]);
+        }
+    }
 }
 ?>

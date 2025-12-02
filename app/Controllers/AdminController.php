@@ -155,7 +155,11 @@ class AdminController extends BaseController {
 
     public function addSaison() {
         if ($_SERVER["REQUEST_METHOD"] === "POST") {
-            $this->saisonModel->create(["lib_saison" => $_POST["lib_saison"]]);
+            $this->saisonModel->create([
+                "lib_saison" => $_POST["lib_saison"],
+                "date_debut" => $_POST["date_debut"],
+                "date_fin" => $_POST["date_fin"]
+            ]);
             $this->redirect("/admin/saisons");
         }
         $this->render("admin/add_saison", [], ["style.css"]);
@@ -163,7 +167,11 @@ class AdminController extends BaseController {
 
     public function editSaison($id) {
         if ($_SERVER["REQUEST_METHOD"] === "POST") {
-            $this->saisonModel->update($id, ["lib_saison" => $_POST["lib_saison"]]);
+            $this->saisonModel->update($id, [
+                "lib_saison" => $_POST["lib_saison"],
+                "date_debut" => $_POST["date_debut"],
+                "date_fin" => $_POST["date_fin"]
+            ]);
             $this->redirect("/admin/saisons");
         }
         $saison = $this->saisonModel->getById($id);

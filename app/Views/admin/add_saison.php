@@ -14,6 +14,13 @@
         <form action="/admin/addSaison" method="POST">
             <label for="lib_saison">Libelle de la Saison :</label>
             <input type="text" id="lib_saison" name="lib_saison" required>
+            
+            <label for="date_debut">Date de début :</label>
+            <input type="date" id="date_debut" name="date_debut" required>
+            
+            <label for="date_fin">Date de fin :</label>
+            <input type="date" id="date_fin" name="date_fin" required>
+            
             <button type="submit">Ajouter la Saison</button>
         </form>
 

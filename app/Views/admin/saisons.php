@@ -25,6 +25,8 @@
                 <tr>
                     <th>ID</th>
                     <th>Désignation</th>
+                    <th>Date de début</th>
+                    <th>Date de fin</th>
                     <th>Actions</th>
                 </tr>
             </thead>
@@ -33,6 +35,8 @@
                     <tr>
                         <td><?php echo htmlspecialchars($saison["id_saison"]); ?></td>
                         <td><?php echo htmlspecialchars($saison["lib_saison"]); ?></td>
+                        <td><?php echo !empty($saison["date_debut"]) ? date('d/m/Y', strtotime($saison["date_debut"])) : '-'; ?></td>
+                        <td><?php echo !empty($saison["date_fin"]) ? date('d/m/Y', strtotime($saison["date_fin"])) : '-'; ?></td>
                         <td>
                             <a href="/admin/editSaison/<?php echo htmlspecialchars($saison["id_saison"]); ?>">Modifier</a>
                             <a href="/admin/deleteSaison/<?php echo htmlspecialchars($saison["id_saison"]); ?>" onclick="return confirm('Êtes-vous sûr de vouloir supprimer cette saison ?');">Supprimer</a>

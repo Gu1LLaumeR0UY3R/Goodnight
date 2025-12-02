@@ -167,9 +167,12 @@ body.dark-mode .profile-header {
     border-bottom-color: #ff9800;
 }
 
-body.dark-mode .bien-header h1,
+body.dark-mode .bien-header h1 {
+    color: #000;
+}
+
 body.dark-mode .profile-header h1 {
-    color: #ff9800;
+    color: var(--primary);
 }
 
 body.dark-mode .info-block,
@@ -243,16 +246,23 @@ body.dark-mode textarea:focus {
 }
 
 /* Calendrier FullCalendar */
+body.dark-mode #calendar {
+    width: 100%;
+    min-height: 450px;
+    background: rgba(30, 30, 30, 0.95) !important;
+    border: 1px solid #444 !important;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4) !important;
+}
+
 body.dark-mode .fc {
     background: rgba(30, 30, 30, 0.95);
     border: 1px solid #444;
     border-radius: 12px;
     box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
-    backdrop-filter: blur(10px);
 }
 
 body.dark-mode .fc-toolbar {
-    background: rgba(40, 40, 40, 0.8);
+    background: rgba(40, 40, 40, 0.5);
     padding: 1rem;
     border-radius: 12px 12px 0 0;
 }
@@ -263,16 +273,30 @@ body.dark-mode .fc-toolbar-title {
 }
 
 body.dark-mode .fc-col-header {
-    background: rgba(40, 40, 40, 0.5);
+    background: #5DBAA7 !important;
 }
 
 body.dark-mode .fc-col-header-cell {
-    border-color: #444;
+    border-color: #4a9d8b !important;
+    background: transparent !important;
 }
 
 body.dark-mode .fc-col-header-cell-cushion {
-    color: #e0e0e0;
+    color: #fff !important;
     font-weight: 600;
+    text-transform: uppercase;
+}
+
+body.dark-mode .fc-scrollgrid-section-header {
+    background: #5DBAA7 !important;
+}
+
+body.dark-mode .fc-scrollgrid-section-header > * {
+    background: #5DBAA7 !important;
+}
+
+body.dark-mode .fc-col-header-cell .fc-scrollgrid-sync-inner {
+    background: transparent !important;
 }
 
 body.dark-mode .fc-daygrid-day-number {
@@ -280,9 +304,9 @@ body.dark-mode .fc-daygrid-day-number {
 }
 
 body.dark-mode .fc-button {
-    background: linear-gradient(135deg, #ff9800 0%, #fb8c00 100%) !important;
+    background: linear-gradient(135deg, #FE9D15 0%, #FEBB5F 100%) !important;
     border-color: #ff9800 !important;
-    color: #000 !important;
+    color: #fff !important;
     font-weight: 600;
 }
 
@@ -307,7 +331,7 @@ body.dark-mode .fc-day:hover {
 }
 
 body.dark-mode .fc-day-today {
-    background: rgba(255, 152, 0, 0.2) !important;
+    background: rgba(255, 152, 0, 0.15) !important;
     border-color: #ff9800;
 }
 
@@ -346,11 +370,13 @@ body.dark-mode .calendar-container,
 body.dark-mode #calendarContainer,
 body.dark-mode .content-area {
     background: rgba(30, 30, 30, 0.95);
-    padding: 1.5rem;
-    border-radius: 12px;
+    padding: 30px;
+    border-radius: 15px;
     border: 1px solid #444;
     box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
     backdrop-filter: blur(10px);
+    margin: 40px auto;
+    max-width: 1000px;
 }
 
 /* Div du calendrier avec background inline white */
@@ -372,6 +398,14 @@ body.dark-mode .content-area > div[style*="display:flex"] {
     padding: 0.75rem 1rem;
     border-radius: 8px;
     border: 1px solid #555;
+}
+
+body.dark-mode .content-area > div[style*="color:#666"] {
+    color: #fff !important;
+}
+
+body.dark-mode .content-area div[style*="color:#666"] span {
+    color: #fff !important;
 }
 
 body.dark-mode .content-area strong {
@@ -718,6 +752,62 @@ body.dark-mode .search-section {
     backdrop-filter: blur(10px);
 }
 
+/* Barre de recherche - mode sombre (page d'accueil) */
+body.dark-mode .hero .search-bar {
+    display: flex;
+    gap: 12px;
+    padding: 14px;
+    background: rgba(30, 30, 30, 0.85);
+    border: 1px solid #444;
+    border-radius: 12px;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.35);
+}
+
+body.dark-mode .hero .search-bar input[type="text"],
+body.dark-mode .hero #commune_search {
+    flex: 1;
+    background: rgba(40, 40, 40, 0.9);
+    color: #e0e0e0;
+    border: 1px solid #555;
+    padding: 12px 14px;
+    border-radius: 8px;
+}
+
+body.dark-mode .hero .search-bar input[type="text"]::placeholder,
+body.dark-mode .hero #commune_search::placeholder {
+    color: #9aa0a6;
+}
+
+body.dark-mode .hero .search-bar input[type="text"]:focus,
+body.dark-mode .hero #commune_search:focus {
+    border-color: #ff9800;
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(255, 152, 0, 0.15);
+    background: rgba(48, 48, 48, 0.95);
+}
+
+body.dark-mode .hero .search-bar button[type="submit"],
+body.dark-mode .hero .search-bar button {
+    background: linear-gradient(135deg, #ff9800 0%, #fb8c00 100%);
+    color: #000;
+    border: none;
+    padding: 12px 18px;
+    border-radius: 8px;
+    font-weight: 600;
+    min-width: 140px;
+}
+
+body.dark-mode .hero .search-bar button[type="submit"]:hover,
+body.dark-mode .hero .search-bar button:hover {
+    background: linear-gradient(135deg, #fb8c00 0%, #f57c00 100%);
+    transform: translateY(-1px);
+}
+
+/* Titre de la section héro en mode sombre */
+body.dark-mode .hero h2 {
+    color: #ff9800;
+}
+
 body.dark-mode .hero-section h1,
 body.dark-mode .search-section h1,
 body.dark-mode .section-title {
@@ -1010,6 +1100,40 @@ body.dark-mode .wheel-card p {
     color: #b0b0b0;
 }
 
+/* Wheel slots (cartes du carrousel) */
+body.dark-mode .wheel-slot {
+    background: rgba(30, 30, 30, 0.95) !important;
+    border: 2px solid #444;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+}
+
+body.dark-mode .wheel-slot:hover {
+    border-color: #ff9800;
+    box-shadow: 0 12px 32px rgba(255, 152, 0, 0.4);
+}
+
+body.dark-mode .wheel-slot .slot-body {
+    color: #e0e0e0 !important;
+    background: rgba(30, 30, 30, 0.95);
+}
+
+body.dark-mode .wheel-slot .card-title {
+    color: #ff9800;
+}
+
+body.dark-mode .wheel-slot .card-desc,
+body.dark-mode .wheel-slot .card-price {
+    color: #b0b0b0;
+}
+
+body.dark-mode .wheel-slot img {
+    opacity: 0.9;
+}
+
+body.dark-mode .wheel-slot:hover img {
+    opacity: 1;
+}
+
 /* Filtres et checkbox */
 body.dark-mode .filter-panel {
     background: rgba(30, 30, 30, 0.95);
@@ -1292,6 +1416,16 @@ body.dark-mode .blocage-item:hover {
 
 body.dark-mode .blocage-item strong {
     color: #ff9800;
+}
+
+/* Instruction du calendrier */
+body.dark-mode .calendar-instruction {
+    padding: 0.75rem 1rem;
+    color: #e0e0e0;
+    font-size: 14px;
+    background: rgba(40, 40, 40, 0.8);
+    border: 1px solid #555;
+    border-radius: 8px;
 }
 
 /* Modals */
