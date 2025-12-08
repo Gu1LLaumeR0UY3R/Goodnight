@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
@@ -10,7 +10,8 @@
     <link rel="stylesheet" href="/css/dashboard.css">
     <link rel="stylesheet" href="/css/admin-modal.css">
 </head>
-<body class="home-sunset">
+<body class="home-sunset admin-page">
+    <div class="top-banner"></div>
     <?php include __DIR__ . '/../layout/navbar.php'; ?>
 
     <main class="page-shell">

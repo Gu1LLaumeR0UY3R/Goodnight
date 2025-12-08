@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
@@ -6,6 +6,7 @@
     <title>Gestion des Admins - Admin</title>
     <link rel="stylesheet" href="/css/style.css">
     <link rel="stylesheet" href="/css/navbar.css">
+    <link rel="stylesheet" href="/css/admin-content.css">
 </head>
 <div class="container mt-4">
     <h2>Modifier l'Administrateur: <?= htmlspecialchars($admin["nom_admin"]) ?></h2>
