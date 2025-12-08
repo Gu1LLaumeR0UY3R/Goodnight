@@ -11,11 +11,6 @@ body.home-sunset {
   margin-top: 0;
 }
 
-/* Admin page: remove top banner padding */
-body.home-sunset.admin-page {
-  padding-top: 0;
-}
-
 /* Top decorative banner */
 .top-banner {
   position: fixed;
