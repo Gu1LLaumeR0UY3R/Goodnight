@@ -76,15 +76,6 @@
                 </div>
             </div>
 
-            <!-- Modal zoom (inchangé) -->
-            <div id="imgModal" class="img-modal" aria-hidden="true">
-                <div class="img-modal-backdrop" data-close></div>
-                <div class="img-modal-content">
-                    <button class="img-modal-close" aria-label="Fermer">X</button>
-                    <img src="" alt="Agrandissement" id="modalImage">
-                </div>
-            </div>
-
             <div class="bien-info">
                 <div class="info-block">
                     <h3>Informations Générales</h3>
@@ -119,7 +110,7 @@
         </div>
 
         <!-- Calendrier des réservations -->
-        <div class="bien-calendar-container glass-card">
+        <div class="bien-calendar-container glass-card" style="background: white; border: 1px solid rgba(0,0,0,0.08);">
           <h2>Calendrier des réservations</h2>
           
           <!-- Légende -->
@@ -153,7 +144,7 @@
         ?>
         
         <?php if ($canBook): ?>
-            <div class="reservation-section-calendar glass-card">
+            <div class="reservation-section-calendar glass-card" style="background: white; border: 1px solid rgba(0,0,0,0.08);">
                 <h3>Réserver ce bien</h3>
         
                 <?php 
@@ -195,7 +186,7 @@
                             
         <?php elseif ($userId): ?>
             <!-- Connecté mais pas autorisé à réserver -->
-            <div class="reservation-section-calendar glass-card">
+            <div class="reservation-section-calendar glass-card" style="background: white; border: 1px solid rgba(0,0,0,0.08);">
                 <h3>Réserver ce bien</h3>
                 <p style="text-align: center; color: #666;">
                     <?php if ($isOwner): ?>
@@ -213,12 +204,30 @@
                     
         <?php else: ?>
             <!-- Non connecté -->
-            <div class="reservation-section-calendar glass-card">
+            <div class="reservation-section-calendar glass-card" style="background: white; border: 1px solid rgba(0,0,0,0.08);">
                 <h3>Réserver ce bien</h3>
                 <p style="text-align: center;">Veuillez vous <a href="/login" style="color: var(--primary); text-decoration: underline;">connecter</a> pour effectuer une réservation.</p>
             </div>
         <?php endif; ?>
     </main>
+
+    <!-- Lightbox pour les photos (en dehors de la structure principale) -->
+    <div id="lightbox" class="lightbox">
+        <div class="lightbox-backdrop"></div>
+        <div class="lightbox-container">
+            <button class="lightbox-close" aria-label="Fermer">&times;</button>
+            <button class="lightbox-prev" aria-label="Image précédente">‹</button>
+            <button class="lightbox-next" aria-label="Image suivante">›</button>
+            <div class="lightbox-content">
+                <img src="" alt="" id="lightboxImage">
+                <div class="lightbox-caption">
+                    <span id="lightboxCounter"></span>
+                    <span id="lightboxTitle"></span>
+                </div>
+            </div>
+            <div class="lightbox-thumbnails" id="lightboxThumbnails"></div>
+        </div>
+    </div>
 
     <footer>
         <p>© <?php echo date("Y"); ?> GlobeNight. Tous droits réservés.</p>
@@ -240,6 +249,11 @@
                     const bienCalendar = new FullCalendar.Calendar(bienCalendarEl, {
                         initialView: 'dayGridMonth',
                         locale: 'fr',
+                        buttonText: {
+                            today: 'Aujourd\'hui',
+                            month: 'Mois',
+                            week: 'Semaine'
+                        },
                         headerToolbar: {
                             left: 'prev,next today',
                             center: 'title',
@@ -306,11 +320,21 @@
                     });
                 }
             });
+        // ===== CAROUSEL & LIGHTBOX =====
         (function(){
             const slidesContainer = document.querySelector('.slides');
             if (!slidesContainer) return;
             const slides = Array.from(slidesContainer.querySelectorAll('.slide'));
             let current = 0;
+
+            // Récupérer toutes les photos
+            const allPhotos = slides.map(s => {
+                const img = s.querySelector('img');
+                return {
+                    src: img.dataset.full || img.src,
+                    alt: img.alt
+                };
+            });
 
             function showSlide(n) {
                 if (slides.length === 0) return;
@@ -328,46 +352,95 @@
                 btn.addEventListener('click', () => showSlide(parseInt(btn.dataset.dot, 10)));
             });
 
-            // Modal
-            const modal = document.getElementById('imgModal');
-            const modalImage = document.getElementById('modalImage');
-            const mainEl = document.querySelector('main');
-            let ignoreBackdropClick = false;
+            // ===== LIGHTBOX =====
+            const lightbox = document.getElementById('lightbox');
+            const lightboxImage = document.getElementById('lightboxImage');
+            const lightboxCounter = document.getElementById('lightboxCounter');
+            const lightboxTitle = document.getElementById('lightboxTitle');
+            const lightboxThumbnails = document.getElementById('lightboxThumbnails');
+            const lightboxClose = document.querySelector('.lightbox-close');
+            const lightboxPrev = document.querySelector('.lightbox-prev');
+            const lightboxNext = document.querySelector('.lightbox-next');
+            const lightboxBackdrop = document.querySelector('.lightbox-backdrop');
+            
+            let lightboxIndex = 0;
 
-            slides.forEach(s => {
-                const img = s.querySelector('img');
-                if (!img) return;
-                s.addEventListener('click', e => e.stopPropagation());
-                img.addEventListener('click', function(e) {
-                    e.preventDefault(); e.stopPropagation();
-                    const src = this.dataset.full || this.src;
-                    modal.classList.add('open');
-                    modal.setAttribute('aria-hidden', 'false');
-                    mainEl.classList.add('blurred');
-                    modalImage.src = src;
-                    ignoreBackdropClick = true;
-                    setTimeout(() => ignoreBackdropClick = false, 300);
-                });
+            // Créer les thumbnails
+            allPhotos.forEach((photo, index) => {
+                const thumb = document.createElement('img');
+                thumb.src = photo.src;
+                thumb.alt = photo.alt;
+                thumb.className = 'lightbox-thumb';
+                thumb.dataset.index = index;
+                thumb.addEventListener('click', () => openLightbox(index));
+                lightboxThumbnails.appendChild(thumb);
             });
 
-            function closeModal() {
-                modal.classList.remove('open');
-                modal.setAttribute('aria-hidden', 'true');
-                modalImage.src = '';
-                mainEl.classList.remove('blurred');
+            function openLightbox(index) {
+                lightboxIndex = index;
+                updateLightbox();
+                lightbox.classList.add('active');
+                document.body.style.overflow = 'hidden';
             }
 
-            modal.querySelector('.img-modal-close')?.addEventListener('click', closeModal);
-            modal.querySelector('[data-close]')?.addEventListener('click', function(e) {
-                if (ignoreBackdropClick || e.target !== this) return;
-                closeModal();
+            function closeLightbox() {
+                lightbox.classList.remove('active');
+                document.body.style.overflow = '';
+                document.querySelector('main').style.filter = '';
+            }
+
+            function updateLightbox() {
+                if (allPhotos.length === 0) return;
+                
+                lightboxIndex = (lightboxIndex + allPhotos.length) % allPhotos.length;
+                const photo = allPhotos[lightboxIndex];
+                
+                lightboxImage.src = photo.src;
+                lightboxImage.alt = photo.alt;
+                lightboxCounter.textContent = `${lightboxIndex + 1} / ${allPhotos.length}`;
+                lightboxTitle.textContent = photo.alt;
+
+                // Mettre à jour les thumbnails actifs
+                document.querySelectorAll('.lightbox-thumb').forEach((thumb, i) => {
+                    thumb.classList.toggle('active', i === lightboxIndex);
+                });
+            }
+
+            function prevLightbox() {
+                lightboxIndex--;
+                updateLightbox();
+            }
+
+            function nextLightbox() {
+                lightboxIndex++;
+                updateLightbox();
+            }
+
+            // Ouvrir lightbox au clic sur image du carousel
+            slides.forEach((s, index) => {
+                const img = s.querySelector('img');
+                if (!img) return;
+                img.style.cursor = 'zoom-in';
+                img.addEventListener('click', () => openLightbox(index));
             });
-            modal.querySelector('.img-modal-content')?.addEventListener('click', e => e.stopPropagation());
+
+            // Event listeners
+            lightboxClose?.addEventListener('click', closeLightbox);
+            lightboxBackdrop?.addEventListener('click', closeLightbox);
+            lightboxPrev?.addEventListener('click', prevLightbox);
+            lightboxNext?.addEventListener('click', nextLightbox);
+
+            // Navigation clavier
             document.addEventListener('keydown', e => {
-                if (e.key === 'Escape') closeModal();
-                if (!modal.classList.contains('open')) {
+                if (!lightbox.classList.contains('active')) {
+                    // Navigation carousel normale
                     if (e.key === 'ArrowLeft') showSlide(current - 1);
                     if (e.key === 'ArrowRight') showSlide(current + 1);
+                } else {
+                    // Navigation lightbox
+                    if (e.key === 'Escape') closeLightbox();
+                    if (e.key === 'ArrowLeft') prevLightbox();
+                    if (e.key === 'ArrowRight') nextLightbox();
                 }
             });
         })();
