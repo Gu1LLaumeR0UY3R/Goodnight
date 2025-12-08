@@ -29,6 +29,7 @@ $routes = [
     "" => ["controller" => "HomeController", "action" => "index"],
     "home" => ["controller" => "HomeController", "action" => "index"],
     "home/search" => ["controller" => "HomeController", "action" => "search"],
+    "home/map" => ["controller" => "HomeController", "action" => "map"],
     "home/autocompleteCommunes" => ["controller" => "HomeController", "action" => "autocompleteCommunes"],
     "bien/([0-9]+)" => ["controller" => "HomeController", "action" => "details"],
     "register" => ["controller" => "RegisterController", "action" => "index"],

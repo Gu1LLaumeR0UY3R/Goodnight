@@ -136,6 +136,8 @@ class BienModel extends Model {
                 b.*,
                 tb.desc_type_bien as type_bien_nom,
                 c.ville_nom as commune_nom,
+                c.ville_latitude_deg,
+                c.ville_longitude_deg,
                 (SELECT lien_photo FROM photos WHERE id_biens = b.id_biens ORDER BY id_photo ASC LIMIT 1) as premiere_photo,
                 IFNULL((SELECT prix_semaine FROM tarifs WHERE id_biens = b.id_biens AND annee = :currentYear AND id_saison = :currentSaisonId LIMIT 1), NULL) as prix_semaine
             FROM biens b 

@@ -48,6 +48,13 @@ class HomeController extends BaseController {
         ]);
     }
 
+    public function map() {
+        $biens = $this->bienModel->getBiensWithDetails();
+        $this->render("home/map", [
+            "biens" => $biens
+        ]);
+    }
+
     public function details($id) {
         $bien = $this->bienModel->getBienWithDetailsById($id);
         
