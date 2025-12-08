@@ -747,72 +747,88 @@
         /* ================== Visual wheel initialization ================== */
         function initVisualWheel() {
             const wheel = document.getElementById('wheel3d');
-            const particlesLayer = document.getElementById('particlesLayer');
-            if (!wheel || !particlesLayer) return;
+            if (!wheel) return;
 
-            // create particles
-            const particleCount = 40;
-            particlesLayer.innerHTML = '';
-            for (let i = 0; i < particleCount; i++) {
-                const p = document.createElement('div');
-                p.className = 'particle';
-                const left = Math.random() * 100;
-                const top = Math.random() * 100;
-                const scale = 0.6 + Math.random() * 1.2;
-                p.style.left = left + '%';
-                p.style.top = top + '%';
-                p.style.transform = `scale(${scale})`;
-                p.style.opacity = (0.3 + Math.random() * 0.9).toString();
-                p.style.animation = `float${i} 6s ${Math.random()*4}s ease-in-out infinite`; 
-                particlesLayer.appendChild(p);
-            }
-
-            // keyframes for small floats appended dynamically
-            const style = document.createElement('style');
-            let animCss = '';
-            for (let i = 0; i < particleCount; i++) {
-                const dx = (Math.random() - 0.5) * 8;
-                const dy = (Math.random() - 0.5) * 8;
-                animCss += `@keyframes float${i} { 0%{transform:translate(0,0)} 50%{transform:translate(${dx}px,${dy}px)} 100%{transform:translate(0,0)} }\n`;
-            }
-            style.innerHTML = animCss;
-            document.head.appendChild(style);
-
-            // populate 10 wheel slots using biens (repeat if fewer than 10)
+            // Clear existing content
             wheel.innerHTML = '';
-            const slotCount = 10;
             if (!Array.isArray(biens) || biens.length === 0) return;
-            const radius = 420; // translateZ radius
-            for (let i = 0; i < slotCount; i++) {
+
+            // Fonction pour créer une carte
+            function createSlot(b) {
                 const slot = document.createElement('div');
                 slot.className = 'wheel-slot';
-                const b = biens[i % biens.length];
                 const img = b.premiere_photo || '/img/default.jpg';
                 slot.innerHTML = `
                     <img src="${img}" alt="${escapeHtml(b.designation_bien)}">
                     <div class="slot-body">
-                        <div class="card-title">${escapeHtml(b.designation_bien)}</div>
-                        <div class="card-desc">${escapeHtml((b.description_biens || '').slice(0,120))}</div>
-                        <div class="card-price">${b.prix ?? ''}</div>
+                        <h3>${escapeHtml(b.designation_bien)}</h3>
+                        <p>${escapeHtml((b.description_biens || '').slice(0, 80))}</p>
+                        <p style="color: var(--accent-primary); font-weight: 700;">${b.prix || ''}</p>
                     </div>
                 `;
-
-                const angle = (i / slotCount) * 360; // degrees
-                // position around Y-axis in 3D
-                slot.style.transform = `rotateY(${angle}deg) translateZ(${radius}px) translateX(0px)`;
-                // store bien id for click
                 slot.dataset.bienId = b.id_biens;
-
-                // click toggles selection for that bien
                 slot.addEventListener('click', (e) => {
                     toggleBienSelection(b.id_biens);
-                    // visually nudge the wheel to slow-stop near clicked slot: rotate so clicked slot faces front
-                    // compute desired rotation to bring this angle to 0
-                    const currentRot = 0; // we use CSS animation; to nudge we'd need more complex control -- keep simple for now
                 });
-
-                wheel.appendChild(slot);
+                return slot;
             }
+
+            // Dupliquer les cartes au moins 3 fois pour créer l'effet de carousel infini
+            const repetitions = Math.max(3, Math.ceil(15 / biens.length));
+            
+            for (let rep = 0; rep < repetitions; rep++) {
+                biens.forEach((b) => {
+                    wheel.appendChild(createSlot(b));
+                });
+            }
+
+            // Démarrer l'auto-scroll
+            startAutoScroll();
+        }
+
+        let autoScrollInterval = null;
+        let isScrolling = false;
+
+        function startAutoScroll() {
+            const wheel = document.getElementById('wheel3d');
+            if (!wheel) return;
+
+            // Configuration
+            const scrollSpeed = 1; // pixels par frame
+            const frameRate = 30; // ms entre chaque frame
+
+            // Arrêter l'auto-scroll au survol
+            wheel.addEventListener('mouseenter', () => {
+                if (autoScrollInterval) {
+                    clearInterval(autoScrollInterval);
+                    autoScrollInterval = null;
+                }
+            });
+
+            // Reprendre l'auto-scroll quand la souris quitte
+            wheel.addEventListener('mouseleave', () => {
+                if (!autoScrollInterval) {
+                    startScrolling();
+                }
+            });
+
+            // Fonction de défilement
+            function startScrolling() {
+                autoScrollInterval = setInterval(() => {
+                    wheel.scrollLeft += scrollSpeed;
+                    
+                    // Réinitialiser au milieu quand on atteint les 2/3 pour un effet infini
+                    const maxScroll = wheel.scrollWidth - wheel.clientWidth;
+                    const resetPoint = maxScroll * 0.66;
+                    
+                    if (wheel.scrollLeft >= resetPoint) {
+                        wheel.scrollLeft = maxScroll * 0.33;
+                    }
+                }, frameRate);
+            }
+
+            // Démarrer l'animation
+            startScrolling();
         }
 
         let carouselInterval = null;
