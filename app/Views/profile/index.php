@@ -110,10 +110,7 @@
                             <input type="date" class="info-input" data-field="dateNaissance_locataire" value="<?php echo htmlspecialchars($user['dateNaissance_locataire'] ?? ''); ?>" style="display: none;">
                         </div>
                     <?php endif; ?>
-                </div>
-
-                <div class="info-card">
-                    <h3>Contact</h3>
+                    
                     <div class="info-row">
                         <span class="info-label">Email:</span>
                         <span class="info-value" data-field="email_locataire"><?php echo htmlspecialchars($user['email_locataire']); ?></span>
@@ -124,10 +121,6 @@
                         <span class="info-value" data-field="tel_locataire"><?php echo htmlspecialchars($user['tel_locataire'] ?? 'Non renseigné'); ?></span>
                         <input type="tel" class="info-input" data-field="tel_locataire" value="<?php echo htmlspecialchars($user['tel_locataire'] ?? ''); ?>" placeholder="+33 6 12 34 56 78" style="display: none;">
                     </div>
-                </div>
-
-                <div class="info-card">
-                    <h3>Adresse</h3>
                     <div class="info-row">
                         <span class="info-label">Rue:</span>
                         <span class="info-value" data-field="rue_locataire"><?php echo htmlspecialchars($user['rue_locataire'] ?? 'Non renseignée'); ?></span>
