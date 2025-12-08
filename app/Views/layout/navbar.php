@@ -29,38 +29,6 @@ $userPfp = $_SESSION['user_pfp'] ?? null;
                 
                 <?php if ($isLoggedIn && isset($_SESSION['is_admin']) && $_SESSION['is_admin'] === true): ?>
                     <li><a href="/admin" class="navbar-link">Administration</a></li>
-                    <li>
-                        <a href="/admin/validations" class="navbar-link">
-                            Validations
-                            <?php 
-                            // Afficher le compteur de biens en attente
-                            require_once __DIR__ . '/../../Models/BienModel.php';
-                            $bienModel = new BienModel();
-                            $countEnAttente = $bienModel->countBiensEnAttente();
-                            if ($countEnAttente > 0): 
-                            ?>
-                                <span class="badge-notif" style="background: #ff4444; color: white; border-radius: 50%; padding: 2px 7px; font-size: 11px; margin-left: 5px; font-weight: 600;">
-                                    <?php echo $countEnAttente; ?>
-                                </span>
-                            <?php endif; ?>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="/admin/signalements" class="navbar-link">
-                            Signalements
-                            <?php 
-                            // Afficher le compteur de signalements en attente
-                            require_once __DIR__ . '/../../Models/SignalementModel.php';
-                            $signalementModel = new SignalementModel();
-                            $countSignalements = $signalementModel->countSignalementsEnAttente();
-                            if ($countSignalements > 0): 
-                            ?>
-                                <span class="badge-notif" style="background: #ff5252; color: white; border-radius: 50%; padding: 2px 7px; font-size: 11px; margin-left: 5px; font-weight: 600;">
-                                    <?php echo $countSignalements; ?>
-                                </span>
-                            <?php endif; ?>
-                        </a>
-                    </li>
                 <?php elseif ($isLoggedIn && in_array('Propriétaire', $userRoles)): ?>
                     <li><a href="/proprietaire" class="navbar-link">Tableau de bord</a></li>
                     <li><a href="/proprietaire/myBiens" class="navbar-link">Mes Biens</a></li>
