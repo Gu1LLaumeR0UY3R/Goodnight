@@ -613,6 +613,51 @@ class AdminController extends BaseController {
         $communes = $this->communeModel->search($term);
         echo json_encode($communes);
     }
+
+    // --- Gestion de la validation des biens ---
+    public function validations() {
+        $biensEnAttente = $this->bienModel->getBiensEnAttente();
+        $this->render("admin/validations", ["biensEnAttente" => $biensEnAttente]);
+    }
+
+    public function validerBien($id) {
+        $adminId = $_SESSION['admin_id'] ?? null;
+        
+        if ($this->bienModel->validerBien($id, $adminId)) {
+            $_SESSION['flash'] = [
+                'type' => 'success',
+                'message' => 'Le bien a été validé avec succès et est maintenant visible publiquement.'
+            ];
+        } else {
+            $_SESSION['flash'] = [
+                'type' => 'error',
+                'message' => 'Une erreur est survenue lors de la validation du bien.'
+            ];
+        }
+        
+        header('Location: /admin/validations');
+        exit;
+    }
+
+    public function refuserBien($id) {
+        $adminId = $_SESSION['admin_id'] ?? null;
+        $motif = $_GET['motif'] ?? null;
+        
+        if ($this->bienModel->refuserBien($id, $adminId, $motif)) {
+            $_SESSION['flash'] = [
+                'type' => 'warning',
+                'message' => 'Le bien a été refusé. Le propriétaire peut le modifier et le soumettre à nouveau.'
+            ];
+        } else {
+            $_SESSION['flash'] = [
+                'type' => 'error',
+                'message' => 'Une erreur est survenue lors du refus du bien.'
+            ];
+        }
+        
+        header('Location: /admin/validations');
+        exit;
+    }
 }
 
 ?>

@@ -76,6 +76,11 @@ $routes = [
     "admin/editUser/([0-9]+)" => ["controller" => "AdminController", "action" => "editUser"],
     "admin/deleteUser/([0-9]+)" => ["controller" => "AdminController", "action" => "deleteUser"],
 
+    //Partie Validation des biens
+    "admin/validations" => ["controller" => "AdminController", "action" => "validations"],
+    "admin/validerBien/([0-9]+)" => ["controller" => "AdminController", "action" => "validerBien"],
+    "admin/refuserBien/([0-9]+)" => ["controller" => "AdminController", "action" => "refuserBien"],
+
     //Partie Réservations
     "admin/reservations" => ["controller" => "AdminController", "action" => "reservations"],
     "admin/addReservation" => ["controller" => "AdminController", "action" => "addReservation"],
