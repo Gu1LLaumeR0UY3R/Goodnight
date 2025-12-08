@@ -32,6 +32,7 @@ $routes = [
     "home/map" => ["controller" => "HomeController", "action" => "map"],
     "home/autocompleteCommunes" => ["controller" => "HomeController", "action" => "autocompleteCommunes"],
     "bien/([0-9]+)" => ["controller" => "HomeController", "action" => "details"],
+    "signaler/([0-9]+)" => ["controller" => "HomeController", "action" => "signaler"],
     "register" => ["controller" => "RegisterController", "action" => "index"],
     "register/process" => ["controller" => "RegisterController", "action" => "register"],
     
@@ -80,6 +81,12 @@ $routes = [
     "admin/validations" => ["controller" => "AdminController", "action" => "validations"],
     "admin/validerBien/([0-9]+)" => ["controller" => "AdminController", "action" => "validerBien"],
     "admin/refuserBien/([0-9]+)" => ["controller" => "AdminController", "action" => "refuserBien"],
+
+    //Partie Signalements
+    "admin/signalements" => ["controller" => "AdminController", "action" => "signalements"],
+    "admin/traiterSignalement/([0-9]+)" => ["controller" => "AdminController", "action" => "traiterSignalement"],
+    "admin/rejeterSignalement/([0-9]+)" => ["controller" => "AdminController", "action" => "rejeterSignalement"],
+    "admin/updateStatutBien/([0-9]+)" => ["controller" => "AdminController", "action" => "updateStatutBien"],
 
     //Partie Réservations
     "admin/reservations" => ["controller" => "AdminController", "action" => "reservations"],

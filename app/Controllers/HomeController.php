@@ -87,6 +87,45 @@ class HomeController extends BaseController {
         header("Content-Type: application/json");
         echo json_encode($results);
     }
+
+    public function signaler($id) {
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            $this->redirect('/bien/' . $id);
+            return;
+        }
+
+        require_once __DIR__ . '/../Models/SignalementModel.php';
+        $signalementModel = new SignalementModel();
+
+        $data = [
+            'id_biens' => $id,
+            'id_locataire' => $_SESSION['user_id'] ?? null,
+            'email_signaleur' => $_POST['email_signaleur'] ?? null,
+            'motif' => $_POST['motif'],
+            'description' => $_POST['description'] ?? null
+        ];
+
+        // Vérifier si l'utilisateur a déjà signalé ce bien
+        if (isset($_SESSION['user_id'])) {
+            if ($signalementModel->hasUserReported($id, $_SESSION['user_id'])) {
+                $_SESSION['flash'] = [
+                    'type' => 'warning',
+                    'message' => 'Vous avez déjà signalé ce bien.'
+                ];
+                $this->redirect('/bien/' . $id);
+                return;
+            }
+        }
+
+        $signalementModel->create($data);
+
+        $_SESSION['flash'] = [
+            'type' => 'success',
+            'message' => 'Votre signalement a été envoyé avec succès. Merci de votre contribution.'
+        ];
+
+        $this->redirect('/bien/' . $id);
+    }
 }
 
 ?>

@@ -425,19 +425,28 @@
     <main>
         <div class="bien-details">
             <div class="bien-header">
-                <h1><?php echo htmlspecialchars($bien["designation_bien"]); ?></h1>
-                <?php 
-                    // Afficher le nom du propriétaire
-                    $proprietaireNom = '';
-                    if (!empty($bien['proprietaire_raison_sociale'])) {
-                        $proprietaireNom = $bien['proprietaire_raison_sociale'];
-                    } elseif (!empty($bien['proprietaire_prenom']) && !empty($bien['proprietaire_nom'])) {
-                        $proprietaireNom = $bien['proprietaire_prenom'] . ' ' . $bien['proprietaire_nom'];
-                    }
-                    if ($proprietaireNom): 
-                ?>
-                    <p class="proprietaire-info">Propriété de <?php echo htmlspecialchars($proprietaireNom); ?></p>
-                <?php endif; ?>
+                <div style="display: flex; justify-content: space-between; align-items: start;">
+                    <div>
+                        <h1><?php echo htmlspecialchars($bien["designation_bien"]); ?></h1>
+                        <?php 
+                            // Afficher le nom du propriétaire
+                            $proprietaireNom = '';
+                            if (!empty($bien['proprietaire_raison_sociale'])) {
+                                $proprietaireNom = $bien['proprietaire_raison_sociale'];
+                            } elseif (!empty($bien['proprietaire_prenom']) && !empty($bien['proprietaire_nom'])) {
+                                $proprietaireNom = $bien['proprietaire_prenom'] . ' ' . $bien['proprietaire_nom'];
+                            }
+                            if ($proprietaireNom): 
+                        ?>
+                            <p class="proprietaire-info">Propriété de <?php echo htmlspecialchars($proprietaireNom); ?></p>
+                        <?php endif; ?>
+                    </div>
+                    
+                    <!-- Bouton de signalement -->
+                    <button onclick="openSignalementModal()" class="btn-signaler" title="Signaler ce bien">
+                        🚩 Signaler
+                    </button>
+                </div>
             </div>
 
             
@@ -740,6 +749,233 @@
                 }
             });
         })();
+    </script>
+
+    <!-- Modal de signalement -->
+    <div id="signalementModal" class="signalement-modal">
+        <div class="signalement-modal-content">
+            <span class="signalement-close" onclick="closeSignalementModal()">&times;</span>
+            <h2>🚩 Signaler ce bien</h2>
+            <p style="color: #666; margin-bottom: 20px;">Aidez-nous à maintenir la qualité de la plateforme en signalant tout contenu inapproprié ou trompeur.</p>
+            
+            <form id="signalementForm" action="/signaler/<?php echo $bien['id_biens']; ?>" method="POST">
+                <div class="form-group">
+                    <label for="motif">Motif du signalement *</label>
+                    <select name="motif" id="motif" required>
+                        <option value="">Sélectionnez un motif...</option>
+                        <option value="contenu_inapproprie">Contenu inapproprié</option>
+                        <option value="fausses_informations">Fausses informations</option>
+                        <option value="photos_trompeuses">Photos trompeuses</option>
+                        <option value="arnaque">Arnaque suspectée</option>
+                        <option value="autre">Autre</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="description">Description (optionnel)</label>
+                    <textarea name="description" id="description" rows="4" placeholder="Décrivez le problème que vous avez constaté..."></textarea>
+                </div>
+                
+                <?php if (!isset($_SESSION['user_id'])): ?>
+                    <div class="form-group">
+                        <label for="email_signaleur">Votre email (optionnel)</label>
+                        <input type="email" name="email_signaleur" id="email_signaleur" placeholder="email@exemple.com">
+                        <small>Nous pourrons vous contacter si nécessaire</small>
+                    </div>
+                <?php endif; ?>
+                
+                <div style="display: flex; gap: 10px; margin-top: 20px;">
+                    <button type="button" onclick="closeSignalementModal()" class="btn-cancel">Annuler</button>
+                    <button type="submit" class="btn-submit">Envoyer le signalement</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <style>
+        .btn-signaler {
+            background: #ff5252;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .btn-signaler:hover {
+            background: #ff1744;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(255, 82, 82, 0.3);
+        }
+
+        .signalement-modal {
+            display: none;
+            position: fixed;
+            z-index: 10000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.6);
+            animation: fadeIn 0.3s ease;
+        }
+
+        .signalement-modal.open {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .signalement-modal-content {
+            background-color: white;
+            padding: 30px;
+            border-radius: 12px;
+            max-width: 500px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+            animation: slideUp 0.3s ease;
+            position: relative;
+        }
+
+        .signalement-close {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            font-size: 28px;
+            font-weight: bold;
+            color: #999;
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+
+        .signalement-close:hover {
+            color: #333;
+        }
+
+        .signalement-modal h2 {
+            margin-top: 0;
+            color: #333;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: #333;
+        }
+
+        .form-group select,
+        .form-group textarea,
+        .form-group input {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 14px;
+            font-family: inherit;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-group select:focus,
+        .form-group textarea:focus,
+        .form-group input:focus {
+            outline: none;
+            border-color: #ff5252;
+        }
+
+        .form-group small {
+            display: block;
+            margin-top: 5px;
+            color: #666;
+            font-size: 12px;
+        }
+
+        .btn-cancel {
+            flex: 1;
+            background: #e0e0e0;
+            color: #333;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            transition: background 0.3s ease;
+        }
+
+        .btn-cancel:hover {
+            background: #bdbdbd;
+        }
+
+        .btn-submit {
+            flex: 1;
+            background: #ff5252;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            transition: background 0.3s ease;
+        }
+
+        .btn-submit:hover {
+            background: #ff1744;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideUp {
+            from { 
+                transform: translateY(50px);
+                opacity: 0;
+            }
+            to { 
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+    </style>
+
+    <script>
+        function openSignalementModal() {
+            document.getElementById('signalementModal').classList.add('open');
+        }
+
+        function closeSignalementModal() {
+            document.getElementById('signalementModal').classList.remove('open');
+        }
+
+        // Fermer en cliquant à l'extérieur
+        document.getElementById('signalementModal')?.addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeSignalementModal();
+            }
+        });
+
+        // Fermer avec la touche Escape
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape' && document.getElementById('signalementModal').classList.contains('open')) {
+                closeSignalementModal();
+            }
+        });
     </script>
 </body>
 </html>

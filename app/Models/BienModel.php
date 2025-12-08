@@ -395,6 +395,31 @@ class BienModel extends Model {
         $stmt = $this->db->query($query);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
+
+    // Mettre à jour le statut de validation d'un bien
+    public function updateStatutValidation($id, $statut, $adminId = null) {
+        $allowedStatuts = ['en_attente', 'valide', 'refuse'];
+        if (!in_array($statut, $allowedStatuts)) {
+            return false;
+        }
+
+        $sql = "UPDATE biens SET statut_validation = :statut, date_validation = NOW()";
+        
+        $params = [
+            'id' => $id,
+            'statut' => $statut
+        ];
+
+        if ($adminId !== null) {
+            $sql .= ", id_admin_validateur = :adminId";
+            $params['adminId'] = $adminId;
+        }
+
+        $sql .= " WHERE id_biens = :id";
+
+        $stmt = $this->db->prepare($sql);
+        return $stmt->execute($params);
+    }
 }
 
 ?>
