@@ -2,6 +2,110 @@
    DASHBOARDS & ADMIN
    ======================================== */
 
+/* ===== GLOBAL SHELL ===== */
+.page-shell {
+  min-height: calc(100vh - 140px);
+  padding: 2.5rem 1.5rem 3rem;
+}
+
+.glass-card {
+  background: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  border-radius: 18px;
+  box-shadow: 0 18px 48px rgba(0, 0, 0, 0.18);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+.dark-mode .glass-card {
+  background: rgba(31, 40, 51, 0.78);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow: 0 18px 48px rgba(0, 0, 0, 0.4);
+}
+
+/* ===== ADMIN HERO ===== */
+.admin-hero {
+  max-width: 1100px;
+  margin: 0 auto 1.75rem;
+  padding: 1.4rem 1.6rem;
+}
+
+.admin-hero-head h1 {
+  font-size: 2.25rem;
+  margin-bottom: 0.25rem;
+}
+
+.admin-hero-head p {
+  margin: 0;
+  color: var(--text-secondary);
+}
+
+.eyebrow {
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-secondary);
+  margin-bottom: 0.35rem;
+}
+
+/* ===== ADMIN GRID ===== */
+.admin-boxes-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 1rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.admin-box {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  padding: 1.1rem 1.25rem;
+  color: var(--text-primary);
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+  background: linear-gradient(135deg, rgba(255,255,255,0.2), rgba(255,255,255,0.1));
+}
+
+.admin-box:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.18);
+  border-color: rgba(255, 255, 255, 0.55);
+}
+
+.dark-mode .admin-box {
+  background: linear-gradient(135deg, rgba(31,40,51,0.9), rgba(31,40,51,0.75));
+}
+
+.admin-box-icon {
+  width: 48px;
+  height: 48px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.3rem;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.35);
+}
+
+.dark-mode .admin-box-icon {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.15);
+}
+
+.admin-box-title {
+  margin: 0;
+  font-size: 1.15rem;
+}
+
+.admin-box-description {
+  margin: 0.35rem 0 0;
+  color: var(--text-secondary);
+  font-size: 0.95rem;
+}
+
 /* ===== CONTENEUR DASHBOARD ===== */
 .dashboard-container {
   max-width: 1400px;

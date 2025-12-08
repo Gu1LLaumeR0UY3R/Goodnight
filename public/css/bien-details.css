@@ -2,11 +2,33 @@
    PAGE DÉTAILS BIEN
    ======================================== */
 
-/* ===== CONTENEUR PRINCIPAL ===== */
-.bien-details {
+/* ===== SHELL + GLASS CARDS ===== */
+.page-shell {
+  min-height: calc(100vh - 140px);
+  padding: 2.5rem 1.5rem 3rem;
+}
+
+.bien-details,
+.bien-calendar-container,
+.reservation-section-calendar {
   max-width: 1200px;
-  margin: 2rem auto;
-  padding: 0 1rem;
+  margin: 0 auto 2rem;
+  padding: 1.5rem;
+}
+
+.glass-card {
+  background: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  border-radius: 18px;
+  box-shadow: 0 18px 48px rgba(0, 0, 0, 0.18);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+.dark-mode .glass-card {
+  background: rgba(31, 40, 51, 0.78);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow: 0 18px 48px rgba(0, 0, 0, 0.4);
 }
 
 /* ===== HEADER BIEN ===== */
@@ -15,8 +37,8 @@
 }
 
 .bien-header h1 {
-  font-size: 2.5rem;
-  margin-bottom: 0.5rem;
+  font-size: 2.4rem;
+  margin-bottom: 0.35rem;
 }
 
 .proprietaire-info {
@@ -26,9 +48,10 @@
 
 /* ===== GALERIE PHOTOS ===== */
 .bien-photos {
-  margin-bottom: 3rem;
+  margin-bottom: 2rem;
   border-radius: 16px;
   overflow: hidden;
+  box-shadow: 0 12px 32px rgba(0,0,0,0.16);
 }
 
 .carousel {
@@ -110,30 +133,31 @@
 }
 
 /* ===== INFORMATIONS BIEN ===== */
+
 .bien-info {
   display: grid;
   grid-template-columns: 1fr;
-  gap: 2rem;
-  margin-bottom: 3rem;
+  gap: 1.5rem;
+  margin-bottom: 2rem;
 }
 
-.info-section {
-  background: var(--bg-card);
-  padding: 2rem;
-  border-radius: 12px;
-  border: 1px solid var(--border-color);
+.info-block {
+  padding: 1.5rem;
+  border-radius: 14px;
+  background: rgba(255,255,255,0.12);
+  border: 1px solid rgba(255,255,255,0.28);
+  box-shadow: 0 12px 30px rgba(0,0,0,0.12);
 }
 
-.info-section h2 {
-  font-size: 1.75rem;
-  margin-bottom: 1.5rem;
-  color: var(--text-primary);
+.dark-mode .info-block {
+  background: rgba(31,40,51,0.78);
+  border: 1px solid rgba(255,255,255,0.12);
 }
 
-.info-section h3 {
+.info-block h3 {
   font-size: 1.25rem;
-  margin-bottom: 1rem;
-  margin-top: 1.5rem;
+  margin-bottom: 0.75rem;
+  color: var(--text-primary);
 }
 
 .info-grid {
@@ -234,12 +258,10 @@
 
 /* ===== FORMULAIRE RÉSERVATION ===== */
 .reservation-form {
-  background: var(--bg-card);
-  padding: 2rem;
-  border-radius: 12px;
-  border: 2px solid var(--accent-primary);
-  position: sticky;
-  top: 100px;
+  background: transparent;
+  padding: 1.25rem 1.5rem;
+  border: 1px solid rgba(255,255,255,0.28);
+  position: static;
 }
 
 .reservation-form h2 {
@@ -285,6 +307,15 @@
   background: var(--bg-secondary);
   border-radius: 8px;
   margin-bottom: 1rem;
+  color: var(--text-primary);
+}
+
+.bien-calendar-container {
+  padding: 1.5rem;
+}
+
+.reservation-section-calendar {
+  padding: 1.25rem 1.5rem;
 }
 
 .btn-submit {

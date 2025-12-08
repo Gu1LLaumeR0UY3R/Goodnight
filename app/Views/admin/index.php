@@ -5,82 +5,94 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Administration - GlobeNight</title>
     <link rel="stylesheet" href="/css/style.css">
-    <link rel="stylesheet" href="/css/grille.css">
     <link rel="stylesheet" href="/css/navbar.css">
+    <link rel="stylesheet" href="/css/sunset-background.css">
+    <link rel="stylesheet" href="/css/dashboard.css">
     <link rel="stylesheet" href="/css/admin-modal.css">
 </head>
-<body>
+<body class="home-sunset">
     <?php include __DIR__ . '/../layout/navbar.php'; ?>
 
-    <main>
-        <h2>Bienvenue sur le tableau de bord administrateur</h2>
-        <p>Cliquez sur une boîte pour gérer les différentes entités de la plateforme.</p>
-        
-        <!-- Conteneur des boîtes cliquables -->
-        <div class="admin-boxes-container">
-            <!-- Gestion des Types de Biens -->
-            <div class="admin-box" data-iframe-url="/admin/typesBiens" data-title="Gestion des Types de Biens">
+    <main class="page-shell">
+        <section class="glass-card admin-hero">
+            <p class="eyebrow">Tableau de bord administrateur</p>
+            <div class="admin-hero-head">
+                <h1>Bienvenue</h1>
+                <p>Cliquez sur une carte pour gérer les entités clés de la plateforme.</p>
+            </div>
+        </section>
+
+        <section class="admin-boxes-grid">
+            <div class="admin-box glass-card" data-iframe-url="/admin/typesBiens" data-title="Gestion des Types de Biens">
                 <span class="admin-box-icon">🏠</span>
-                <h3 class="admin-box-title">Types de Biens</h3>
-                <p class="admin-box-description">Gérer les types de biens disponibles</p>
+                <div>
+                    <h3 class="admin-box-title">Types de Biens</h3>
+                    <p class="admin-box-description">Gérer les catégories et les typologies</p>
+                </div>
             </div>
 
-            <!-- Gestion des Rôles -->
-            <div class="admin-box" data-iframe-url="/admin/roles" data-title="Gestion des Rôles">
+            <div class="admin-box glass-card" data-iframe-url="/admin/roles" data-title="Gestion des Rôles">
                 <span class="admin-box-icon">👥</span>
-                <h3 class="admin-box-title">Rôles</h3>
-                <p class="admin-box-description">Gérer les rôles utilisateur</p>
+                <div>
+                    <h3 class="admin-box-title">Rôles</h3>
+                    <p class="admin-box-description">Définir les rôles et permissions</p>
+                </div>
             </div>
 
-            <!-- Gestion des Communes -->
-            <div class="admin-box" data-iframe-url="/admin/communes" data-title="Gestion des Communes">
+            <div class="admin-box glass-card" data-iframe-url="/admin/communes" data-title="Gestion des Communes">
                 <span class="admin-box-icon">🗺️</span>
-                <h3 class="admin-box-title">Communes</h3>
-                <p class="admin-box-description">Gérer les communes</p>
+                <div>
+                    <h3 class="admin-box-title">Communes</h3>
+                    <p class="admin-box-description">Référentiel des communes</p>
+                </div>
             </div>
 
-            <!-- Gestion des Utilisateurs -->
-            <div class="admin-box" data-iframe-url="/admin/users" data-title="Gestion des Utilisateurs">
+            <div class="admin-box glass-card" data-iframe-url="/admin/users" data-title="Gestion des Utilisateurs">
                 <span class="admin-box-icon">👤</span>
-                <h3 class="admin-box-title">Utilisateurs</h3>
-                <p class="admin-box-description">Gérer les utilisateurs</p>
+                <div>
+                    <h3 class="admin-box-title">Utilisateurs</h3>
+                    <p class="admin-box-description">Administrer les comptes et accès</p>
+                </div>
             </div>
 
-            <!-- Gestion des Saisons -->
-            <div class="admin-box" data-iframe-url="/admin/saisons" data-title="Gestion des Saisons">
+            <div class="admin-box glass-card" data-iframe-url="/admin/saisons" data-title="Gestion des Saisons">
                 <span class="admin-box-icon">📅</span>
-                <h3 class="admin-box-title">Saisons</h3>
-                <p class="admin-box-description">Gérer les saisons tarifaires</p>
+                <div>
+                    <h3 class="admin-box-title">Saisons</h3>
+                    <p class="admin-box-description">Piloter les saisons tarifaires</p>
+                </div>
             </div>
 
-            <!-- Gestion des Biens -->
-            <div class="admin-box" data-iframe-url="/admin/biens" data-title="Gestion des Biens">
+            <div class="admin-box glass-card" data-iframe-url="/admin/biens" data-title="Gestion des Biens">
                 <span class="admin-box-icon">🏢</span>
-                <h3 class="admin-box-title">Biens</h3>
-                <p class="admin-box-description">Gérer tous les biens</p>
+                <div>
+                    <h3 class="admin-box-title">Biens</h3>
+                    <p class="admin-box-description">Superviser l'ensemble du parc</p>
+                </div>
             </div>
 
-            <!-- Gestion des Admins -->
-            <div class="admin-box" data-iframe-url="/admin/admins" data-title="Gestion des Admins">
-                <span class="admin-box-icon"></span>
-                <h3 class="admin-box-title">Admin</h3>
-                <p class="admin-box-description">Gérer tous les admins</p>
+            <div class="admin-box glass-card" data-iframe-url="/admin/admins" data-title="Gestion des Admins">
+                <span class="admin-box-icon">🛡️</span>
+                <div>
+                    <h3 class="admin-box-title">Admins</h3>
+                    <p class="admin-box-description">Gérer les comptes administrateurs</p>
+                </div>
             </div>
 
-            <!-- Gestion des Réservations -->
-            <div class="admin-box" data-iframe-url="/admin/reservations" data-title="Gestion des Réservations">
+            <div class="admin-box glass-card" data-iframe-url="/admin/reservations" data-title="Gestion des Réservations">
                 <span class="admin-box-icon">📖</span>
-                <h3 class="admin-box-title">Réservations</h3>
-                <p class="admin-box-description">Gérer toutes les réservations</p>
+                <div>
+                    <h3 class="admin-box-title">Réservations</h3>
+                    <p class="admin-box-description">Suivre et ajuster les réservations</p>
+                </div>
             </div>
-        </div>
+        </section>
     </main>
 
     <footer>
         <p>&copy; <?php echo date("Y"); ?> GlobeNight. Tous droits réservés.</p>
     </footer>
 
-    <!-- Script pour gérer les modales -->
     <script src="/js/admin-modal.js"></script>
 </body>
 </html>
