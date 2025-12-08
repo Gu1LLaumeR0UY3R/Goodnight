@@ -6,23 +6,25 @@
     <title>GlobeNight - Votre plateforme de location</title>
     <link rel="stylesheet" href="/css/style.css">
     <link rel="stylesheet" href="/css/navbar.css">
+    <link rel="stylesheet" href="/css/sunset-background.css">
     <link rel="stylesheet" href="//code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js"></script>
 </head>
-<body>
+<body class="home-sunset">
     <?php include __DIR__ . '/../layout/navbar.php'; ?>
 
     <main>
-        <section class="hero">
-            <h2>Trouvez votre logement idéal</h2>
-            <form action="/home/search" method="GET" class="search-bar">
-                <input type="text" id="commune_search" name="q" placeholder="Rechercher par région..." value="<?php echo htmlspecialchars($searchTerm ?? ''); ?>">
-                <button type="submit">Rechercher</button>
-            </form>
-        </section>
 
         <section class="liste-biens">
+            <div class="search-section">
+                <h2>Trouvez votre logement idéal</h2>
+                <form action="/home/search" method="GET" class="search-bar">
+                    <input type="text" id="commune_search" name="q" placeholder="Rechercher par région..." value="<?php echo htmlspecialchars($searchTerm ?? ''); ?>">
+                    <button type="submit">Rechercher</button>
+                </form>
+            </div>
+
             <h2>Tous nos biens</h2>
             <div class="biens-grid">
                 <?php if (!empty($biens)): ?>
@@ -44,9 +46,14 @@
                 <?php endif; ?>
             </div>
         </section>
+
     </main>
 
     <footer>
+        <div class="sunset">
+            <div class="sun"></div>
+            <div class="horizon"></div>
+        </div>
         <p>&copy; <?php echo date("Y"); ?> GlobeNight. Tous droits réservés.</p>
     </footer>
 

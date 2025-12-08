@@ -1,0 +1,132 @@
+/* Sunset theme for home page only */
+body.home-sunset {
+  min-height: 100vh;
+  background: linear-gradient(180deg, #f7b267 0%, #ff9966 40%, #ff5e62 80%, #2d2d72 100%);
+  background-attachment: fixed;
+  background-repeat: no-repeat;
+  background-size: cover;
+  position: relative;
+  overflow-x: hidden;
+}
+
+/* Keep content above the sun and add space */
+body.home-sunset main {
+  position: relative;
+  z-index: 1;
+  padding-bottom: 140px; /* space for the sun above footer */
+}
+
+/* Footer hosts the sun, which rises above it */
+body.home-sunset footer {
+  position: relative;
+  overflow: visible;
+  z-index: 0;
+}
+
+body.home-sunset footer .sunset {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 100%; /* place just above footer */
+  height: 120px;
+  pointer-events: none;
+  z-index: 0;
+}
+
+body.home-sunset footer .sun {
+  position: absolute;
+  left: 50%;
+  bottom: -1px; /* tuck slightly into footer to avoid gap */
+  transform: translateX(-50%);
+  width: 220px;
+  height: 110px; /* half circle */
+  background: radial-gradient(circle at 50% 100%, #fffbe6 0%, #ffd700 60%, #ff9966 100%);
+  border-top-left-radius: 110px;
+  border-top-right-radius: 110px;
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+  box-shadow: 0 0 60px 20px #ffd70055;
+}
+
+body.home-sunset footer .horizon {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0; /* starts at footer top edge */
+  height: 80px;
+  background: linear-gradient(180deg, transparent 0%, #2d2d72 100%);
+}
+    background: linear-gradient(180deg, #ff9966 0%, #ff5e62 40%, #ffc371 100%);
+    min-height: 100vh;
+    background-attachment: fixed;
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+.sunset {
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100vw;
+    height: 40vh;
+    background: radial-gradient(circle at 50% 80%, #ffcf6b 0%, #ff9966 60%, transparent 100%);
+    z-index: 0;
+}
+
+/* Optionally, add some clouds or silhouettes for more effect */
+.cloud {
+    position: absolute;
+    background: rgba(255,255,255,0.7);
+    border-radius: 50%;
+    z-index: 1;
+}
+
+body {
+    min-height: 100vh;
+    background: linear-gradient(180deg, #f7b267 0%, #ff9966 40%, #ff5e62 80%, #2d2d72 100%);
+    background-attachment: fixed;
+    background-repeat: no-repeat;
+    background-size: cover;
+    position: relative;
+    overflow-x: hidden;
+}
+
+.sunset {
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    width: 100vw;
+    height: 40vh;
+    pointer-events: none;
+    z-index: 0;
+}
+
+
+.sun {
+    position: absolute;
+    left: 50%;
+    bottom: 0;
+    transform: translateX(-50%);
+    width: 220px;
+    height: 110px;
+    background: radial-gradient(circle at 50% 100%, #fffbe6 0%, #ffd700 60%, #ff9966 100%);
+    border-top-left-radius: 110px;
+    border-top-right-radius: 110px;
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+    box-shadow: 0 0 60px 20px #ffd70055;
+    z-index: 0;
+    overflow: hidden;
+}
+
+/* Optionnel: sol fondu pour effet horizon */
+.horizon {
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 100vw;
+    height: 80px;
+    background: linear-gradient(180deg, transparent 0%, #2d2d72 100%);
+    z-index: 2;
+}

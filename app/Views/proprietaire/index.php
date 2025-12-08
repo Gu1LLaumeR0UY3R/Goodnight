@@ -7,18 +7,19 @@
     <link rel="stylesheet" href="/css/style.css">
     <link rel="stylesheet" href="/css/navbar.css">
     <link rel="stylesheet" href="/css/calendar_proprio.css">
+    <link rel="stylesheet" href="/css/dashboard-proprio.css">
     <link href="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.css" rel="stylesheet" />
     <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.js"></script>
 </head>
 <body>
     <?php include __DIR__ . '/../layout/navbar.php'; ?>
     <!-- Alert container for notifications (inserted dynamically) -->
-    <div id="alertContainer" style="position:fixed; top:80px; right:20px; z-index:1100;"></div>
+    <div id="alertContainer"></div>
 
     <!-- Placeholders for removed wheel features to avoid JS errors -->
-    <div id="bienDetails" style="display:none;"></div>
-    <div id="blocageSection" style="display:none;"></div>
-    <div id="blocagesList" style="display:none;"><div id="blocagesContent"></div></div>
+    <div id="bienDetails"></div>
+    <div id="blocageSection"></div>
+    <div id="blocagesList"><div id="blocagesContent"></div></div>
 
     <div class="dashboard">
         <h1>Tableau de bord Propriétaire</h1>
@@ -89,20 +90,20 @@
         </div>
         
         <!-- Calendrier FullCalendar -->
-        <div class="content-area" style="max-width:1000px;">
+        <div class="content-area">
             <h2>Calendrier des réservations</h2>
 
-            <div style="margin-bottom:12px; display:flex; gap:12px; align-items:center;">
+            <div class="calendar-legend">
                 <div class="calendar-instruction"><strong>Sélectionnez un ou plusieurs biens via la colonne de gauche</strong></div>
-                <div style="margin-left:auto; font-size:14px; color:#666">
-                    <span style="display:inline-block;margin-right:8px;"><span style="display:inline-block;width:12px;height:12px;background:#3788d8;margin-right:6px;"></span>Réservations</span>
-                    <span style="display:inline-block;margin-left:8px;"><span style="display:inline-block;width:12px;height:12px;background:#ff7f50;margin-right:6px;"></span>Blocages</span>
+                <div class="calendar-legend-items">
+                    <span class="legend-item"><span class="legend-dot reservations"></span>Réservations</span>
+                    <span class="legend-item"><span class="legend-dot blocked"></span>Blocages</span>
                 </div>
             </div>
 
-            <div id="calendar" style="background:white; border-radius:8px; padding:12px;"></div>
+            <div id="calendar"></div>
 
-            <div style="margin-top:20px; display:flex; gap:10px;">
+            <div class="calendar-actions">
                 <button class="btn btn-primary" onclick="openBlocageModal()">+ Créer un blocage</button>
             </div>
         </div>
@@ -133,7 +134,7 @@
                     </div>
                 </div>
 
-                <div class="fiche-item" id="modal-raison-sociale-container" style="display:none;">
+                <div class="fiche-item hidden-field" id="modal-raison-sociale-container">
                     <div class="fiche-label">Raison Sociale</div>
                     <div class="fiche-value" id="modal-locataire-raison-sociale">-</div>
                 </div>
@@ -184,12 +185,12 @@
                 <button class="close-btn" onclick="closeBlocageModal()">&times;</button>
             </div>
 
-            <form id="blocageForm" onsubmit="submitBlocageForm(event)">
+            <form id="blocageForm" class="blocage-form" onsubmit="submitBlocageForm(event)">
                 <div class="modal-body">
                     <!-- Mini FullCalendar removed: use the date inputs below to sélectionner la période. -->
                     <div class="fiche-item">
                         <label for="blocage-bien" class="fiche-label">Bien *</label>
-                        <select id="blocage-bien" required style="width:100%; padding:10px; border:2px solid #e0e0e0; border-radius:6px;">
+                        <select id="blocage-bien" required>
                             <option value="">-- Sélectionnez un bien --</option>
                             <?php foreach($biens ?? [] as $b): ?>
                                 <option value="<?php echo $b['id_biens']; ?>"><?php echo htmlspecialchars($b['designation_bien']); ?></option>
@@ -200,17 +201,17 @@
                     <div class="fiche-row">
                         <div class="fiche-item">
                             <label for="blocage-date-debut" class="fiche-label">Date début *</label>
-                            <input type="date" id="blocage-date-debut" required style="width:100%; padding:10px; border:2px solid #e0e0e0; border-radius:6px;">
+                            <input type="date" id="blocage-date-debut" required>
                         </div>
                         <div class="fiche-item">
                             <label for="blocage-date-fin" class="fiche-label">Date fin *</label>
-                            <input type="date" id="blocage-date-fin" required style="width:100%; padding:10px; border:2px solid #e0e0e0; border-radius:6px;">
+                            <input type="date" id="blocage-date-fin" required>
                         </div>
                     </div>
 
                     <div class="fiche-item">
                         <label for="blocage-motif" class="fiche-label">Motif *</label>
-                        <select id="blocage-motif" required style="width:100%; padding:10px; border:2px solid #e0e0e0; border-radius:6px;">
+                        <select id="blocage-motif" required>
                             <option value="">-- Sélectionnez un motif --</option>
                             <option value="personnel">Personnel</option>
                             <option value="entretien">Entretien</option>
@@ -221,13 +222,13 @@
 
                     <div class="fiche-item">
                         <label for="blocage-commentaire" class="fiche-label">Commentaire</label>
-                        <textarea id="blocage-commentaire" style="width:100%; padding:10px; border:2px solid #e0e0e0; border-radius:6px; min-height:80px;"></textarea>
+                        <textarea id="blocage-commentaire"></textarea>
                     </div>
                 </div>
 
                 <div class="modal-footer">
                     <button type="button" class="btn-close-modal" onclick="closeBlocageModal()">Annuler</button>
-                    <button type="submit" class="btn btn-primary" style="padding:10px 20px;">Créer blocage</button>
+                    <button type="submit" class="btn btn-primary btn-submit">Créer blocage</button>
                 </div>
             </form>
         </div>
@@ -370,7 +371,7 @@
             const container = document.getElementById('alertContainer');
             const alert = document.createElement('div');
             alert.className = 'alert alert-' + type;
-            alert.innerHTML = message + ' <span style="float:right; cursor:pointer;" onclick="this.parentElement.remove()">×</span>';
+            alert.innerHTML = message + ' <span class="alert-close" onclick="this.parentElement.remove()">×</span>';
             alert.style.display = 'block';
             container.appendChild(alert);
 
