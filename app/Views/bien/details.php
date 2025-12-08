@@ -6,16 +6,17 @@
     <title><?php echo htmlspecialchars($bien["designation_bien"]); ?> - GlobeNight</title>
     <link rel="stylesheet" href="/css/style.css">
     <link rel="stylesheet" href="/css/navbar.css">
+    <link rel="stylesheet" href="/css/sunset-background.css">
     <link rel="stylesheet" href="/css/bien-details.css">
     <!-- Modern FullCalendar & CSS -->
     <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.js"></script>
 </head>
-<body>
+<body class="home-sunset">
     <?php include __DIR__ . '/../layout/navbar.php'; ?>
 
-    <main>
-        <div class="bien-details">
+    <main class="page-shell">
+        <div class="bien-details glass-card">
             <div class="bien-header">
                 <div style="display: flex; justify-content: space-between; align-items: start;">
                     <div>
@@ -118,7 +119,7 @@
         </div>
 
         <!-- Calendrier des réservations -->
-        <div class="bien-calendar-container">
+        <div class="bien-calendar-container glass-card">
           <h2>Calendrier des réservations</h2>
           
           <!-- Légende -->
@@ -152,7 +153,7 @@
         ?>
         
         <?php if ($canBook): ?>
-            <div class="reservation-section-calendar">
+            <div class="reservation-section-calendar glass-card">
                 <h3>Réserver ce bien</h3>
         
                 <?php 
@@ -194,7 +195,7 @@
                             
         <?php elseif ($userId): ?>
             <!-- Connecté mais pas autorisé à réserver -->
-            <div class="reservation-section-calendar">
+            <div class="reservation-section-calendar glass-card">
                 <h3>Réserver ce bien</h3>
                 <p style="text-align: center; color: #666;">
                     <?php if ($isOwner): ?>
@@ -212,7 +213,7 @@
                     
         <?php else: ?>
             <!-- Non connecté -->
-            <div class="reservation-section-calendar">
+            <div class="reservation-section-calendar glass-card">
                 <h3>Réserver ce bien</h3>
                 <p style="text-align: center;">Veuillez vous <a href="/login" style="color: var(--primary); text-decoration: underline;">connecter</a> pour effectuer une réservation.</p>
             </div>
