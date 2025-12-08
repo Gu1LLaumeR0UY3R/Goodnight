@@ -142,76 +142,11 @@ $userPfp = $_SESSION['user_pfp'] ?? null;
     unset($_SESSION['success_message'], $_SESSION['error_message'], $_SESSION['errors']);
 ?>
 
-<style>
-    .toast-container {
-        position: fixed;
-        top: 1rem;
-        left: 50%;
-        transform: translateX(-50%);
-        z-index: 999999;
-        pointer-events: none;
-    }
-    .toast {
-        min-width: 320px;
-        max-width: 720px;
-        margin: 0.5rem auto;
-        background: #fff;
-        color: #111;
-        border-radius: 6px;
-        box-shadow: 0 6px 18px rgba(0,0,0,0.12);
-        padding: 12px 16px;
-        display: flex;
-        align-items: center;
-        gap: 12px;
-        font-family: Arial, sans-serif;
-        pointer-events: auto;
-        opacity: 0;
-        transform: translateY(-8px);
-        transition: opacity 240ms ease, transform 240ms ease;
-    }
-    .toast.show { opacity: 1; transform: translateY(0); }
-    .toast.success { border-left: 4px solid #28a745; }
-    .toast.error { border-left: 4px solid #dc3545; }
-    .toast .toast-close { margin-left: auto; background: transparent; border: none; font-size: 16px; cursor: pointer; }
-</style>
+<!-- Global Components CSS -->
+<link rel="stylesheet" href="/css/components.css">
 
 <!-- Dark Mode CSS -->
 <link rel="stylesheet" href="/css/dark-mode.css">
-
-<style>
-    /* Profile picture in navbar */
-    .navbar-profile-img {
-        width: 32px;
-        height: 32px;
-        border-radius: 50%;
-        object-fit: cover;
-        border: 2px solid white;
-        vertical-align: middle;
-        margin-right: 8px;
-    }
-
-    .navbar-profile-placeholder {
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        width: 32px;
-        height: 32px;
-        border-radius: 50%;
-        background: rgba(255, 255, 255, 0.3);
-        color: white;
-        font-weight: bold;
-        font-size: 14px;
-        border: 2px solid white;
-        vertical-align: middle;
-        margin-right: 8px;
-    }
-
-    .navbar-btn-profile {
-        display: inline-flex;
-        align-items: center;
-        gap: 0;
-    }
-</style>
 
 <div class="toast-container" id="toast-container" aria-live="polite" aria-atomic="true"></div>
 

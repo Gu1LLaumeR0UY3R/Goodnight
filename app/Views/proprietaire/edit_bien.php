@@ -62,7 +62,7 @@
             <input type="hidden" id="id_commune" name="id_commune" value="<?php echo htmlspecialchars($bien["id_commune"] ?? ''); ?>">
 
             <fieldset class="form-section">
-                <legend>Tarification (Prix à la semaine)</legend>
+                <legend>Tarification (Prix par jour)</legend>
                 <div id="tarifs-container" class="tarifs-grid">
                     <?php foreach ($saisons as $saison): ?>
                         <div class="tarif-group">
@@ -70,7 +70,7 @@
                             <input type="hidden" name="tarifs[<?php echo htmlspecialchars($saison["id_saison"]); ?>][id_saison]" value="<?php echo htmlspecialchars($saison["id_saison"]); ?>">
                             
                             <div class="form-group">
-                                <label for="prix_semaine_<?php echo htmlspecialchars($saison["id_saison"]); ?>">Prix Semaine (€) :</label>
+                                <label for="prix_semaine_<?php echo htmlspecialchars($saison["id_saison"]); ?>">Prix Jour (€) :</label>
                                 <?php
                                     $currentYear = date('Y');
                                     $tarifKey = $saison['id_saison'] . '_' . $currentYear;

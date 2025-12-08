@@ -6,117 +6,129 @@
     <title>Inscription - GlobeNight</title>
     <link rel="stylesheet" href="/css/style.css">
     <link rel="stylesheet" href="/css/navbar.css">
+    <link rel="stylesheet" href="/css/auth.css">
+    <link rel="stylesheet" href="/css/sunset-background.css">
     <link rel="stylesheet" href="/lib/intl-tel-input/intlTelInput.min.css">
     <link rel="stylesheet" href="https://code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
-<style>
-	        .form-section { margin-bottom: 1em; }
-	        .hidden { display: none; }
-	        /* Correction de positionnement pour intl-tel-input */
-	        .iti {
-	            width: 100% !important; /* Assure que le conteneur intl-tel-input prend toute la largeur disponible */
-	            display: flex !important; /* Utiliser flex pour forcer l'alignement */
-	        }
-	        .iti .iti__country-container {
-	            flex-shrink: 0 !important; /* Empêche le sélecteur de rétrécir */
-	        }
-                .iti input.iti__tel-input {
-            flex-grow: 1 !important; /* Permet au champ de saisie de prendre l'espace restant */
-            padding-right: 0 !important; /* Corrige le padding si nécessaire */
-        }
-            /* Ensure the country dropdown is above other elements */
-            .iti__country-list, .iti__flag-list, .iti__country { z-index: 200000 !important; }
-            .tel-error {
-                color: #dc3545;
-                font-size: 0.875rem;
-                margin-top: 0.25rem;
-                margin-bottom: 0.5rem;
-            }
-            input.error {
-                border-color: #dc3545;
-            }
-            input.error:focus {
-                box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, 0.25);
-            }
-	    </style>
+
 </head>
-<body>
+<body class="home-sunset">
     <?php include __DIR__ . '/../layout/navbar.php'; ?>
 
-    <main>
-        <h2>Créez votre compte</h2>
-        <?php
-        if (isset($_SESSION['error'])) {
-            echo '<p class="error">' . htmlspecialchars($_SESSION['error']) . '</p>';
-            unset($_SESSION['error']);
-        }
-        ?>
+    <main class="auth-wrapper">
+        <section class="auth-card">
+            <h2>Créez votre compte</h2>
+            <?php
+            if (isset($_SESSION['error'])) {
+                echo '<div class="error-message">' . htmlspecialchars($_SESSION['error']) . '</div>';
+                unset($_SESSION['error']);
+            }
+            ?>
 
-        <form action="/register/process" method="POST">
-            <div class="form-section">
-                <label for="user_type">Type de compte :</label>
-                <select id="user_type" name="type_personne" onchange="toggleUserType()">
-                    <option value="physique" <?php echo (isset($old_data['type_personne']) && $old_data['type_personne'] === 'physique') ? 'selected' : ''; ?>>Personne Physique</option>
-                    <option value="morale" <?php echo (isset($old_data['type_personne']) && $old_data['type_personne'] === 'morale') ? 'selected' : ''; ?>>Personne Morale</option>
-                </select>
-            </div>
+            <form action="/register/process" method="POST" class="auth-form register-form">
+                <div class="choices-container">
+                    <!-- Slider Type de Compte -->
+                    <div class="choice-wrapper">
+                        <label class="choice-label">Type de compte :</label>
+                        <div class="toggle-switch">
+                            <input type="radio" name="type_personne" value="physique" id="physique" <?php echo (!isset($old_data['type_personne']) || $old_data['type_personne'] === 'physique') ? 'checked' : ''; ?> onchange="toggleUserType()">
+                            <input type="radio" name="type_personne" value="morale" id="morale" <?php echo (isset($old_data['type_personne']) && $old_data['type_personne'] === 'morale') ? 'checked' : ''; ?> onchange="toggleUserType()">
+                            <label for="physique" class="toggle-label physique-label">Particulier</label>
+                            <label for="morale" class="toggle-label morale-label">Entreprise</label>
+                            <span class="toggle-slider"></span>
+                        </div>
+                    </div>
 
-            <div class="form-section">
-                <label for="nom">Nom :</label>
-                <input type="text" id="nom" name="nom" required value="<?php echo htmlspecialchars($old_data['nom'] ?? ''); ?>">
-                <label for="prenom">Prénom :</label>
-                <input type="text" id="prenom" name="prenom" required value="<?php echo htmlspecialchars($old_data['prenom'] ?? ''); ?>">
-            </div>
+                    <!-- Choix Propriétaire/Locataire -->
+                    <div class="choice-wrapper">
+                        <label class="choice-label">Je m'inscris en tant que :</label>
+                        <div class="radio-buttons-group">
+                            <input type="radio" name="role_choice" value="proprietaire" id="proprietaire" checked>
+                            <label for="proprietaire" class="btn-radio">Propriétaire</label>
+                            <input type="radio" name="role_choice" value="locataire" id="locataire">
+                            <label for="locataire" class="btn-radio">Locataire</label>
+                        </div>
+                    </div>
+                </div>
 
-            <div id="form-physique" class="form-section hidden">
-                <label for="date_naissance">Date de naissance :</label>
-                <input type="date" id="date_naissance" name="date_naissance" value="<?php echo htmlspecialchars($old_data['date_naissance'] ?? ''); ?>">
-            </div>
+                <div class="form-columns">
+                    <div class="form-column">
+                        <div id="form-physique" class="form-section hidden">
+                            <label for="date_naissance">Date de naissance :</label>
+                            <input type="date" id="date_naissance" name="date_naissance" value="<?php echo htmlspecialchars($old_data['date_naissance'] ?? ''); ?>">
+                        </div>
+                    </div>
+                    <div class="form-column">
+                        <div class="form-section">
+                            <label for="tel">Téléphone :</label>
+                            <input type="tel" id="tel" name="tel_locataire" value="<?php echo htmlspecialchars($old_data['tel_locataire'] ?? ''); ?>" maxlength="20">
+                            <input type="hidden" id="full_tel" name="tel_locataire_formatted">
+                        </div>
+                    </div>
+                </div>
 
-            <div id="form-morale" class="form-section hidden">
-                <label for="raison_sociale">Raison Sociale :</label>
-                <input type="text" id="raison_sociale" name="raison_sociale" value="<?php echo htmlspecialchars($old_data['raison_sociale'] ?? ''); ?>">
-                <label for="siret">SIRET :</label>
-                <input type="text" id="siret" name="siret" value="<?php echo htmlspecialchars($old_data['siret'] ?? ''); ?>" maxlength="14">
-            </div>
+                <div id="form-morale" class="form-section full-width hidden">
+                    <label for="raison_sociale">Raison Sociale :</label>
+                    <input type="text" id="raison_sociale" name="raison_sociale" value="<?php echo htmlspecialchars($old_data['raison_sociale'] ?? ''); ?>">
+                    <label for="siret">SIRET :</label>
+                    <input type="text" id="siret" name="siret" value="<?php echo htmlspecialchars($old_data['siret'] ?? ''); ?>" maxlength="14">
+                </div>
 
-            <div class="form-section">
-                <label for="email">Email :</label>
-                <input type="email" id="email" name="email" required value="<?php echo htmlspecialchars($old_data['email'] ?? ''); ?>">
+                <div class="form-columns">
+                    <!-- COLONNE GAUCHE -->
+                    <div class="form-column">
+                        <div class="form-section">
+                            <label for="nom">Nom :</label>
+                            <input type="text" id="nom" name="nom" required value="<?php echo htmlspecialchars($old_data['nom'] ?? ''); ?>">
+                        </div>
 
-                <label for="password">Mot de passe :</label>
-                <input type="password" id="password" name="password" required>
+                        <div class="form-section">
+                            <label for="prenom">Prénom :</label>
+                            <input type="text" id="prenom" name="prenom" required value="<?php echo htmlspecialchars($old_data['prenom'] ?? ''); ?>">
+                        </div>
 
-                <label for="confirm_password">Confirmer le mot de passe :</label>
-                <input type="password" id="confirm_password" name="confirm_password" required>
+                        <div class="form-section">
+                            <label for="email">Email :</label>
+                            <input type="email" id="email" name="email" required value="<?php echo htmlspecialchars($old_data['email'] ?? ''); ?>">
+                        </div>
+                    </div>
 
-                <label for="tel">Téléphone :</label>
-                <input type="tel" id="tel" name="tel_locataire" value="<?php echo htmlspecialchars($old_data['tel_locataire'] ?? ''); ?>" maxlength="20">
-                <input type="hidden" id="full_tel" name="tel_locataire_formatted">
+                    <!-- COLONNE DROITE -->
+                    <div class="form-column">
+                        <div class="form-section">
+                            <label for="rue">Rue :</label>
+                            <input type="text" id="rue" name="rue" value="<?php echo htmlspecialchars($old_data['rue'] ?? ''); ?>">
+                        </div>
 
-                <label for="rue">Rue :</label>
-                <input type="text" id="rue" name="rue" value="<?php echo htmlspecialchars($old_data['rue'] ?? ''); ?>">
+                        <div class="form-section">
+                            <label for="complement">Complément d'adresse :</label>
+                            <input type="text" id="complement" name="complement" value="<?php echo htmlspecialchars($old_data['complement'] ?? ''); ?>">
+                        </div>
 
-                <label for="complement">Complément d'adresse :</label>
-                <input type="text" id="complement" name="complement" value="<?php echo htmlspecialchars($old_data['complement'] ?? ''); ?>">
+                        <div class="form-section">
+                            <label for="id_commune">Commune :</label>
+                            <input type="text" id="commune_search_register" name="commune_nom" value="<?php echo htmlspecialchars($old_data['commune_nom'] ?? ''); ?>">
+                            <input type="hidden" id="id_commune" name="id_commune" value="<?php echo htmlspecialchars($old_data['id_commune'] ?? ''); ?>">
+                        </div>
+                    </div>
+                </div>
 
-                <label for="id_commune">Commune :</label>
-                <input type="text" id="commune_search_register" name="commune_nom" value="<?php echo htmlspecialchars($old_data['commune_nom'] ?? ''); ?>">
-                <input type="hidden" id="id_commune" name="id_commune" value="<?php echo htmlspecialchars($old_data['id_commune'] ?? ''); ?>">
-            </div>
+                <div class="form-section full-width">
+                    <label for="password">Mot de passe :</label>
+                    <input type="password" id="password" name="password" required>
+                </div>
 
-            <div class="role-choice-buttons form-section">
-                <label>Je souhaite m'inscrire en tant que :</label>
-                <input type="radio" name="role_choice" value="proprietaire" id="proprietaire" checked>
-                <label for="proprietaire" class="btn-radio">Propriétaire</label>
-                <input type="radio" name="role_choice" value="locataire" id="locataire">
-                <label for="locataire" class="btn-radio">Locataire</label>
-            </div>
+                <div class="form-section full-width">
+                    <label for="confirm_password">Confirmer le mot de passe :</label>
+                    <input type="password" id="confirm_password" name="confirm_password" required>
+                </div>
 
-            <button type="submit">S'inscrire</button>
-        </form>
+                <button type="submit" class="full-width">S'inscrire</button>
+            </form>
+        </section>
     </main>
 
-    <footer>
+    <footer class="auth-footer">
         <p>&copy; <?php echo date("Y"); ?> GlobeNight. Tous droits réservés.</p>
     </footer>
 
@@ -126,11 +138,11 @@
     <script src="/lib/intl-tel-input/intlTelInput.min.js"></script>
     <script>
         function toggleUserType() {
-            const userType = document.getElementById('user_type').value;
+            const physiqueRadio = document.getElementById('physique');
             const physiqueFields = document.getElementById('form-physique');
             const moraleFields = document.getElementById('form-morale');
 
-            if (userType === 'physique') {
+            if (physiqueRadio.checked) {
                 physiqueFields.classList.remove('hidden');
                 moraleFields.classList.add('hidden');
                 document.getElementById('date_naissance').required = true;

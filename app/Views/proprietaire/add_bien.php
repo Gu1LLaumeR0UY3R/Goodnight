@@ -73,7 +73,7 @@
             </fieldset>
 
             <fieldset class="form-section">
-                <legend>Tarification (Prix à la semaine)</legend>
+                <legend>Tarification (Prix par jour)</legend>
                 <div id="tarifs-container" class="tarifs-grid">
                     <?php foreach ($saisons as $saison): ?>
                         <div class="tarif-group">
@@ -81,7 +81,7 @@
                             <input type="hidden" name="tarifs[<?php echo htmlspecialchars($saison["id_saison"]); ?>][id_saison]" value="<?php echo htmlspecialchars($saison["id_saison"]); ?>">
                             
                             <div class="form-group">
-                                <label for="prix_semaine_<?php echo htmlspecialchars($saison["id_saison"]); ?>">Prix Semaine (€) :</label>
+                                <label for="prix_semaine_<?php echo htmlspecialchars($saison["id_saison"]); ?>">Prix Jour (€) :</label>
                                 <input type="number" id="prix_semaine_<?php echo htmlspecialchars($saison["id_saison"]); ?>" name="tarifs[<?php echo htmlspecialchars($saison["id_saison"]); ?>][prix_semaine]" step="0.01" min="0">
                             </div>
                             <input type="hidden" name="tarifs[<?php echo htmlspecialchars($saison["id_saison"]); ?>][annee]" value="<?php echo date('Y'); ?>">

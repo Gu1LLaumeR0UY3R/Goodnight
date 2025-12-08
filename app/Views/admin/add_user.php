@@ -8,22 +8,7 @@
     <link rel="stylesheet" href="/css/navbar.css">
     <link rel="stylesheet" href="/lib/intl-tel-input/intlTelInput.min.css">
     <link rel="stylesheet" href="https://code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
-<style>
-	        .form-section { margin-bottom: 1em; }
-	        .hidden { display: none; }
-	        /* Correction de positionnement pour intl-tel-input */
-	        .iti {
-	            width: 100% !important; /* Assure que le conteneur intl-tel-input prend toute la largeur disponible */
-	            display: flex !important; /* Utiliser flex pour forcer l'alignement */
-	        }
-	        .iti .iti__country-container {
-	            flex-shrink: 0 !important; /* Empêche le sélecteur de rétrécir */
-	        }
-	        .iti input.iti__tel-input {
-	            flex-grow: 1 !important; /* Permet au champ de saisie de prendre l'espace restant */
-	            padding-right: 0 !important; /* Corrige le padding si nécessaire */
-	        }
-	    </style>
+
 </head>
 <body>
     <main>

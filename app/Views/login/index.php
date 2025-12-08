@@ -6,49 +6,53 @@
     <title>Connexion - GlobeNight</title>
     <link rel="stylesheet" href="/css/style.css">
     <link rel="stylesheet" href="/css/navbar.css">
+    <link rel="stylesheet" href="/css/auth.css">
+    <link rel="stylesheet" href="/css/sunset-background.css">
 </head>
-<body>
+<body class="home-sunset">
     <?php include __DIR__ . '/../layout/navbar.php'; ?>
 
-    <main>
-        <h2>Connectez-vous à votre compte</h2>
-        <?php
-        if (isset($_SESSION['error'])) {
-            echo '<p class="error">' . htmlspecialchars($_SESSION['error']) . '</p>';
-            unset($_SESSION['error']);
-        }
-        if (isset($_SESSION['success'])) {
-            echo '<p class="success">' . htmlspecialchars($_SESSION['success']) . '</p>';
-            unset($_SESSION['success']);
-        }
-        ?>
-        <?php if (isset($_GET['success']) && $_GET['success'] === 'registered'): ?>
-            <p class="success">Votre compte a été créé avec succès. Vous pouvez maintenant vous connecter.</p>
-        <?php endif; ?>
+    <main class="auth-wrapper">
+        <section class="auth-card">
+            <h2>Connectez-vous à votre compte</h2>
 
-        <form action="/login/process" method="POST">
-            <label for="email">Email :</label>
-            <input type="email" id="email" name="email" required value="<?php echo htmlspecialchars($old_email ?? ''); ?>">
+            <?php
+            if (isset($_SESSION['error'])) {
+                echo '<div class="error-message">' . htmlspecialchars($_SESSION['error']) . '</div>';
+                unset($_SESSION['error']);
+            }
+            if (isset($_SESSION['success'])) {
+                echo '<div class="success-message">' . htmlspecialchars($_SESSION['success']) . '</div>';
+                unset($_SESSION['success']);
+            }
+            ?>
+            <?php if (isset($_GET['success']) && $_GET['success'] === 'registered'): ?>
+                <div class="success-message">Votre compte a été créé avec succès. Vous pouvez maintenant vous connecter.</div>
+            <?php endif; ?>
 
-            <label for="password">Mot de passe :</label>
-            <div class="password-wrapper">
-                <input type="password" id="password" name="password" required>
-                <button type="button" id="togglePassword" class="toggle-password" aria-label="Afficher le mot de passe"></button>
-            </div>
+            <form action="/login/process" method="POST" class="auth-form">
+                <label for="email">Email :</label>
+                <input type="email" id="email" name="email" required value="<?php echo htmlspecialchars($old_email ?? ''); ?>">
 
-            <button type="submit">Se connecter</button>
-            <p class="reset-link">
-                <a href="/login/reset">Mot de passe oublié ?</a>
-        </form>
+                <label for="password">Mot de passe :</label>
+                <div class="password-wrapper">
+                    <input type="password" id="password" name="password" required>
+                    <button type="button" id="togglePassword" class="toggle-password" aria-label="Afficher le mot de passe"></button>
+                </div>
+
+                <button type="submit">Se connecter</button>
+                <div class="auth-links single-link">
+                    <a href="/login/reset">Mot de passe oublié ?</a>
+                </div>
+            </form>
+        </section>
     </main>
 
-    <footer>
+    <footer class="auth-footer">
         <p>&copy; <?php echo date("Y"); ?> GlobeNight. Tous droits réservés.</p>
     </footer>
-</body>
-</html>
 
-<script>
+    <script>
 // Basculer l'affichage du mot de passe (accessible, amélioration progressive)
 document.addEventListener('DOMContentLoaded', function () {
     var toggle = document.getElementById('togglePassword');
@@ -87,3 +91,5 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 });
 </script>
+</body>
+</html>

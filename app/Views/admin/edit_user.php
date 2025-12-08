@@ -7,35 +7,6 @@
     <link rel="stylesheet" href="/css/style.css">
     <link rel="stylesheet" href="/css/navbar.css">
     <link rel="stylesheet" href="/lib/intl-tel-input/intlTelInput.min.css">
-    <style>
-        /* Correction de positionnement pour intl-tel-input */
-        .iti {
-            width: 100% !important;
-            display: flex !important;
-        }
-        .iti .iti__country-container {
-            flex-shrink: 0 !important;
-        }
-        .iti input.iti__tel-input {
-            flex-grow: 1 !important;
-            padding-right: 0 !important;
-        }
-        .iti__country-list, .iti__flag-list, .iti__country {
-            z-index: 200000 !important;
-        }
-        .tel-error {
-            color: #dc3545;
-            font-size: 0.875rem;
-            margin-top: 0.25rem;
-            margin-bottom: 0.5rem;
-        }
-        input.error {
-            border-color: #dc3545;
-        }
-        input.error:focus {
-            box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, 0.25);
-        }
-    </style>
 </head>
 <body>
 

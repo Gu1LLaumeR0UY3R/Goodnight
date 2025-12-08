@@ -6,18 +6,7 @@
     <title>Réservations de mes biens</title>
     <link rel="stylesheet" href="/css/style.css">
     <link rel="stylesheet" href="/css/navbar.css">
-    <style>
-        .btn-cancel {
-            background: #dc3545; color: white; border: none;
-            padding: 6px 12px; border-radius: 4px; cursor: pointer;
-            font-size: 0.9em; transition: background 0.2s;
-        }
-        .btn-cancel:hover { background: #c82333; }
-        .alert { padding: 12px; margin: 15px 0; border-radius: 4px; }
-        .alert-success { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
-        .alert-error { background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
-        .photo-thumb { width: 50px; height: 50px; object-fit: cover; border-radius: 4px; vertical-align: middle; margin-right: 8px; }
-    </style>
+
 </head>
 <body>
     <?php include __DIR__ . '/../layout/navbar.php'; ?>

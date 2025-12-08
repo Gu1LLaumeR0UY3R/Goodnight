@@ -1,0 +1,664 @@
+/* ========================================
+   PAGES PROPRIÉTAIRE
+   ======================================== */
+
+/* ===== LAYOUT PROPRIÉTAIRE ===== */
+.proprietaire-container {
+  max-width: 1400px;
+  margin: 2rem auto;
+  padding: 0 1rem;
+}
+
+.proprietaire-header {
+  background: linear-gradient(135deg, var(--twilight-rose), var(--twilight-amber));
+  color: white;
+  padding: 3rem 2rem;
+  border-radius: 16px;
+  margin-bottom: 2rem;
+  box-shadow: var(--shadow);
+}
+
+.dark-mode .proprietaire-header {
+  background: linear-gradient(135deg, var(--night-stellar), var(--night-nebula));
+}
+
+.proprietaire-header h1 {
+  color: white;
+  font-size: 2.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.proprietaire-header p {
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 1.125rem;
+  margin: 0;
+}
+
+/* ===== STATS PROPRIÉTAIRE ===== */
+.proprietaire-stats {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+  margin-bottom: 3rem;
+}
+
+.stat-card-prop {
+  background: var(--bg-card);
+  padding: 2rem;
+  border-radius: 12px;
+  border: 1px solid var(--border-color);
+  box-shadow: var(--shadow);
+  transition: all 0.3s;
+  position: relative;
+  overflow: hidden;
+}
+
+.stat-card-prop::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 100px;
+  height: 100px;
+  background: var(--accent-primary);
+  opacity: 0.05;
+  border-radius: 50%;
+  transform: translate(30%, -30%);
+}
+
+.stat-card-prop:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+}
+
+.dark-mode .stat-card-prop:hover {
+  box-shadow: 0 8px 24px rgba(102, 252, 241, 0.15);
+}
+
+.stat-card-prop-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.stat-card-prop-icon {
+  font-size: 2rem;
+}
+
+.stat-card-prop-title {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.stat-card-prop-value {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: var(--accent-primary);
+  margin-bottom: 0.5rem;
+  line-height: 1;
+}
+
+.stat-card-prop-label {
+  font-size: 0.875rem;
+  color: var(--text-muted);
+}
+
+.stat-card-prop-trend {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  margin-top: 0.5rem;
+}
+
+.stat-card-prop-trend.up {
+  color: #10B981;
+}
+
+.stat-card-prop-trend.down {
+  color: #EF4444;
+}
+
+/* ===== MES BIENS - GRILLE ===== */
+.mes-biens-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.mes-biens-header h2 {
+  margin: 0;
+  font-size: 2rem;
+}
+
+.mes-biens-actions {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.mes-biens-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2rem;
+  margin-bottom: 3rem;
+}
+
+.mon-bien-card {
+  background: var(--bg-card);
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: var(--shadow);
+  border: 1px solid var(--border-color);
+  transition: all 0.3s;
+  display: grid;
+  grid-template-columns: 250px 1fr;
+  gap: 0;
+}
+
+.mon-bien-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.15);
+  border-color: var(--accent-primary);
+}
+
+.dark-mode .mon-bien-card:hover {
+  box-shadow: 0 12px 28px rgba(102, 252, 241, 0.15);
+}
+
+.mon-bien-card-image {
+  position: relative;
+  height: 100%;
+  min-height: 200px;
+}
+
+.mon-bien-card-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.mon-bien-card-badge {
+  position: absolute;
+  top: 1rem;
+  left: 1rem;
+  padding: 0.375rem 0.875rem;
+  border-radius: 20px;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  background: var(--accent-primary);
+  color: white;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.mon-bien-card-content {
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+}
+
+.mon-bien-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: start;
+  margin-bottom: 1rem;
+}
+
+.mon-bien-card-title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin: 0 0 0.5rem 0;
+}
+
+.mon-bien-card-location {
+  color: var(--text-secondary);
+  font-size: 0.9375rem;
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
+}
+
+.mon-bien-card-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 1rem;
+  margin: 1rem 0;
+  padding: 1rem 0;
+  border-top: 1px solid var(--border-color);
+  border-bottom: 1px solid var(--border-color);
+}
+
+.mon-bien-stat {
+  text-align: center;
+}
+
+.mon-bien-stat-value {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--accent-primary);
+  display: block;
+}
+
+.mon-bien-stat-label {
+  font-size: 0.8125rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.mon-bien-card-footer {
+  display: flex;
+  gap: 0.75rem;
+  margin-top: auto;
+}
+
+.mon-bien-card-footer .btn {
+  flex: 1;
+  padding: 0.75rem;
+  text-align: center;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 0.9375rem;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.btn-view-bien {
+  background: #3B82F6;
+  color: white;
+}
+
+.btn-view-bien:hover {
+  background: #2563EB;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+}
+
+.btn-edit-bien {
+  background: #10B981;
+  color: white;
+}
+
+.btn-edit-bien:hover {
+  background: #059669;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+}
+
+.btn-delete-bien {
+  background: #EF4444;
+  color: white;
+}
+
+.btn-delete-bien:hover {
+  background: #DC2626;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+}
+
+/* ===== FORMULAIRE AJOUT/ÉDITION BIEN ===== */
+.form-bien {
+  background: var(--bg-card);
+  padding: 2rem;
+  border-radius: 12px;
+  border: 1px solid var(--border-color);
+  max-width: 1000px;
+  margin: 0 auto 3rem;
+}
+
+.form-bien h2 {
+  margin-bottom: 2rem;
+}
+
+.form-section-bien {
+  margin-bottom: 2rem;
+  padding-bottom: 2rem;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.form-section-bien:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.form-section-bien h3 {
+  font-size: 1.25rem;
+  margin-bottom: 1.5rem;
+  color: var(--accent-primary);
+}
+
+.form-row-bien {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.form-group-bien label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  font-size: 0.9375rem;
+}
+
+.form-group-bien input,
+.form-group-bien select,
+.form-group-bien textarea {
+  width: 100%;
+  padding: 0.875rem;
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  font-size: 1rem;
+  font-family: var(--font-main);
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  transition: all 0.2s;
+}
+
+.form-group-bien textarea {
+  min-height: 120px;
+  resize: vertical;
+}
+
+.form-group-bien input:focus,
+.form-group-bien select:focus,
+.form-group-bien textarea:focus {
+  outline: none;
+  border-color: var(--accent-primary);
+  box-shadow: 0 0 0 3px rgba(255, 90, 95, 0.1);
+}
+
+.dark-mode .form-group-bien input:focus,
+.dark-mode .form-group-bien select:focus,
+.dark-mode .form-group-bien textarea:focus {
+  box-shadow: 0 0 0 3px rgba(102, 252, 241, 0.1);
+}
+
+.form-help-text {
+  font-size: 0.8125rem;
+  color: var(--text-muted);
+  margin-top: 0.375rem;
+}
+
+/* Upload photos */
+.photo-upload-zone {
+  border: 2px dashed var(--border-color);
+  border-radius: 8px;
+  padding: 2rem;
+  text-align: center;
+  background: var(--bg-secondary);
+  transition: all 0.2s;
+  cursor: pointer;
+}
+
+.photo-upload-zone:hover {
+  border-color: var(--accent-primary);
+  background: var(--bg-primary);
+}
+
+.photo-upload-zone input[type="file"] {
+  display: none;
+}
+
+.photo-upload-icon {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+  opacity: 0.5;
+}
+
+.photo-preview-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.photo-preview-item {
+  position: relative;
+  aspect-ratio: 1;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 2px solid var(--border-color);
+}
+
+.photo-preview-item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.photo-preview-remove {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  background: rgba(239, 68, 68, 0.9);
+  color: white;
+  border: none;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.25rem;
+  transition: all 0.2s;
+}
+
+.photo-preview-remove:hover {
+  background: #DC2626;
+  transform: scale(1.1);
+}
+
+/* Prestations checkboxes */
+.prestations-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.prestation-checkbox {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.875rem;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.prestation-checkbox:hover {
+  border-color: var(--accent-primary);
+  background: var(--bg-primary);
+}
+
+.prestation-checkbox input[type="checkbox"] {
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+  accent-color: var(--accent-primary);
+}
+
+.prestation-checkbox label {
+  margin: 0;
+  font-weight: 500;
+  cursor: pointer;
+  flex: 1;
+}
+
+/* Actions formulaire */
+.form-actions-bien {
+  display: flex;
+  gap: 1rem;
+  justify-content: flex-end;
+  margin-top: 2rem;
+  padding-top: 2rem;
+  border-top: 2px solid var(--border-color);
+}
+
+.form-actions-bien button {
+  padding: 0.875rem 2rem;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-submit-bien {
+  background: var(--accent-primary);
+  color: white;
+  border: none;
+}
+
+.btn-submit-bien:hover {
+  background: var(--accent-hover);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(255, 90, 95, 0.4);
+}
+
+.dark-mode .btn-submit-bien:hover {
+  box-shadow: 0 6px 20px rgba(102, 252, 241, 0.4);
+}
+
+.btn-cancel-bien {
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+  border: 1px solid var(--border-color);
+}
+
+.btn-cancel-bien:hover {
+  background: var(--bg-primary);
+  border-color: var(--accent-primary);
+}
+
+/* ===== GESTION PRESTATIONS ===== */
+.prestations-manager {
+  background: var(--bg-card);
+  padding: 2rem;
+  border-radius: 12px;
+  border: 1px solid var(--border-color);
+  margin-bottom: 2rem;
+}
+
+.prestation-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
+  background: var(--bg-secondary);
+  border-radius: 8px;
+  margin-bottom: 0.75rem;
+  border: 1px solid var(--border-color);
+}
+
+.prestation-item-info {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex: 1;
+}
+
+.prestation-item-icon {
+  font-size: 1.5rem;
+}
+
+.prestation-item-name {
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.prestation-item-actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+/* ===== RESPONSIVE TABLETTE ===== */
+@media (min-width: 768px) {
+  .proprietaire-stats {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .form-row-bien {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .mes-biens-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ===== RESPONSIVE DESKTOP ===== */
+@media (min-width: 1024px) {
+  .proprietaire-stats {
+    grid-template-columns: repeat(4, 1fr);
+  }
+  
+  .form-row-bien.triple {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+/* ===== RESPONSIVE MOBILE ===== */
+@media (max-width: 767px) {
+  .proprietaire-header {
+    padding: 2rem 1.5rem;
+  }
+  
+  .proprietaire-header h1 {
+    font-size: 1.75rem;
+  }
+  
+  .mon-bien-card {
+    grid-template-columns: 1fr;
+  }
+  
+  .mon-bien-card-image {
+    min-height: 200px;
+  }
+  
+  .mon-bien-card-footer {
+    flex-direction: column;
+  }
+  
+  .form-bien {
+    padding: 1.5rem;
+  }
+  
+  .form-actions-bien {
+    flex-direction: column;
+  }
+  
+  .form-actions-bien button {
+    width: 100%;
+  }
+  
+  .mes-biens-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  .mes-biens-actions {
+    width: 100%;
+  }
+  
+  .mes-biens-actions .action-btn {
+    flex: 1;
+  }
+}

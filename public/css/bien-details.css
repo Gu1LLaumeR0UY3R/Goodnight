@@ -1,0 +1,382 @@
+/* ========================================
+   PAGE DÉTAILS BIEN
+   ======================================== */
+
+/* ===== CONTENEUR PRINCIPAL ===== */
+.bien-details {
+  max-width: 1200px;
+  margin: 2rem auto;
+  padding: 0 1rem;
+}
+
+/* ===== HEADER BIEN ===== */
+.bien-header {
+  margin-bottom: 2rem;
+}
+
+.bien-header h1 {
+  font-size: 2.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.proprietaire-info {
+  color: var(--text-secondary);
+  font-size: 1.1rem;
+}
+
+/* ===== GALERIE PHOTOS ===== */
+.bien-photos {
+  margin-bottom: 3rem;
+  border-radius: 16px;
+  overflow: hidden;
+}
+
+.carousel {
+  position: relative;
+  width: 100%;
+  height: 500px;
+  background: var(--bg-secondary);
+}
+
+.slides {
+  width: 100%;
+  height: 100%;
+  position: relative;
+}
+
+.slide {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  transition: opacity 0.5s;
+}
+
+.slide.active {
+  opacity: 1;
+}
+
+.slide img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  cursor: pointer;
+}
+
+/* Contrôles carousel */
+.carousel-controls {
+  position: absolute;
+  bottom: 1rem;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 0.5rem;
+  z-index: 10;
+}
+
+.carousel-controls button {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.9);
+  border: none;
+  font-size: 1.2rem;
+  cursor: pointer;
+  transition: all 0.2s;
+  color: var(--text-primary);
+}
+
+.dark-mode .carousel-controls button {
+  background: rgba(31, 40, 51, 0.9);
+  color: var(--night-silver);
+}
+
+.carousel-controls button:hover {
+  background: var(--accent-primary);
+  color: white;
+  transform: scale(1.1);
+}
+
+/* Indicateurs */
+.carousel-indicators {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background: rgba(0, 0, 0, 0.5);
+  color: white;
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  font-size: 0.9rem;
+}
+
+/* ===== INFORMATIONS BIEN ===== */
+.bien-info {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2rem;
+  margin-bottom: 3rem;
+}
+
+.info-section {
+  background: var(--bg-card);
+  padding: 2rem;
+  border-radius: 12px;
+  border: 1px solid var(--border-color);
+}
+
+.info-section h2 {
+  font-size: 1.75rem;
+  margin-bottom: 1.5rem;
+  color: var(--text-primary);
+}
+
+.info-section h3 {
+  font-size: 1.25rem;
+  margin-bottom: 1rem;
+  margin-top: 1.5rem;
+}
+
+.info-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+}
+
+.info-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem;
+  background: var(--bg-secondary);
+  border-radius: 8px;
+}
+
+.info-item strong {
+  color: var(--text-primary);
+}
+
+/* ===== PRESTATIONS ===== */
+.prestations-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-top: 1rem;
+}
+
+.prestation-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  background: var(--accent-primary);
+  color: white;
+  border-radius: 20px;
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+/* ===== TARIFS ===== */
+.tarifs-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1rem;
+}
+
+.tarifs-table th,
+.tarifs-table td {
+  padding: 1rem;
+  text-align: left;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.tarifs-table th {
+  background: var(--bg-secondary);
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.tarifs-table .prix-tarif {
+  font-weight: 700;
+  color: var(--accent-primary);
+  font-size: 1.1rem;
+}
+
+/* ===== CALENDRIER ===== */
+.calendrier-section {
+  background: var(--bg-card);
+  padding: 2rem;
+  border-radius: 12px;
+  border: 1px solid var(--border-color);
+  margin-bottom: 3rem;
+}
+
+#calendar {
+  margin-top: 1rem;
+}
+
+/* Styles FullCalendar pour dark mode */
+.dark-mode .fc {
+  color: var(--night-silver);
+}
+
+.dark-mode .fc-theme-standard td,
+.dark-mode .fc-theme-standard th {
+  border-color: var(--border-color);
+}
+
+.dark-mode .fc-theme-standard .fc-scrollgrid {
+  border-color: var(--border-color);
+}
+
+.dark-mode .fc-col-header-cell {
+  background: var(--night-deep);
+}
+
+/* ===== FORMULAIRE RÉSERVATION ===== */
+.reservation-form {
+  background: var(--bg-card);
+  padding: 2rem;
+  border-radius: 12px;
+  border: 2px solid var(--accent-primary);
+  position: sticky;
+  top: 100px;
+}
+
+.reservation-form h2 {
+  margin-bottom: 1.5rem;
+}
+
+.form-group {
+  margin-bottom: 1.5rem;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.form-group input,
+.form-group select {
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  font-size: 1rem;
+  font-family: var(--font-main);
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  transition: border-color 0.2s;
+}
+
+.form-group input:focus,
+.form-group select:focus {
+  outline: none;
+  border-color: var(--accent-primary);
+}
+
+.prix-total {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--accent-primary);
+  text-align: center;
+  padding: 1rem;
+  background: var(--bg-secondary);
+  border-radius: 8px;
+  margin-bottom: 1rem;
+}
+
+.btn-submit {
+  width: 100%;
+  padding: 1rem;
+  background: var(--accent-primary);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-submit:hover {
+  background: var(--accent-hover);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(255, 90, 95, 0.3);
+}
+
+.dark-mode .btn-submit:hover {
+  box-shadow: 0 4px 12px rgba(102, 252, 241, 0.3);
+}
+
+.btn-submit:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* ===== MESSAGES ===== */
+.alert {
+  padding: 1rem;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+}
+
+.alert-success {
+  background: #D1FAE5;
+  color: #065F46;
+  border: 1px solid #10B981;
+}
+
+.alert-error {
+  background: #FEE2E2;
+  color: #991B1B;
+  border: 1px solid #EF4444;
+}
+
+.dark-mode .alert-success {
+  background: rgba(16, 185, 129, 0.2);
+  color: #6EE7B7;
+}
+
+.dark-mode .alert-error {
+  background: rgba(239, 68, 68, 0.2);
+  color: #FCA5A5;
+}
+
+/* ===== RESPONSIVE TABLETTE (768px+) ===== */
+@media (min-width: 768px) {
+  .bien-info {
+    grid-template-columns: 2fr 1fr;
+  }
+}
+
+/* ===== RESPONSIVE DESKTOP (1024px+) ===== */
+@media (min-width: 1024px) {
+  .carousel {
+    height: 600px;
+  }
+  
+  .bien-header h1 {
+    font-size: 3rem;
+  }
+}
+
+/* ===== RESPONSIVE MOBILE ===== */
+@media (max-width: 767px) {
+  .carousel {
+    height: 300px;
+  }
+  
+  .bien-header h1 {
+    font-size: 1.75rem;
+  }
+  
+  .info-section {
+    padding: 1.5rem;
+  }
+  
+  .reservation-form {
+    position: static;
+  }
+}
