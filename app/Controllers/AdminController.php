@@ -613,6 +613,123 @@ class AdminController extends BaseController {
         $communes = $this->communeModel->search($term);
         echo json_encode($communes);
     }
+
+    // --- Gestion de la validation des biens ---
+    public function validations() {
+        $biensEnAttente = $this->bienModel->getBiensEnAttente();
+        $this->render("admin/validations", ["biensEnAttente" => $biensEnAttente]);
+    }
+
+    public function validerBien($id) {
+        $adminId = $_SESSION['admin_id'] ?? null;
+        
+        if ($this->bienModel->validerBien($id, $adminId)) {
+            $_SESSION['flash'] = [
+                'type' => 'success',
+                'message' => 'Le bien a été validé avec succès et est maintenant visible publiquement.'
+            ];
+        } else {
+            $_SESSION['flash'] = [
+                'type' => 'error',
+                'message' => 'Une erreur est survenue lors de la validation du bien.'
+            ];
+        }
+        
+        header('Location: /admin/validations');
+        exit;
+    }
+
+    public function refuserBien($id) {
+        $adminId = $_SESSION['admin_id'] ?? null;
+        $motif = $_GET['motif'] ?? null;
+        
+        if ($this->bienModel->refuserBien($id, $adminId, $motif)) {
+            $_SESSION['flash'] = [
+                'type' => 'warning',
+                'message' => 'Le bien a été refusé. Le propriétaire peut le modifier et le soumettre à nouveau.'
+            ];
+        } else {
+            $_SESSION['flash'] = [
+                'type' => 'error',
+                'message' => 'Une erreur est survenue lors du refus du bien.'
+            ];
+        }
+        
+        header('Location: /admin/validations');
+        exit;
+    }
+
+    // --- Gestion des signalements ---
+    public function signalements() {
+        require_once __DIR__ . '/../Models/SignalementModel.php';
+        $signalementModel = new SignalementModel();
+        $signalements = $signalementModel->getSignalementsEnAttente();
+        $this->render("admin/signalements", ["signalements" => $signalements]);
+    }
+
+    public function traiterSignalement($id) {
+        require_once __DIR__ . '/../Models/SignalementModel.php';
+        $signalementModel = new SignalementModel();
+        $adminId = $_SESSION['admin_id'] ?? null;
+        
+        if ($signalementModel->traiterSignalement($id, $adminId, null)) {
+            $_SESSION['flash'] = [
+                'type' => 'success',
+                'message' => 'Le signalement a été marqué comme traité.'
+            ];
+        } else {
+            $_SESSION['flash'] = [
+                'type' => 'error',
+                'message' => 'Une erreur est survenue lors du traitement du signalement.'
+            ];
+        }
+        
+        header('Location: /admin/signalements');
+        exit;
+    }
+
+    public function rejeterSignalement($id) {
+        require_once __DIR__ . '/../Models/SignalementModel.php';
+        $signalementModel = new SignalementModel();
+        $adminId = $_SESSION['admin_id'] ?? null;
+        
+        if ($signalementModel->rejeterSignalement($id, $adminId, null)) {
+            $_SESSION['flash'] = [
+                'type' => 'warning',
+                'message' => 'Le signalement a été rejeté.'
+            ];
+        } else {
+            $_SESSION['flash'] = [
+                'type' => 'error',
+                'message' => 'Une erreur est survenue lors du rejet du signalement.'
+            ];
+        }
+        
+        header('Location: /admin/signalements');
+        exit;
+    }
+
+    // Mettre à jour le statut de validation d'un bien
+    public function updateStatutBien($id) {
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            echo json_encode(['success' => false, 'message' => 'Méthode non autorisée']);
+            return;
+        }
+
+        $statut = $_POST['statut'] ?? null;
+        $adminId = $_SESSION['admin_id'] ?? null;
+
+        if (!$statut) {
+            echo json_encode(['success' => false, 'message' => 'Statut manquant']);
+            return;
+        }
+
+        if ($this->bienModel->updateStatutValidation($id, $statut, $adminId)) {
+            echo json_encode(['success' => true, 'message' => 'Statut mis à jour avec succès']);
+        } else {
+            echo json_encode(['success' => false, 'message' => 'Erreur lors de la mise à jour']);
+        }
+    }
 }
 
 ?>

@@ -23,6 +23,7 @@
                     <th>ID</th>
                     <th>Nom du bien</th>
                     <th>Propriétaire</th>
+                    <th>Statut</th>
                     <th>Rue</th>
                     <th>Complément</th>
                     <th>Superficie</th>
@@ -38,6 +39,13 @@
                         <td><?php echo htmlspecialchars($bien["id_biens"]); ?></td>
                         <td><?php echo htmlspecialchars($bien["designation_bien"]); ?></td>
                         <td><?php echo htmlspecialchars($bien["proprietaire"]); ?></td>
+                        <td>
+                            <select class="statut-select" data-bien-id="<?php echo $bien['id_biens']; ?>" style="padding: 5px 10px; border-radius: 4px; border: 1px solid #ddd; cursor: pointer;">
+                                <option value="en_attente" <?php echo ($bien['statut_validation'] === 'en_attente') ? 'selected' : ''; ?>>🟡 En attente</option>
+                                <option value="valide" <?php echo ($bien['statut_validation'] === 'valide') ? 'selected' : ''; ?>>🟢 Validé</option>
+                                <option value="refuse" <?php echo ($bien['statut_validation'] === 'refuse') ? 'selected' : ''; ?>>🔴 Refusé</option>
+                            </select>
+                        </td>
                         <td><?php echo htmlspecialchars($bien["rue_biens"]); ?></td>
                         <td><?php echo htmlspecialchars($bien["complement_biens"]); ?></td>
                         <td><?php echo htmlspecialchars($bien["superficie_biens"]); ?></td>
@@ -78,6 +86,46 @@
                     "sSortAscending": ": activer pour trier la colonne par ordre croissant",
                     "sSortDescending": ": activer pour trier la colonne par ordre décroissant"
                 }
+                }
+            });
+
+            // Gestion du changement de statut
+            $('.statut-select').on('change', function() {
+                const bienId = $(this).data('bien-id');
+                const newStatut = $(this).val();
+                const selectElement = $(this);
+                
+                let confirmMessage = '';
+                if (newStatut === 'valide') {
+                    confirmMessage = 'Valider ce bien ? Il sera visible publiquement.';
+                } else if (newStatut === 'refuse') {
+                    confirmMessage = 'Refuser ce bien ?';
+                } else if (newStatut === 'en_attente') {
+                    confirmMessage = 'Remettre ce bien en attente de validation ?';
+                }
+                
+                if (confirm(confirmMessage)) {
+                    $.ajax({
+                        url: '/admin/updateStatutBien/' + bienId,
+                        method: 'POST',
+                        data: { statut: newStatut },
+                        success: function(response) {
+                            const data = JSON.parse(response);
+                            if (data.success) {
+                                alert('Statut mis à jour avec succès');
+                                location.reload();
+                            } else {
+                                alert('Erreur lors de la mise à jour: ' + data.message);
+                                location.reload();
+                            }
+                        },
+                        error: function() {
+                            alert('Erreur de connexion');
+                            location.reload();
+                        }
+                    });
+                } else {
+                    location.reload();
                 }
             });
         });

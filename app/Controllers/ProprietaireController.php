@@ -66,6 +66,12 @@ class ProprietaireController extends BaseController {
             
             $bienId = $this->bienModel->create($data);
             
+            // Message flash de soumission
+            $_SESSION['flash'] = [
+                'type' => 'warning',
+                'message' => 'Votre bien "' . $data['designation_bien'] . '" a été soumis avec succès ! Il est en attente de validation par un administrateur.'
+            ];
+            
             // Gérer l'upload de photos si nécessaire
             if ($bienId) {
                 // Gérer l'upload de photos
@@ -125,7 +131,20 @@ class ProprietaireController extends BaseController {
                 "id_commune" => $_POST["id_commune"],
                 "id_locataire" => $_SESSION["user_id"] // S'assurer que l'ID du propriétaire est toujours inclus
             ];
-            $this->bienModel->update($id, $data);
+            $champsCritiquesModifies = $this->bienModel->update($id, $data);
+
+            // Message flash selon modification critique ou non
+            if ($champsCritiquesModifies) {
+                $_SESSION['flash'] = [
+                    'type' => 'warning',
+                    'message' => 'Votre bien a été modifié et est maintenant en attente de validation. Il ne sera plus visible publiquement jusqu\'à validation par un administrateur.'
+                ];
+            } else {
+                $_SESSION['flash'] = [
+                    'type' => 'success',
+                    'message' => 'Votre bien a été modifié avec succès ! Les modifications sont immédiatement visibles.'
+                ];
+            }
 
             // Gérer la mise à jour des tarifs
             if (isset($_POST["tarifs"]) && is_array($_POST["tarifs"])) {

@@ -14,7 +14,19 @@
 
     <main>
         <h2>Modifier le Bien : <?php echo htmlspecialchars($bien["designation_bien"]); ?></h2>
-        <form action="/proprietaire/editBien/<?php echo htmlspecialchars($bien["id_biens"]); ?>" method="POST" enctype="multipart/form-data">
+        
+        <div class="alert alert-info" style="background: #e3f2fd; padding: 15px; border-left: 4px solid #2196f3; margin-bottom: 20px;">
+            ℹ️ <strong>Attention :</strong> La modification des champs suivants nécessite une re-validation par un administrateur :
+            <ul style="margin: 10px 0 0 20px;">
+                <li>Désignation du bien</li>
+                <li>Description</li>
+                <li>Type de bien</li>
+                <li>Photos (ajout/suppression)</li>
+            </ul>
+            Votre bien sera remis en attente et ne sera plus visible publiquement jusqu'à validation.
+        </div>
+        
+        <form action="/proprietaire/editBien/<?php echo htmlspecialchars($bien["id_biens"]); ?>" method="POST" enctype="multipart/form-data" id="editBienForm" onsubmit="return confirmCriticalChanges()">
             <label for="designation_bien">Désignation du bien :</label>
             <input type="text" id="designation_bien" name="designation_bien" value="<?php echo htmlspecialchars($bien["designation_bien"]); ?>" required>
 
@@ -109,5 +121,54 @@
     <script src="/js/autocomplete.js"></script>
     <script src="/js/register.js"></script>
     <script src="/js/photo-upload.js"></script>
+    <script>
+        // Valeurs initiales des champs critiques
+        const initialValues = {
+            designation_bien: document.getElementById('designation_bien').value,
+            description_biens: document.getElementById('description_biens').value,
+            id_TypeBien: document.getElementById('id_TypeBien').value,
+            photos_count: <?php echo count($photos ?? []); ?>
+        };
+        
+        // Vérifier si des champs critiques ont été modifiés
+        function confirmCriticalChanges() {
+            const champsCritiquesModifies = [];
+            
+            // Vérifier la désignation
+            if (document.getElementById('designation_bien').value !== initialValues.designation_bien) {
+                champsCritiquesModifies.push('Désignation du bien');
+            }
+            
+            // Vérifier la description
+            if (document.getElementById('description_biens').value !== initialValues.description_biens) {
+                champsCritiquesModifies.push('Description');
+            }
+            
+            // Vérifier le type de bien
+            if (document.getElementById('id_TypeBien').value !== initialValues.id_TypeBien) {
+                champsCritiquesModifies.push('Type de bien');
+            }
+            
+            // Vérifier les photos (si des nouvelles photos ont été ajoutées)
+            const fileInput = document.getElementById('photos');
+            if (fileInput && fileInput.files.length > 0) {
+                champsCritiquesModifies.push('Photos');
+            }
+            
+            // Si des champs critiques ont été modifiés, demander confirmation
+            if (champsCritiquesModifies.length > 0) {
+                const message = "⚠️ ATTENTION\n\n" +
+                    "Vous avez modifié les champs critiques suivants :\n" +
+                    "• " + champsCritiquesModifies.join("\n• ") + "\n\n" +
+                    "Votre bien sera remis en attente de validation.\n" +
+                    "Il ne sera plus visible publiquement jusqu'à validation par un administrateur.\n\n" +
+                    "Voulez-vous continuer ?";
+                    
+                return confirm(message);
+            }
+            
+            return true; // Pas de changement critique, continuer normalement
+        }
+    </script>
 </body>
 </html>

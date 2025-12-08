@@ -14,8 +14,7 @@
 <body class="home-sunset">
     <?php include __DIR__ . '/../layout/navbar.php'; ?>
 
-    <main>
-
+    <main>        
         <section class="liste-biens">
             <div class="search-section">
                 <h2>Trouvez votre logement idéal</h2>
@@ -23,6 +22,11 @@
                     <input type="text" id="commune_search" name="q" placeholder="Rechercher par région..." value="<?php echo htmlspecialchars($searchTerm ?? ''); ?>">
                     <button type="submit">Rechercher</button>
                 </form>
+                <div style="text-align: center; margin-top: 20px;">
+                    <a href="/home/map" class="btn-map" style="display: inline-block; padding: 12px 30px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; text-decoration: none; border-radius: 25px; font-weight: 500; transition: transform 0.3s ease, box-shadow 0.3s ease;">
+                        📍 Voir la carte
+                    </a>
+                </div>
             </div>
 
             <h2>Tous nos biens</h2>
