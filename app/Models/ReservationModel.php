@@ -59,10 +59,10 @@ class ReservationModel extends Model {
             b.designation_bien,
             b.rue_biens,
             c.ville_nom AS commune_nom,
-            l.nom_locataire AS locataire_nom,
-            l.prenom_locataire AS locataire_prenom,
-            p.nom_locataire AS proprietaire_nom,
-            p.prenom_locataire AS proprietaire_prenom,
+            l.nom_locataire,
+            l.prenom_locataire,
+            p.nom_locataire AS nom_proprietaire,
+            p.prenom_locataire AS prenom_proprietaire,
             (SELECT lien_photo FROM photos WHERE id_biens = b.id_biens ORDER BY id_photo ASC LIMIT 1) AS premiere_photo
         FROM " . $this->table . " r
         JOIN biens b ON r.id_biens = b.id_biens
