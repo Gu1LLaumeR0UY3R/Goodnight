@@ -11,7 +11,6 @@
     <link rel="stylesheet" href="/css/admin-modal.css">
 </head>
 <body class="home-sunset">
-    <div class="top-banner"></div>
     <?php include __DIR__ . '/../layout/navbar.php'; ?>
 
     <main class="page-shell">
@@ -24,27 +23,12 @@
         </section>
 
         <section class="admin-boxes-grid">
-            <div class="admin-box glass-card" data-iframe-url="/admin/typesBiens" data-title="Gestion des Types de Biens">
-                <span class="admin-box-icon">🏠</span>
+            <!-- Gestion des Admins et Accès -->
+            <div class="admin-box glass-card" data-iframe-url="/admin/admins" data-title="Gestion des Admins">
+                <span class="admin-box-icon">🛡️</span>
                 <div>
-                    <h3 class="admin-box-title">Types de Biens</h3>
-                    <p class="admin-box-description">Gérer les catégories et les typologies</p>
-                </div>
-            </div>
-
-            <div class="admin-box glass-card" data-iframe-url="/admin/roles" data-title="Gestion des Rôles">
-                <span class="admin-box-icon">👥</span>
-                <div>
-                    <h3 class="admin-box-title">Rôles</h3>
-                    <p class="admin-box-description">Définir les rôles et permissions</p>
-                </div>
-            </div>
-
-            <div class="admin-box glass-card" data-iframe-url="/admin/communes" data-title="Gestion des Communes">
-                <span class="admin-box-icon">🗺️</span>
-                <div>
-                    <h3 class="admin-box-title">Communes</h3>
-                    <p class="admin-box-description">Référentiel des communes</p>
+                    <h3 class="admin-box-title">Admins</h3>
+                    <p class="admin-box-description">Gérer les comptes administrateurs</p>
                 </div>
             </div>
 
@@ -56,14 +40,15 @@
                 </div>
             </div>
 
-            <div class="admin-box glass-card" data-iframe-url="/admin/saisons" data-title="Gestion des Saisons">
-                <span class="admin-box-icon">📅</span>
+            <div class="admin-box glass-card" data-iframe-url="/admin/roles" data-title="Gestion des Rôles">
+                <span class="admin-box-icon">👥</span>
                 <div>
-                    <h3 class="admin-box-title">Saisons</h3>
-                    <p class="admin-box-description">Piloter les saisons tarifaires</p>
+                    <h3 class="admin-box-title">Rôles</h3>
+                    <p class="admin-box-description">Définir les rôles et permissions</p>
                 </div>
             </div>
 
+            <!-- Gestion des Biens et Réservations -->
             <div class="admin-box glass-card" data-iframe-url="/admin/biens" data-title="Gestion des Biens">
                 <span class="admin-box-icon">🏢</span>
                 <div>
@@ -72,11 +57,19 @@
                 </div>
             </div>
 
-            <div class="admin-box glass-card" data-iframe-url="/admin/admins" data-title="Gestion des Admins">
-                <span class="admin-box-icon">🛡️</span>
+            <div class="admin-box glass-card" data-iframe-url="/admin/typesBiens" data-title="Gestion des Types de Biens">
+                <span class="admin-box-icon">🏠</span>
                 <div>
-                    <h3 class="admin-box-title">Admins</h3>
-                    <p class="admin-box-description">Gérer les comptes administrateurs</p>
+                    <h3 class="admin-box-title">Types de Biens</h3>
+                    <p class="admin-box-description">Gérer les catégories et les typologies</p>
+                </div>
+            </div>
+
+            <div class="admin-box glass-card" data-iframe-url="/admin/saisons" data-title="Gestion des Saisons">
+                <span class="admin-box-icon">📅</span>
+                <div>
+                    <h3 class="admin-box-title">Saisons</h3>
+                    <p class="admin-box-description">Piloter les saisons tarifaires</p>
                 </div>
             </div>
 
@@ -85,6 +78,31 @@
                 <div>
                     <h3 class="admin-box-title">Réservations</h3>
                     <p class="admin-box-description">Suivre et ajuster les réservations</p>
+                </div>
+            </div>
+
+            <div class="admin-box glass-card" data-iframe-url="/admin/communes" data-title="Gestion des Communes">
+                <span class="admin-box-icon">🗺️</span>
+                <div>
+                    <h3 class="admin-box-title">Communes</h3>
+                    <p class="admin-box-description">Référentiel des communes</p>
+                </div>
+            </div>
+
+            <!-- Validation et Modération -->
+            <div class="admin-box glass-card" data-iframe-url="/admin/validations" data-title="Validation des Biens">
+                <span class="admin-box-icon">✅</span>
+                <div>
+                    <h3 class="admin-box-title">Validations</h3>
+                    <p class="admin-box-description">Approuver les biens en attente</p>
+                </div>
+            </div>
+
+            <div class="admin-box glass-card" data-iframe-url="/admin/signalements" data-title="Gestion des Signalements">
+                <span class="admin-box-icon">🚩</span>
+                <div>
+                    <h3 class="admin-box-title">Signalements</h3>
+                    <p class="admin-box-description">Traiter les signalements utilisateurs</p>
                 </div>
             </div>
         </section>
@@ -97,4 +115,3 @@
     <script src="/js/admin-modal.js"></script>
 </body>
 </html>
-
