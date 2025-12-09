@@ -7,10 +7,28 @@
   position: sticky;
   top: 0;
   z-index: 999;
-  background: var(--bg-primary);
-  border-bottom: 1px solid var(--border-color);
-  box-shadow: var(--shadow);
+  background: rgba(255, 255, 255, 0.85);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   transition: all 0.3s;
+  margin-top: 6px;
+}
+
+/* Admin page: fix navbar to top */
+body.admin-page .navbar-sticky {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  margin-top: 0;
+  border-radius: 0;
+}
+
+.dark-mode .navbar-sticky {
+  background: rgba(31, 40, 51, 0.85);
+  border-bottom-color: rgba(255, 255, 255, 0.1);
 }
 
 .navbar-container {

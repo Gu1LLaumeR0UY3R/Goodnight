@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
@@ -6,6 +6,7 @@
     <title>Modifier Utilisateur - Admin</title>
     <link rel="stylesheet" href="/css/style.css">
     <link rel="stylesheet" href="/css/navbar.css">
+    <link rel="stylesheet" href="/css/admin-content.css">
     <link rel="stylesheet" href="/lib/intl-tel-input/intlTelInput.min.css">
 </head>
 <body>

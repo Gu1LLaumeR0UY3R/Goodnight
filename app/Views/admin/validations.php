@@ -1,11 +1,11 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Validation des Biens - Admin</title>
     <link rel="stylesheet" href="/css/style.css">
-    <link rel="stylesheet" href="/css/navbar.css">
+    <link rel="stylesheet" href="/css/admin-content.css">
     <link rel="stylesheet" href="/app/Views/admin/DataTables/datatables.min.css">
     <style>
         .badge {
@@ -128,7 +128,6 @@
     </style>
 </head>
 <body>
-    <?php include __DIR__ . '/../layout/navbar.php'; ?>
 
     <main class="admin-container">
         <?php if (isset($_SESSION['flash'])): ?>
