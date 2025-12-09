@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="/css/navbar.css">
     <link rel="stylesheet" href="/css/sunset-background.css">
     <link rel="stylesheet" href="/css/bien-details.css">
+    <link rel="stylesheet" href="/css/animations-bien.css">
     <!-- Modern FullCalendar & CSS -->
     <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.js"></script>
@@ -78,7 +79,7 @@
 
             <div class="bien-info">
                 <div class="info-block">
-                    <h3>Informations Générales</h3>
+                    <h3 data-emoji="✨">Informations Générales</h3>
                     <p><strong>Type :</strong> <?php echo htmlspecialchars($bien["type_bien_nom"]); ?></p>
                     <p><strong>Adresse :</strong> <?php echo htmlspecialchars($bien["rue_biens"]); ?>, <?php echo htmlspecialchars($bien["complement_biens"]); ?></p>
                     <p><strong>Commune :</strong> <?php echo htmlspecialchars($bien["commune_nom"]); ?></p>
@@ -103,7 +104,7 @@
                 </div>
 
                 <div class="info-block">
-                    <h3>Description</h3>
+                    <h3 data-emoji="📝">Description</h3>
                     <p><?php echo nl2br(htmlspecialchars($bien["description_biens"])); ?></p>
                 </div>
             </div>
