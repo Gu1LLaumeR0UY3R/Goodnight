@@ -11,7 +11,7 @@
     <link href="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.css" rel="stylesheet" />
     <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.js"></script>
 </head>
-<body>
+<body class="home-sunset">
     <?php include __DIR__ . '/../layout/navbar.php'; ?>
     <!-- Alert container for notifications (inserted dynamically) -->
     <div id="alertContainer"></div>
@@ -273,7 +273,11 @@
     </div>
 
     <footer>
-        <p>&copy; 2024 Goodnight. Tous droits réservés.</p>
+        <div class="sunset">
+            <div class="sun"></div>
+            <div class="horizon"></div>
+        </div>
+        <p>&copy; 2025 Goodnight. Tous droits réservés.</p>
     </footer>
 
     <script>

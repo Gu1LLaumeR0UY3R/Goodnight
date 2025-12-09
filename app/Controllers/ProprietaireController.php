@@ -214,9 +214,16 @@ class ProprietaireController extends BaseController {
     }
 
     public function myReservations() {
-        // Affiche les réservations faites par l'utilisateur connecté (le propriétaire)
-        $reservations = $this->reservationModel->getReservationsByLocataire($_SESSION["user_id"]);
-        $this->render("proprietaire/my_reservations", ["reservations" => $reservations]);
+        // Réservations professionnelles : faites SUR les biens du propriétaire
+        $reservationsProfessionnelles = $this->reservationModel->getReservationsByProprietaire($_SESSION["user_id"]);
+        
+        // Réservations personnelles : faites PAR le propriétaire (en tant que locataire)
+        $reservationsPersonnelles = $this->reservationModel->getReservationsByLocataire($_SESSION["user_id"]);
+        
+        $this->render("proprietaire/my_reservations", [
+            "reservationsProfessionnelles" => $reservationsProfessionnelles,
+            "reservationsPersonnelles" => $reservationsPersonnelles
+        ]);
     }
 
     // Retourne les événements (réservations + blocages) au format FullCalendar
@@ -574,9 +581,17 @@ class ProprietaireController extends BaseController {
             return isset($p["quantite_prestation"]) && $p["quantite_prestation"] !== null;
         });
 
+        // Récupérer les tarifs du bien
+        $tarifs = $this->tarifModel->getTarifsByBien($id_biens);
+        
+        // Récupérer toutes les saisons pour référence
+        $saisons = $this->saisonModel->getAll();
+
         $this->render("proprietaire/view_bien", [
             "bien" => $bien,
-            "prestations" => $prestations
+            "prestations" => $prestations,
+            "tarifs" => $tarifs,
+            "saisons" => $saisons
         ]);
     }
 }
