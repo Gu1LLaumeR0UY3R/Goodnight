@@ -32,9 +32,9 @@ body.admin-page .navbar-sticky {
 }
 
 .navbar-container {
-  max-width: 1400px;
+  max-width: 1600px;
   margin: 0 auto;
-  padding: 1rem 2rem;
+  padding: 1rem 3rem;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -61,16 +61,20 @@ body.admin-page .navbar-sticky {
 
 /* ===== MENU PRINCIPAL ===== */
 .navbar-main {
-  flex: 1;
+  flex: 1 1 auto;
   display: none;
 }
 
 .navbar-menu {
   list-style: none;
   display: flex;
-  gap: 1.5rem;
+  gap: 1.75rem;
   margin: 0;
   padding: 0;
+  justify-content: flex-start;
+}
+.navbar-auth {
+  flex-shrink: 0;
 }
 
 .navbar-link {
