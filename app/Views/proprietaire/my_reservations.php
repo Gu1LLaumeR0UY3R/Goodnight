@@ -6,9 +6,9 @@
     <title>Réservations de mes biens</title>
     <link rel="stylesheet" href="/css/style.css">
     <link rel="stylesheet" href="/css/navbar.css">
-
+    <link rel="stylesheet" href="/css/sunset-background.css">
 </head>
-<body>
+<body class="home-sunset">
     <?php include __DIR__ . '/../layout/navbar.php'; ?>
 
     <main>
@@ -75,6 +75,10 @@
     </main>
 
     <footer>
+        <div class="sunset">
+            <div class="sun"></div>
+            <div class="horizon"></div>
+        </div>
         <p>&copy; <?= date("Y") ?> GlobeNight. Tous droits réservés.</p>
     </footer>
 </body>
