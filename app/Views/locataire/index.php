@@ -24,9 +24,9 @@
         <section class="stats-grid">
             <?php
             // Compter les réservations
-            $activeCount = count(array_filter($reservations ?? [], fn($r) => strtotime($r['date_depart']) > time() && strtotime($r['date_arrivee']) <= time()));
-            $upcomingCount = count(array_filter($reservations ?? [], fn($r) => strtotime($r['date_arrivee']) > time()));
-            $pastCount = count(array_filter($reservations ?? [], fn($r) => strtotime($r['date_depart']) < time()));
+            $activeCount = count(array_filter($reservations ?? [], fn($r) => strtotime($r['date_fin']) > time() && strtotime($r['date_debut']) <= time()));
+            $upcomingCount = count(array_filter($reservations ?? [], fn($r) => strtotime($r['date_debut']) > time()));
+            $pastCount = count(array_filter($reservations ?? [], fn($r) => strtotime($r['date_fin']) < time()));
             
             // Calculer les nuits du mois actuel
             $currentMonth = date('m');
@@ -35,8 +35,8 @@
             $nightsReserved = 0;
             
             foreach ($reservations ?? [] as $reservation) {
-                $arrivalDate = new DateTime($reservation['date_arrivee']);
-                $departDate = new DateTime($reservation['date_depart']);
+                $arrivalDate = new DateTime($reservation['date_debut']);
+                $departDate = new DateTime($reservation['date_fin']);
                 
                 // Vérifier si la réservation chevauche le mois actuel
                 if ($arrivalDate->format('m') == $currentMonth && $arrivalDate->format('Y') == $currentYear) {
@@ -146,8 +146,8 @@
         <section class="upcoming-preview">
             <h2>Vos Prochaines Réservations</h2>
             <?php
-            $upcomingReservations = array_filter($reservations ?? [], fn($r) => strtotime($r['date_arrivee']) > time());
-            usort($upcomingReservations, fn($a, $b) => strtotime($a['date_arrivee']) <=> strtotime($b['date_arrivee']));
+            $upcomingReservations = array_filter($reservations ?? [], fn($r) => strtotime($r['date_debut']) > time());
+            usort($upcomingReservations, fn($a, $b) => strtotime($a['date_debut']) <=> strtotime($b['date_debut']));
             $upcomingReservations = array_slice($upcomingReservations, 0, 3);
 
             if (!empty($upcomingReservations)):
@@ -157,7 +157,7 @@
                         <div class="reservation-item">
                             <div class="reservation-date">
                                 <span class="date-label">Arrivée</span>
-                                <span class="date-value"><?php echo date('d/m/Y', strtotime($reservation['date_arrivee'])); ?></span>
+                                <span class="date-value"><?php echo date('d/m/Y', strtotime($reservation['date_debut'])); ?></span>
                             </div>
                             <div class="reservation-info">
                                 <h4><?php echo htmlspecialchars($reservation['designation_bien'] ?? 'Bien'); ?></h4>
