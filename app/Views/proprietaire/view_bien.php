@@ -258,6 +258,160 @@
             background: rgba(255, 255, 255, 0.02);
         }
 
+        /* Accordéon des tarifs */
+        .tarifs-card {
+            background: white;
+            border: 2px solid var(--border-color, #e0e0e0);
+            border-radius: 12px;
+            padding: 1.75rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            transition: all 0.2s;
+        }
+
+        .dark-mode .tarifs-card {
+            background: var(--bg-card);
+            border-color: var(--border-color);
+        }
+
+        .tarifs-card:hover {
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+            transform: translateY(-2px);
+        }
+
+        .accordion-container {
+            margin-top: 1rem;
+        }
+
+        .accordion-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.25rem 1.5rem;
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            border: 2px solid var(--border-color, #e0e0e0);
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            font-size: 1.0625rem;
+            color: var(--text-primary);
+        }
+
+        .dark-mode .accordion-header {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.04));
+            border-color: var(--border-color);
+        }
+
+        .accordion-header:hover {
+            background: linear-gradient(135deg, var(--accent-primary, #ff5a5f), var(--accent-hover, #ff7f83));
+            color: white;
+            border-color: var(--accent-primary, #ff5a5f);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(255, 90, 95, 0.3);
+        }
+
+        .accordion-icon {
+            font-size: 1.5rem;
+            transition: transform 0.3s ease;
+            display: inline-block;
+        }
+
+        .accordion-header.active .accordion-icon {
+            transform: rotate(180deg);
+        }
+
+        .accordion-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s ease;
+            margin-top: 0;
+        }
+
+        .accordion-content.active {
+            max-height: 2000px;
+            margin-top: 1rem;
+        }
+
+        .tarifs-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1rem;
+        }
+
+        .tarif-item {
+            background: white;
+            border: 2px solid var(--border-color, #e0e0e0);
+            border-radius: 10px;
+            padding: 1.5rem;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+            transition: all 0.2s;
+        }
+
+        .dark-mode .tarif-item {
+            background: var(--bg-card);
+            border-color: var(--border-color);
+        }
+
+        .tarif-item:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+            border-color: var(--accent-primary, #ff5a5f);
+        }
+
+        .tarif-header {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 1rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 2px solid var(--border-color, #e0e0e0);
+        }
+
+        .tarif-saison {
+            font-size: 1.125rem;
+            font-weight: 700;
+            color: var(--accent-primary, #ff5a5f);
+            flex: 1;
+        }
+
+        .tarif-annee {
+            background: var(--accent-primary, #ff5a5f);
+            color: white;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.875rem;
+            font-weight: 700;
+        }
+
+        .tarif-prix {
+            font-size: 1.875rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            text-align: center;
+        }
+
+        .tarif-prix-label {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+            text-align: center;
+            margin-top: 0.25rem;
+        }
+
+        .no-tarifs {
+            text-align: center;
+            padding: 2rem;
+            color: var(--text-secondary);
+            font-style: italic;
+            background: rgba(0, 0, 0, 0.02);
+            border-radius: 8px;
+            border: 2px dashed var(--border-color, #e0e0e0);
+        }
+
+        .dark-mode .no-tarifs {
+            background: rgba(255, 255, 255, 0.02);
+        }
+
         /* Actions footer */
         .actions-footer {
             display: flex;
@@ -514,7 +668,7 @@
                     <h2 class="card-title">🏠 Informations Générales</h2>
                     <div class="detail-row">
                         <span class="detail-label">Type de bien</span>
-                        <span class="detail-value"><?php echo htmlspecialchars($bien["desc_type_bien"] ?? 'Non spécifié'); ?></span>
+                        <span class="detail-value"><?php echo htmlspecialchars($bien["type_bien_nom"] ?? 'Non spécifié'); ?></span>
                     </div>
                     <div class="detail-row">
                         <span class="detail-label">Superficie</span>
@@ -543,6 +697,37 @@
                         <span class="detail-value">-</span>
                     </div>
                 </div>
+            </div>
+
+            <!-- Section Tarifs avec accordéon -->
+            <div class="tarifs-card">
+                <h2 class="card-title">💰 Tarifs par saison</h2>
+                <?php if (!empty($tarifs)): ?>
+                    <div class="accordion-container">
+                        <div class="accordion-header" onclick="toggleTarifs()">
+                            <span>💳 Voir tous les tarifs (<?php echo count($tarifs); ?> tarif(s))</span>
+                            <span class="accordion-icon" id="tarifs-accordion-icon">▼</span>
+                        </div>
+                        <div class="accordion-content" id="tarifs-accordion-content">
+                            <div class="tarifs-grid">
+                                <?php foreach ($tarifs as $tarif): ?>
+                                    <div class="tarif-item">
+                                        <div class="tarif-header">
+                                            <div class="tarif-saison"><?php echo htmlspecialchars($tarif["lib_saison"]); ?></div>
+                                            <div class="tarif-annee"><?php echo htmlspecialchars($tarif["annee"]); ?></div>
+                                        </div>
+                                        <div class="tarif-prix"><?php echo number_format($tarif["prix_semaine"], 2, ',', ' '); ?> €</div>
+                                        <div class="tarif-prix-label">par jour</div>
+                                    </div>
+                                <?php endforeach; ?>
+                            </div>
+                        </div>
+                    </div>
+                <?php else: ?>
+                    <div class="no-tarifs">
+                        Aucun tarif n'a été défini pour ce bien.
+                    </div>
+                <?php endif; ?>
             </div>
 
             <?php if (!empty($bien["description_biens"])): ?>
@@ -608,6 +793,16 @@
     </footer>
 
     <script>
+        // Fonction pour l'accordéon des tarifs
+        function toggleTarifs() {
+            const header = document.querySelector('.accordion-header');
+            const content = document.getElementById('tarifs-accordion-content');
+            const icon = document.getElementById('tarifs-accordion-icon');
+            
+            header.classList.toggle('active');
+            content.classList.toggle('active');
+        }
+
         // Lightbox JavaScript
         (function(){
             const photos = <?php echo json_encode($photos ?? []); ?>;

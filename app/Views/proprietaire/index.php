@@ -277,7 +277,7 @@
             <div class="sun"></div>
             <div class="horizon"></div>
         </div>
-        <p>&copy; 2024 Goodnight. Tous droits réservés.</p>
+        <p>&copy; 2025 Goodnight. Tous droits réservés.</p>
     </footer>
 
     <script>
