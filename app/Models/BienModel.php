@@ -420,6 +420,40 @@ class BienModel extends Model {
         $stmt = $this->db->prepare($sql);
         return $stmt->execute($params);
     }
-}
 
-?>
+    /**
+     * Récupérer les biens par IDs (pour les favoris)
+     */
+    public function getBiensByIds($ids) {
+        if (empty($ids)) {
+            return [];
+        }
+
+        // Nettoyer et valider les IDs
+        $ids = array_filter($ids, fn($id) => is_numeric($id));
+        if (empty($ids)) {
+            return [];
+        }
+
+        // Créer les placeholders pour la requête
+        $placeholders = implode(',', array_fill(0, count($ids), '?'));
+
+        $sql = "
+            SELECT 
+                b.*,
+                tb.desc_type_bien as type_bien_nom,
+                c.nom_commune as commune_nom,
+                (SELECT lien_photo FROM photos WHERE id_biens = b.id_biens ORDER BY id_photo ASC LIMIT 1) as premiere_photo
+            FROM biens b
+            LEFT JOIN typebien tb ON b.id_TypeBien = tb.id_typebien
+            LEFT JOIN communes c ON b.id_commune = c.id_commune
+            WHERE b.id_biens IN ($placeholders)
+            AND b.statut_validation = 'valide'
+            ORDER BY b.designation_bien
+        ";
+
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute($ids);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+}

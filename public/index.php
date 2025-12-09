@@ -112,6 +112,9 @@ $routes = [
     // Routes Locataire
     "locataire" => ["controller" => "LocataireController", "action" => "index"],
     "locataire/myReservations" => ["controller" => "ReservationController", "action" => "myReservations"],
+    "locataire/myFavorites" => ["controller" => "LocataireController", "action" => "myFavorites"],
+    "api/favoris" => ["controller" => "LocataireController", "action" => "manageFavorites"],
+    "api/get-user-favorites" => ["controller" => "LocataireController", "action" => "getUserFavorites"],
     
     "reservation/store" => ["controller" => "ReservationController", "action" => "store"],
     "reservation/cancel/([0-9]+)" => ["controller" => "ReservationController", "action" => "cancel"],

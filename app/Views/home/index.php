@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="/css/style.css">
     <link rel="stylesheet" href="/css/navbar.css">
     <link rel="stylesheet" href="/css/sunset-background.css">
+    <link rel="stylesheet" href="/css/favoris.css">
     <link rel="stylesheet" href="//code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js"></script>
@@ -34,7 +35,12 @@
             <div class="biens-grid">
                 <?php if (!empty($biens)): ?>
                     <?php foreach ($biens as $bien): ?>
-                        <div class="bien-card">
+                        <div class="bien-card" data-bien-id="<?php echo htmlspecialchars($bien["id_biens"]); ?>">
+                            <!-- Bouton Favori -->
+                            <button class="btn-favorite" data-bien-id="<?php echo htmlspecialchars($bien["id_biens"]); ?>" title="Ajouter aux favoris">
+                                <span class="heart-icon">♡</span>
+                            </button>
+                            
                             <img src="<?php echo htmlspecialchars($bien["premiere_photo"] ?? '/images/default.jpg'); ?>" alt="Photo de <?php echo htmlspecialchars($bien["designation_bien"]); ?>">
                             <h3><?php echo htmlspecialchars($bien["designation_bien"]); ?></h3>
                             <p>Type: <?php echo htmlspecialchars($bien["type_bien_nom"]); ?></p>
@@ -63,6 +69,7 @@
     </footer>
 
     <script src="/js/autocomplete.js"></script>
+    <script src="/js/favoris.js"></script>
 </body>
 </html>
 

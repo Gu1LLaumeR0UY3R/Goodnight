@@ -140,8 +140,6 @@
     </style>
 </head>
 <body>
-    <?php include __DIR__ . '/../layout/navbar.php'; ?>
-
     <main class="admin-container">
         <?php if (isset($_SESSION['flash'])): ?>
             <div class="flash-message flash-<?php echo $_SESSION['flash']['type']; ?>" style="padding: 15px 20px; margin: 20px 0; border-radius: 8px; font-weight: 500;">

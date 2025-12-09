@@ -187,5 +187,28 @@ class ReservationModel extends Model {
         $stmt->execute(['id' => $id]);
         return $stmt->rowCount();
     }
+
+    /**
+     * Récupérer les réservations d'un utilisateur (locataire)
+     */
+    public function getReservationsByUserId($userId) {
+        $sql = "
+            SELECT 
+                r.*,
+                b.designation_bien,
+                b.id_biens,
+                c.ville_nom as commune_nom,
+                DATEDIFF(r.date_fin, r.date_debut) as nombre_nuits,
+                (SELECT lien_photo FROM photos WHERE id_biens = b.id_biens ORDER BY id_photo ASC LIMIT 1) as premiere_photo
+            FROM " . $this->table . " r
+            JOIN biens b ON r.id_biens = b.id_biens
+            LEFT JOIN commune c ON b.id_commune = c.id_commune
+            WHERE r.id_locataire = :user_id
+            ORDER BY r.date_debut DESC
+        ";
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute(['user_id' => $userId]);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
 }
 ?>
