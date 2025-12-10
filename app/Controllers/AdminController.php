@@ -11,6 +11,7 @@ require_once __DIR__ . "/../Models/TarifModel.php";
 require_once __DIR__ . "/../Models/AdminModel.php";
 require_once __DIR__ . "/../Models/ReservationModel.php";
 require_once __DIR__ . "/../Models/PhotoModel.php";
+require_once __DIR__ . "/../../lib/Database.php";
 
 class AdminController extends BaseController {
     private $userModel;
@@ -40,7 +41,40 @@ class AdminController extends BaseController {
     }
 
     public function index() {
-        $this->render("admin/index", [], ["style.css"]);
+        // Récupérer les compteurs pour les notifications
+        $pendingValidations = 0;
+        $pendingSignalements = 0;
+        
+        // Compter les validations en attente
+        try {
+            $validations = $this->bienModel->getAll();
+            if (is_array($validations)) {
+                $pendingValidations = count(array_filter($validations, function($bien) {
+                    return isset($bien['statut_validation']) && $bien['statut_validation'] === 'en_attente';
+                }));
+            }
+        } catch (Exception $e) {
+            $pendingValidations = 0;
+        }
+
+        // Compter les signalements en attente
+        try {
+            $sql = "SELECT COUNT(*) as count FROM signalements WHERE statut = 'en_attente'";
+            $db = Database::getInstance();
+            $stmt = $db->getConnection()->prepare($sql);
+            $stmt->execute();
+            $result = $stmt->fetch(PDO::FETCH_ASSOC);
+            $pendingSignalements = $result['count'] ?? 0;
+        } catch (Exception $e) {
+            $pendingSignalements = 0;
+        }
+
+        $data = [
+            'pendingValidations' => $pendingValidations,
+            'pendingSignalements' => $pendingSignalements
+        ];
+
+        $this->render("admin/index", $data, ["style.css"]);
     }
 
     // --- Gestion des Administrateurs ---

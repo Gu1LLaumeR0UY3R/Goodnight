@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="/css/style.css">
     <link rel="stylesheet" href="/css/navbar.css">
     <link rel="stylesheet" href="/css/sunset-background.css">
-    <link rel="stylesheet" href="/css/dashboard.css">
+    <link rel="stylesheet" href="/css/admin.css">
     <link rel="stylesheet" href="/css/admin-modal.css">
 </head>
 <body class="home-sunset">
@@ -90,7 +90,15 @@
             </div>
 
             <!-- Validation et Modération -->
-            <div class="admin-box glass-card" data-iframe-url="/admin/validations" data-title="Validation des Biens">
+            <div class="admin-box glass-card validations-card <?php echo ($pendingValidations ?? 0) > 0 ? 'has-notification' : ''; ?>" data-iframe-url="/admin/validations" data-title="Validation des Biens">
+                <?php if (($pendingValidations ?? 0) > 0): ?>
+                    <div class="notification-badge validations has-items" data-tooltip="Validations à traiter">
+                        <div class="notification-badge-text">
+                            <span class="notification-badge-number"><?php echo $pendingValidations; ?></span>
+                            <span class="notification-badge-label">À valider</span>
+                        </div>
+                    </div>
+                <?php endif; ?>
                 <span class="admin-box-icon">✅</span>
                 <div>
                     <h3 class="admin-box-title">Validations</h3>
@@ -98,7 +106,15 @@
                 </div>
             </div>
 
-            <div class="admin-box glass-card" data-iframe-url="/admin/signalements" data-title="Gestion des Signalements">
+            <div class="admin-box glass-card signalements-card <?php echo ($pendingSignalements ?? 0) > 0 ? 'has-notification' : ''; ?>" data-iframe-url="/admin/signalements" data-title="Gestion des Signalements">
+                <?php if (($pendingSignalements ?? 0) > 0): ?>
+                    <div class="notification-badge signalements has-items" data-tooltip="Signalements à traiter">
+                        <div class="notification-badge-text">
+                            <span class="notification-badge-number"><?php echo $pendingSignalements; ?></span>
+                            <span class="notification-badge-label">À traiter</span>
+                        </div>
+                    </div>
+                <?php endif; ?>
                 <span class="admin-box-icon">🚩</span>
                 <div>
                     <h3 class="admin-box-title">Signalements</h3>
@@ -114,4 +130,4 @@
 
     <script src="/js/admin-modal.js"></script>
 </body>
-</html>z
+</html>

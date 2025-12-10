@@ -1,0 +1,70 @@
+/* Dark Mode Styles */
+
+/* Variables de couleurs pour le mode sombre */
+:root {
+  --bg-dark: #1a1a1a;
+  --text-dark: #f1f1f1;
+  --border-dark: #333;
+  --card-dark: #252525;
+}
+
+/* Style de base du dark mode */
+body.dark-mode {
+  background-color: var(--bg-dark);
+  color: var(--text-dark);
+}
+
+/* Cartes en dark mode */
+body.dark-mode .card,
+body.dark-mode .glass-card {
+  background-color: var(--card-dark);
+  color: var(--text-dark);
+  border-color: var(--border-dark);
+}
+
+/* Inputs en dark mode */
+body.dark-mode input,
+body.dark-mode select,
+body.dark-mode textarea {
+  background-color: var(--card-dark);
+  color: var(--text-dark);
+  border-color: var(--border-dark);
+}
+
+body.dark-mode input::placeholder,
+body.dark-mode textarea::placeholder {
+  color: #999;
+}
+
+/* Liens en dark mode */
+body.dark-mode a {
+  color: #6ba3ff;
+}
+
+body.dark-mode a:hover {
+  color: #8bb9ff;
+}
+
+/* Boutons en dark mode */
+body.dark-mode button {
+  background-color: var(--card-dark);
+  color: var(--text-dark);
+  border-color: var(--border-dark);
+}
+
+/* Navbar en dark mode */
+body.dark-mode .navbar {
+  background-color: var(--card-dark);
+  border-bottom-color: var(--border-dark);
+}
+
+/* Tables en dark mode */
+body.dark-mode table {
+  background-color: var(--card-dark);
+  color: var(--text-dark);
+}
+
+body.dark-mode th,
+body.dark-mode td {
+  border-color: var(--border-dark);
+}
