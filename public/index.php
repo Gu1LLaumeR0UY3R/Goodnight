@@ -88,6 +88,11 @@ $routes = [
     "admin/rejeterSignalement/([0-9]+)" => ["controller" => "AdminController", "action" => "rejeterSignalement"],
     "admin/updateStatutBien/([0-9]+)" => ["controller" => "AdminController", "action" => "updateStatutBien"],
 
+    //Partie Commentaires signalés
+    "admin/commentaires-signales" => ["controller" => "AdminController", "action" => "commentairesSignales"],
+    "admin/commentaire/approuver/([0-9]+)" => ["controller" => "AdminController", "action" => "approuverCommentaire"],
+    "admin/commentaire/rejeter/([0-9]+)" => ["controller" => "AdminController", "action" => "rejeterCommentaire"],
+
     //Partie Réservations
     "admin/reservations" => ["controller" => "AdminController", "action" => "reservations"],
     "admin/addReservation" => ["controller" => "AdminController", "action" => "addReservation"],
@@ -115,6 +120,15 @@ $routes = [
     "locataire/myFavorites" => ["controller" => "LocataireController", "action" => "myFavorites"],
     "api/favoris" => ["controller" => "LocataireController", "action" => "manageFavorites"],
     "api/get-user-favorites" => ["controller" => "LocataireController", "action" => "getUserFavorites"],
+    
+    // Routes Commentaires
+    "commentaire/add" => ["controller" => "CommentaireController", "action" => "add"],
+    "commentaire/edit/([0-9]+)" => ["controller" => "CommentaireController", "action" => "edit"],
+    "commentaire/delete/([0-9]+)" => ["controller" => "CommentaireController", "action" => "delete"],
+    "commentaire/signaler/([0-9]+)" => ["controller" => "CommentaireController", "action" => "signaler"],
+    "commentaire/get/([0-9]+)" => ["controller" => "CommentaireController", "action" => "getCommentaires"],
+    "commentaire/like/([0-9]+)" => ["controller" => "CommentaireController", "action" => "toggleLike"],
+    "commentaire/top3/([0-9]+)" => ["controller" => "CommentaireController", "action" => "getTop3"],
     
     "reservation/store" => ["controller" => "ReservationController", "action" => "store"],
     "reservation/cancel/([0-9]+)" => ["controller" => "ReservationController", "action" => "cancel"],
