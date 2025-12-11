@@ -124,6 +124,14 @@ $routes = [
     "profile/uploadProfilePicture" => ["controller" => "ProfileController", "action" => "uploadProfilePicture"],
     "profile/deleteProfilePicture" => ["controller" => "ProfileController", "action" => "deleteProfilePicture"],
     "profile/updateProfile" => ["controller" => "ProfileController", "action" => "updateProfile"],
+    "profile/updateFrame" => ["controller" => "ProfileController", "action" => "updateFrame"],
+    "profile/cadre" => ["controller" => "ProfileController", "action" => "unlockFrames"],
+    
+    // Routes Cadres (Admin)
+    "admin/cadres" => ["controller" => "CadreController", "action" => "index"],
+    "admin/cadres/create" => ["controller" => "CadreController", "action" => "create"],
+    "cadre/store" => ["controller" => "CadreController", "action" => "store"],
+    "cadre/delete" => ["controller" => "CadreController", "action" => "delete"],
 ];
 
 $matchedRoute = null;

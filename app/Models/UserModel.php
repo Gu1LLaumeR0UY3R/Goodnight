@@ -216,6 +216,21 @@ class UserModel extends Model {
         ]);
         return $stmt->rowCount();
     }
+
+    public function unlockFrames($userId) {
+        $stmt = $this->db->prepare("UPDATE " . $this->table . " SET frames_unlocked = 1 WHERE id_locataire = :id_locataire");
+        $stmt->execute(['id_locataire' => $userId]);
+        return $stmt->rowCount() > 0;
+    }
+
+    public function updateCadreProfile($userId, $cadrePath) {
+        $stmt = $this->db->prepare("UPDATE " . $this->table . " SET cadre_profil = :cadre_profil WHERE id_locataire = :id_locataire");
+        $stmt->execute([
+            'cadre_profil' => $cadrePath,
+            'id_locataire' => $userId
+        ]);
+        return $stmt->rowCount() > 0;
+    }
 }
 
 ?>

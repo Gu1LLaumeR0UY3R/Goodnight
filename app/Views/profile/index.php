@@ -7,6 +7,12 @@
     <link rel="stylesheet" href="/css/style.css">
     <link rel="stylesheet" href="/css/navbar.css">
     <link rel="stylesheet" href="/css/profile.css">
+    <link rel="stylesheet" href="/cadre/frames.css">
+    
+    <!-- 🔓 Easter Egg débloqué ! Vous avez trouvé le secret ! 
+         Visitez cette page pour débloquer les cadres de profils spéciaux :
+         /profile/cadre
+         🎨 Profitez de cette découverte exclusive ! -->
 </head>
 <body class="profile-page">
     <?php include __DIR__ . '/../layout/navbar.php'; ?>
@@ -21,9 +27,9 @@
             <!-- Alerts -->
             <div id="alertContainer"></div>
 
-            <!-- Photo de profil -->
+            <!-- Photo de profil avec cadre -->
             <div class="profile-picture-section">
-                <div class="pfp-container">
+                <div class="pfp-container" id="pfpContainerWithFrame">
                     <?php if (!empty($user['pfp_loca'])): ?>
                         <img id="pfpImage" src="<?php echo htmlspecialchars($user['pfp_loca']); ?>" alt="Photo de profil">
                     <?php else: ?>
@@ -51,6 +57,28 @@
                         <button class="btn-delete" onclick="deleteProfilePicture()">
                             🗑️ Supprimer la photo
                         </button>
+                    <?php endif; ?>
+                    
+                    <!-- Afficher le sélecteur de cadres si débloqué -->
+                    <?php if (!empty($user['frames_unlocked']) && $user['frames_unlocked']): ?>
+                        <div style="margin-top: 1.5rem; padding: 1.5rem; background: #f5f5f5; border-radius: 8px;">
+                            <h3 style="margin-top: 0;">🎨 Votre Cadre de Profil</h3>
+                            <p style="font-size: 0.9rem; color: #666; margin-bottom: 1rem;">Sélectionnez un cadre spécial pour votre photo :</p>
+                            
+                            <div id="framesSelector" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(100px, 1fr)); gap: 1rem; margin-bottom: 1rem;">
+                                <!-- Les cadres seront générés en JS -->
+                            </div>
+                            
+                            <!-- Infos du cadre sélectionné -->
+                            <div id="frameInfo" style="background: white; padding: 1rem; border-radius: 6px; margin-bottom: 1rem; border-left: 4px solid #667eea;">
+                                <h4 style="margin: 0 0 0.5rem 0; color: #333;">Sélectionnez un cadre</h4>
+                                <p style="margin: 0; color: #666; font-size: 0.9rem;">Choisissez un cadre pour découvrir sa description</p>
+                            </div>
+                            
+                            <button onclick="applyFrame()" class="btn-save" style="padding: 0.7rem 1.5rem; font-size: 0.95rem;">
+                                ✓ Appliquer le cadre
+                            </button>
+                        </div>
                     <?php endif; ?>
                 </div>
             </div>
@@ -406,6 +434,186 @@
                 document.getElementById('cancelBtn').disabled = false;
             });
         }
+
+        // ========== EASTER EGG - CADRES DE PROFIL ==========
+        
+        // Données des cadres disponibles avec chemins PNG
+        const framesData = [
+            { id: 'default', name: 'Par défaut', description: 'Pas de cadre, affichage normal', path: null },
+            { id: 'gold', name: 'Or Préstigieux', description: 'Un élégant cadre doré avec effet de prestige', path: '/cadre/images/gold.png' },
+            { id: 'silver', name: 'Argent Raffiné', description: 'Un cadre argenté à l\'éclat subtil', path: '/cadre/images/silver.png' },
+            { id: 'bronze', name: 'Bronze Antique', description: 'Un cadre de bronze avec une teinte antique', path: '/cadre/images/bronze.png' },
+            { id: 'rainbow', name: 'Arc-en-ciel', description: 'Un cadre aux couleurs arc-en-ciel vibrant', path: '/cadre/images/rainbow.png' },
+            { id: 'glacier', name: 'Glacier Bleu', description: 'Un cadre glacé aux tons bleus froids', path: '/cadre/images/glacier.png' },
+            { id: 'pink', name: 'Rose Flamant', description: 'Un cadre rose doux et élégant', path: '/cadre/images/pink.png' },
+            { id: 'emerald', name: 'Émeraude', description: 'Un cadre vert émeraude profond', path: '/cadre/images/emerald.png' },
+            { id: 'mystique', name: 'Violet Mystique', description: 'Un cadre violet mystérieux et enchanteur', path: '/cadre/images/mystique.png' }
+        ];
+
+        let selectedFramePath = '<?php echo htmlspecialchars($user['cadre_profil'] ?? ''); ?>' || null;
+        
+        // Déterminer l'ID de cadre à partir du chemin stocké en base de données
+        let selectedFrameId = 'default';
+        if (selectedFramePath) {
+            const frame = framesData.find(f => f.path === selectedFramePath);
+            if (frame) {
+                selectedFrameId = frame.id;
+            }
+        }
+
+
+        // Rendre les cadres disponibles
+        function renderFrameSelector() {
+            const container = document.getElementById('framesSelector');
+            if (!container) return;
+
+            framesData.forEach(frame => {
+                const frameBtn = document.createElement('button');
+                frameBtn.className = 'frame-btn';
+                frameBtn.id = 'frame-' + frame.id;
+                frameBtn.type = 'button';
+                
+                // Afficher l'image ou un placeholder
+                if (frame.path) {
+                    frameBtn.innerHTML = `<img src="${frame.path}" alt="${frame.name}">`;
+                } else {
+                    frameBtn.innerHTML = `<div style="width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; font-size: 2rem;">⭐</div>`;
+                }
+                
+                frameBtn.style.cssText = `
+                    width: 100px;
+                    height: 100px;
+                    padding: 0;
+                    border: 3px solid #ddd;
+                    background: white;
+                    border-radius: 8px;
+                    cursor: pointer;
+                    transition: all 0.3s ease;
+                    overflow: hidden;
+                `;
+
+                if (frame.id === selectedFrameId) {
+                    frameBtn.style.borderColor = '#667eea';
+                    frameBtn.style.boxShadow = '0 0 0 2px white, 0 0 0 4px #667eea';
+                }
+
+                frameBtn.addEventListener('click', () => selectFrame(frame.id, frameBtn));
+                container.appendChild(frameBtn);
+            });
+        }
+
+        // Sélectionner un cadre
+        function selectFrame(frameId, element) {
+            selectedFrameId = frameId;
+            
+            // Mettre à jour le style de sélection
+            document.querySelectorAll('.frame-btn').forEach(btn => {
+                btn.style.borderColor = '#ddd';
+                btn.style.boxShadow = 'none';
+            });
+            
+            element.style.borderColor = '#667eea';
+            element.style.boxShadow = '0 0 0 2px white, 0 0 0 4px #667eea';
+            
+            // Afficher les infos du cadre
+            const frame = framesData.find(f => f.id === frameId);
+            if (frame) {
+                const infoDiv = document.getElementById('frameInfo');
+                if (infoDiv) {
+                    infoDiv.innerHTML = `
+                        <h4>${frame.name}</h4>
+                        <p>${frame.description}</p>
+                    `;
+                }
+            }
+            
+            // Appliquer l'aperçu du cadre en temps réel
+            applyFrameStyle(frameId);
+        }
+
+        // Appliquer le cadre visuellement (PNG overlay)
+        function applyFrameStyle(frameId) {
+            const container = document.getElementById('pfpContainerWithFrame');
+            if (!container) return;
+
+            // Trouver le frame dans framesData
+            const frame = framesData.find(f => f.id === frameId);
+            if (!frame) return;
+
+            // Supprimer les anciens overlays PNG
+            let existingOverlay = container.querySelector('.frame-overlay');
+            if (existingOverlay) {
+                existingOverlay.remove();
+            }
+
+            if (frameId === 'default' || !frame.path) {
+                // Pas d'overlay pour le cadre par défaut
+                container.style.boxShadow = '0 2px 8px rgba(0, 0, 0, 0.1)';
+            } else {
+                // Créer et appliquer l'overlay PNG
+                const overlay = document.createElement('img');
+                overlay.src = frame.path;
+                overlay.alt = frame.name;
+                overlay.className = 'frame-overlay';
+                overlay.style.position = 'absolute';
+                overlay.style.top = '0';
+                overlay.style.left = '0';
+                overlay.style.width = '100%';
+                overlay.style.height = '100%';
+                overlay.style.pointerEvents = 'none';
+                overlay.style.zIndex = '10';
+                overlay.style.borderRadius = '12px';
+                
+                // Charger l'image avec gestion d'erreur
+                overlay.onerror = function() {
+                    console.warn('Cadre image non trouvée:', frame.path);
+                };
+                
+                container.appendChild(overlay);
+                container.style.position = 'relative';
+                container.style.boxShadow = '0 0 15px rgba(0, 0, 0, 0.2)';
+            }
+        }
+
+        // Appliquer le cadre (envoi au serveur)
+        function applyFrame() {
+            if (!selectedFrameId) {
+                showAlert('Veuillez sélectionner un cadre !', 'error');
+                return;
+            }
+
+            // Récupérer le chemin du cadre
+            const frame = framesData.find(f => f.id === selectedFrameId);
+            const framePath = frame.path; // null pour 'default', chemin pour les autres
+
+            fetch('/profile/updateFrame', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    cadre_profil: framePath
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    showAlert(`✓ Cadre "${framesData.find(f => f.id === selectedFrameId).name}" appliqué !`, 'success');
+                } else {
+                    showAlert(data.error || 'Erreur lors de l\'application du cadre', 'error');
+                }
+            })
+            .catch(error => {
+                console.error('Erreur:', error);
+                showAlert('Erreur lors de l\'application du cadre', 'error');
+            });
+        }
+
+        // Appliquer le cadre au chargement
+        document.addEventListener('DOMContentLoaded', () => {
+            renderFrameSelector();
+            applyFrameStyle(selectedFrameId);
+        });
     </script>
 </body>
 </html>

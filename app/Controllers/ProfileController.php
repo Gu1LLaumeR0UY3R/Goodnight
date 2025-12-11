@@ -315,5 +315,99 @@ class ProfileController extends BaseController {
             ]);
         }
     }
+
+    // Mettre à jour le cadre de profil
+    public function updateFrame() {
+        // Vérifier que l'utilisateur est connecté
+        if (!isset($_SESSION['user_id'])) {
+            http_response_code(401);
+            echo json_encode(['success' => false, 'error' => 'Non authentifié']);
+            return;
+        }
+
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            http_response_code(405);
+            echo json_encode(['success' => false, 'error' => 'Méthode non autorisée']);
+            return;
+        }
+
+        $userId = $_SESSION['user_id'];
+        $data = json_decode(file_get_contents('php://input'), true);
+
+        if (!$data || !isset($data['cadre_profil'])) {
+            http_response_code(400);
+            echo json_encode(['success' => false, 'error' => 'Données invalides']);
+            return;
+        }
+
+        // Liste des chemins de cadres valides (null pour défaut, ou PNG paths)
+        $validFramePaths = [
+            null,
+            '/cadre/images/gold.png',
+            '/cadre/images/silver.png',
+            '/cadre/images/bronze.png',
+            '/cadre/images/rainbow.png',
+            '/cadre/images/glacier.png',
+            '/cadre/images/pink.png',
+            '/cadre/images/emerald.png',
+            '/cadre/images/mystique.png'
+        ];
+
+        $cadrePath = $data['cadre_profil']; // null ou chemin PNG
+
+        // Valider le chemin (null ou chemin PNG valide)
+        if (!in_array($cadrePath, $validFramePaths, true)) {
+            http_response_code(400);
+            echo json_encode(['success' => false, 'error' => 'Cadre invalide']);
+            return;
+        }
+
+        // Mettre à jour la base de données
+        try {
+            $result = $this->userModel->updateCadreProfile($userId, $cadrePath);
+
+            if ($result) {
+                echo json_encode(['success' => true, 'message' => 'Cadre mis à jour avec succès']);
+            } else {
+                http_response_code(500);
+                echo json_encode(['success' => false, 'error' => 'Erreur lors de la mise à jour']);
+            }
+        } catch (Exception $e) {
+            error_log("Erreur lors de la mise à jour du cadre : " . $e->getMessage());
+            http_response_code(500);
+            echo json_encode(['success' => false, 'error' => 'Erreur lors de la mise à jour']);
+        }
+    }
+
+    /**
+     * Easter Egg - Débloquer les cadres de profil
+     */
+    public function unlockFrames() {
+        // Vérifier que l'utilisateur est connecté
+        if (!isset($_SESSION['user_id'])) {
+            $_SESSION['error'] = "Vous devez être connecté pour débloquer cette fonctionnalité.";
+            $this->redirect('/login');
+            return;
+        }
+
+        $userId = $_SESSION['user_id'];
+
+        // Mettre à jour la colonne frames_unlocked
+        try {
+            $result = $this->userModel->unlockFrames($userId);
+
+            if ($result) {
+                $_SESSION['success'] = "🎉 Easter Egg débloqué ! Les cadres de profil sont maintenant disponibles.";
+                $this->redirect('/profile');
+            } else {
+                $_SESSION['error'] = "Erreur lors du déverrouillage des cadres.";
+                $this->redirect('/profile');
+            }
+        } catch (Exception $e) {
+            error_log("Erreur lors du déverrouillage des cadres : " . $e->getMessage());
+            $_SESSION['error'] = "Erreur lors du déverrouillage des cadres.";
+            $this->redirect('/profile');
+        }
+    }
 }
 ?>
