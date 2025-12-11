@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="/css/sunset-background.css">
     <link rel="stylesheet" href="/css/bien-details.css">
     <link rel="stylesheet" href="/css/animations-bien.css">
+    <link rel="stylesheet" href="/css/commentaires.css">
     <!-- Modern FullCalendar & CSS -->
     <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.js"></script>
@@ -210,6 +211,280 @@
                 <p style="text-align: center;">Veuillez vous <a href="/login" style="color: var(--primary); text-decoration: underline;">connecter</a> pour effectuer une réservation.</p>
             </div>
         <?php endif; ?>
+
+        <!-- SECTION COMMENTAIRES -->
+        <?php
+        require_once __DIR__ . '/../../Models/CommentaireModel.php';
+        $commentaireModel = new CommentaireModel();
+        $commentaires = $commentaireModel->getCommentairesByBien($bien['id_biens'], 'publie', 'date_desc');
+        $noteMoyenne = $commentaireModel->getNoteMoyenne($bien['id_biens']);
+        $nombreCommentaires = $commentaireModel->getNombreCommentaires($bien['id_biens']);
+        $repartition = $commentaireModel->getRepartitionNotes($bien['id_biens']);
+        $top3Commentaires = $commentaireModel->getTop3MostLiked($bien['id_biens']);
+        
+        // Vérifier si l'utilisateur peut commenter
+        $canComment = false;
+        $hasCommented = false;
+        $userComment = null;
+        $userLikes = [];
+        if ($userId) {
+            $canComment = $commentaireModel->canUserComment($bien['id_biens'], $userId);
+            $hasCommented = $commentaireModel->hasUserCommented($bien['id_biens'], $userId);
+            if ($hasCommented) {
+                $userComment = $commentaireModel->getUserCommentaire($bien['id_biens'], $userId);
+            }
+            // Récupérer les likes de l'utilisateur
+            if (!empty($commentaires)) {
+                $commentairesIds = array_column($commentaires, 'id_commentaire');
+                $userLikes = $commentaireModel->getUserLikes($commentairesIds, $userId);
+            }
+        }
+        ?>
+
+        <div class="commentaires-section glass-card" style="background: white; border: 1px solid rgba(0,0,0,0.08);">
+            <h2>⭐ Avis des voyageurs</h2>
+            
+            <!-- Résumé des notes -->
+            <div class="commentaires-resume">
+                <?php if ($noteMoyenne): ?>
+                    <div class="note-globale">
+                        <div class="note-chiffre"><?php echo number_format($noteMoyenne, 1, ',', ''); ?></div>
+                        <div class="note-etoiles">
+                            <?php for ($i = 1; $i <= 5; $i++): ?>
+                                <span class="etoile <?php echo $i <= round($noteMoyenne) ? 'pleine' : 'vide'; ?>">★</span>
+                            <?php endfor; ?>
+                        </div>
+                        <div class="note-count"><?php echo $nombreCommentaires; ?> avis</div>
+                    </div>
+                    
+                    <div class="repartition-notes">
+                        <?php foreach ($repartition as $note => $count): ?>
+                            <div class="repartition-ligne">
+                                <span class="repartition-label"><?php echo $note; ?> ★</span>
+                                <div class="repartition-barre">
+                                    <div class="repartition-fill" style="width: <?php echo $nombreCommentaires > 0 ? ($count / $nombreCommentaires * 100) : 0; ?>%;"></div>
+                                </div>
+                                <span class="repartition-count"><?php echo $count; ?></span>
+                            </div>
+                        <?php endforeach; ?>
+                    </div>
+                <?php else: ?>
+                    <p class="no-reviews">Aucun avis pour le moment. Soyez le premier à donner votre avis !</p>
+                <?php endif; ?>
+            </div>
+
+            <!-- TOP 3 des commentaires les plus likés -->
+            <?php if (!empty($top3Commentaires) && count($top3Commentaires) > 0 && $top3Commentaires[0]['likes_count'] > 0): ?>
+                <div class="top3-section">
+                    <h3>🏆 Top 3 des avis les plus appréciés</h3>
+                    <div class="top3-container">
+                        <?php foreach ($top3Commentaires as $index => $topComment): ?>
+                            <?php if ($topComment['likes_count'] > 0): ?>
+                                <div class="top3-card" data-rank="<?php echo $index + 1; ?>">
+                                    <div class="top3-badge"><?php echo ['', '🥇', '🥈', '🥉'][$index + 1] ?? ''; ?></div>
+                                    <div class="top3-header">
+                                        <div class="commentaire-auteur">
+                                            <div class="commentaire-avatar">
+                                                <?php if (!empty($topComment['profile_picture'])): ?>
+                                                    <img src="<?php echo htmlspecialchars($topComment['profile_picture']); ?>" alt="<?php echo htmlspecialchars($topComment['prenom_locataire']); ?>">
+                                                <?php else: ?>
+                                                    <div class="avatar-initials"><?php echo strtoupper(substr($topComment['prenom_locataire'], 0, 1)); ?></div>
+                                                <?php endif; ?>
+                                            </div>
+                                            <div class="commentaire-info">
+                                                <div class="commentaire-nom"><?php echo htmlspecialchars($topComment['prenom_locataire'] . ' ' . substr($topComment['nom_locataire'], 0, 1)); ?>.</div>
+                                                <?php if ($topComment['note']): ?>
+                                                    <div class="commentaire-note-small">
+                                                        <?php for ($i = 1; $i <= 5; $i++): ?>
+                                                            <span class="etoile <?php echo $i <= $topComment['note'] ? 'pleine' : 'vide'; ?>">★</span>
+                                                        <?php endfor; ?>
+                                                    </div>
+                                                <?php endif; ?>
+                                            </div>
+                                        </div>
+                                        <div class="top3-likes">
+                                            <span class="likes-icon">❤️</span>
+                                            <span class="likes-count"><?php echo $topComment['likes_count']; ?></span>
+                                        </div>
+                                    </div>
+                                    <?php if ($topComment['titre']): ?>
+                                        <h4 class="top3-titre"><?php echo htmlspecialchars($topComment['titre']); ?></h4>
+                                    <?php endif; ?>
+                                    <p class="top3-contenu"><?php echo nl2br(htmlspecialchars($topComment['contenu'])); ?></p>
+                                </div>
+                            <?php endif; ?>
+                        <?php endforeach; ?>
+                    </div>
+                    <div style="text-align: center; margin-top: 1.5rem;">
+                        <button onclick="scrollToComments()" class="btn-voir-avis">
+                            <span>👇</span> Voir tous les avis
+                        </button>
+                    </div>
+                </div>
+            <?php endif; ?>
+
+            <!-- Formulaire d'ajout/modification de commentaire -->
+            <?php if ($userId && !$isOwner): ?>
+                <?php if ($canComment && !$hasCommented): ?>
+                    <div class="commentaire-form-container">
+                        <h3>✍️ Laisser un avis</h3>
+                        <form id="commentaireForm" action="/commentaire/add" method="POST" class="commentaire-form">
+                            <input type="hidden" name="id_bien" value="<?php echo $bien['id_biens']; ?>">
+                            
+                            <div class="form-group">
+                                <label>Note <span class="required">*</span></label>
+                                <div class="rating-input">
+                                    <input type="hidden" name="note" id="noteInput" value="5" required>
+                                    <div class="stars-input" id="starsInput">
+                                        <span class="star" data-value="1">★</span>
+                                        <span class="star" data-value="2">★</span>
+                                        <span class="star" data-value="3">★</span>
+                                        <span class="star" data-value="4">★</span>
+                                        <span class="star" data-value="5">★</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="titre">Titre de votre avis</label>
+                                <input type="text" id="titre" name="titre" maxlength="255" placeholder="Résumé de votre expérience...">
+                            </div>
+
+                            <div class="form-group">
+                                <label for="contenu">Votre commentaire <span class="required">*</span></label>
+                                <textarea id="contenu" name="contenu" rows="5" required placeholder="Partagez votre expérience dans ce logement..."></textarea>
+                            </div>
+
+                            <div class="form-actions">
+                                <button type="submit" class="btn-submit-commentaire">Publier mon avis</button>
+                            </div>
+                        </form>
+                    </div>
+                <?php elseif ($hasCommented && $userComment): ?>
+                    <div class="commentaire-form-container">
+                        <h3>✏️ Modifier mon avis</h3>
+                        <form id="commentaireEditForm" action="/commentaire/edit/<?php echo $userComment['id_commentaire']; ?>" method="POST" class="commentaire-form">
+                            <div class="form-group">
+                                <label>Note <span class="required">*</span></label>
+                                <div class="rating-input">
+                                    <input type="hidden" name="note" id="noteInputEdit" value="<?php echo $userComment['note']; ?>" required>
+                                    <div class="stars-input" id="starsInputEdit">
+                                        <?php for ($i = 1; $i <= 5; $i++): ?>
+                                            <span class="star <?php echo $i <= $userComment['note'] ? 'active' : ''; ?>" data-value="<?php echo $i; ?>">★</span>
+                                        <?php endfor; ?>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="titreEdit">Titre de votre avis</label>
+                                <input type="text" id="titreEdit" name="titre" maxlength="255" value="<?php echo htmlspecialchars($userComment['titre'] ?? ''); ?>" placeholder="Résumé de votre expérience...">
+                            </div>
+
+                            <div class="form-group">
+                                <label for="contenuEdit">Votre commentaire <span class="required">*</span></label>
+                                <textarea id="contenuEdit" name="contenu" rows="5" required placeholder="Partagez votre expérience..."><?php echo htmlspecialchars($userComment['contenu']); ?></textarea>
+                            </div>
+
+                            <div class="form-actions">
+                                <button type="submit" class="btn-submit-commentaire">Mettre à jour mon avis</button>
+                                <button type="button" class="btn-delete-commentaire" onclick="deleteCommentaire(<?php echo $userComment['id_commentaire']; ?>)">Supprimer</button>
+                            </div>
+                        </form>
+                    </div>
+                <?php elseif (!$canComment): ?>
+                    <div class="info-message">
+                        <p>💡 Vous devez avoir réservé ce bien pour pouvoir laisser un avis.</p>
+                    </div>
+                <?php endif; ?>
+            <?php elseif (!$userId): ?>
+                <div class="info-message">
+                    <p>Veuillez vous <a href="/login" style="color: var(--primary); text-decoration: underline;">connecter</a> pour laisser un avis.</p>
+                </div>
+            <?php endif; ?>
+
+            <!-- Liste des commentaires -->
+            <?php if (!empty($commentaires)): ?>
+                <div class="commentaires-liste">
+                    <div class="commentaires-header">
+                        <h3><?php echo $nombreCommentaires; ?> avis</h3>
+                        <div class="commentaires-tri">
+                            <label for="triCommentaires">Trier par :</label>
+                            <select id="triCommentaires" onchange="trierCommentaires(this.value)">
+                                <option value="date_desc">Plus récents</option>
+                                <option value="date_asc">Plus anciens</option>
+                                <option value="note_desc">Mieux notés</option>
+                                <option value="note_asc">Moins bien notés</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div id="commentairesContainer">
+                        <?php foreach ($commentaires as $commentaire): ?>
+                            <div class="commentaire-card">
+                                <div class="commentaire-header">
+                                    <div class="commentaire-auteur">
+                                        <div class="commentaire-avatar">
+                                            <?php if (!empty($commentaire['profile_picture'])): ?>
+                                                <img src="<?php echo htmlspecialchars($commentaire['profile_picture']); ?>" alt="<?php echo htmlspecialchars($commentaire['prenom_locataire']); ?>">
+                                            <?php else: ?>
+                                                <div class="avatar-initials"><?php echo strtoupper(substr($commentaire['prenom_locataire'], 0, 1)); ?></div>
+                                            <?php endif; ?>
+                                        </div>
+                                        <div class="commentaire-info">
+                                            <div class="commentaire-nom"><?php echo htmlspecialchars($commentaire['prenom_locataire'] . ' ' . substr($commentaire['nom_locataire'], 0, 1)); ?>.</div>
+                                            <div class="commentaire-date"><?php echo date('d/m/Y', strtotime($commentaire['date_creation'])); ?></div>
+                                        </div>
+                                    </div>
+                                    <div class="commentaire-note">
+                                        <?php if ($commentaire['note']): ?>
+                                            <?php for ($i = 1; $i <= 5; $i++): ?>
+                                                <span class="etoile <?php echo $i <= $commentaire['note'] ? 'pleine' : 'vide'; ?>">★</span>
+                                            <?php endfor; ?>
+                                        <?php endif; ?>
+                                    </div>
+                                </div>
+                                
+                                <?php if ($commentaire['titre']): ?>
+                                    <h4 class="commentaire-titre"><?php echo htmlspecialchars($commentaire['titre']); ?></h4>
+                                <?php endif; ?>
+                                
+                                <p class="commentaire-contenu"><?php echo nl2br(htmlspecialchars($commentaire['contenu'])); ?></p>
+                                
+                                <?php if ($commentaire['date_modification']): ?>
+                                    <small class="commentaire-modifie">Modifié le <?php echo date('d/m/Y', strtotime($commentaire['date_modification'])); ?></small>
+                                <?php endif; ?>
+
+                                <div class="commentaire-actions">
+                                    <?php 
+                                    $likesCount = $commentaireModel->countLikes($commentaire['id_commentaire']); 
+                                    $isLiked = $userId && in_array($commentaire['id_commentaire'], $userLikes);
+                                    ?>
+                                    
+                                    <?php if ($userId): ?>
+                                        <button class="btn-like-commentaire <?php echo $isLiked ? 'liked' : ''; ?>" 
+                                                data-commentaire-id="<?php echo $commentaire['id_commentaire']; ?>"
+                                                onclick="toggleLikeCommentaire(<?php echo $commentaire['id_commentaire']; ?>)">
+                                            <span class="like-icon"><?php echo $isLiked ? '❤️' : '🤍'; ?></span>
+                                            <span class="like-count"><?php echo $likesCount; ?></span>
+                                        </button>
+                                    <?php else: ?>
+                                        <span class="like-display">
+                                            <span class="like-icon">❤️</span>
+                                            <span class="like-count"><?php echo $likesCount; ?></span>
+                                        </span>
+                                    <?php endif; ?>
+
+                                    <?php if ($userId && $commentaire['id_locataire'] != $userId): ?>
+                                        <button class="btn-signaler-commentaire" onclick="signalerCommentaire(<?php echo $commentaire['id_commentaire']; ?>)">🚩 Signaler</button>
+                                    <?php endif; ?>
+                                </div>
+                            </div>
+                        <?php endforeach; ?>
+                    </div>
+                </div>
+            <?php endif; ?>
+        </div>
     </main>
 
     <!-- Lightbox pour les photos (en dehors de la structure principale) -->
@@ -268,10 +543,24 @@
                         select: function(info) {
                             // Remplir automatiquement les champs de date du formulaire
                             const startDate = info.startStr;
-                            // FullCalendar utilise une date de fin exclusive, donc on retire 1 jour
+                            
+                            // FullCalendar utilise une date de fin exclusive
+                            // Si on sélectionne du 11 au 12, info.end sera le 13
+                            // On retire 1 jour pour avoir le dernier jour inclus (12)
                             const endDate = new Date(info.end);
                             endDate.setDate(endDate.getDate() - 1);
-                            const endDateStr = endDate.toISOString().split('T')[0];
+                            
+                            // Utiliser les méthodes locales pour éviter les problèmes de timezone
+                            const year = endDate.getFullYear();
+                            const month = String(endDate.getMonth() + 1).padStart(2, '0');
+                            const day = String(endDate.getDate()).padStart(2, '0');
+                            const endDateStr = `${year}-${month}-${day}`;
+                            
+                            console.log('Sélection:', { 
+                                start: startDate, 
+                                endOriginal: info.endStr, 
+                                endAjusté: endDateStr 
+                            });
                             
                             const dateDebutInput = document.getElementById('date_debut');
                             const dateFinInput = document.getElementById('date_fin');
@@ -672,6 +961,202 @@
                 closeSignalementModal();
             }
         });
+
+        // ===== COMMENTAIRES =====
+        
+        // Gestion des étoiles pour la notation (ajout de commentaire)
+        const starsInput = document.getElementById('starsInput');
+        const noteInput = document.getElementById('noteInput');
+        
+        if (starsInput && noteInput) {
+            const stars = starsInput.querySelectorAll('.star');
+            
+            // Initialiser avec 5 étoiles
+            stars.forEach(star => star.classList.add('active'));
+            
+            stars.forEach(star => {
+                star.addEventListener('click', function() {
+                    const value = parseInt(this.dataset.value);
+                    noteInput.value = value;
+                    
+                    stars.forEach(s => {
+                        if (parseInt(s.dataset.value) <= value) {
+                            s.classList.add('active');
+                        } else {
+                            s.classList.remove('active');
+                        }
+                    });
+                });
+                
+                star.addEventListener('mouseenter', function() {
+                    const value = parseInt(this.dataset.value);
+                    stars.forEach(s => {
+                        if (parseInt(s.dataset.value) <= value) {
+                            s.classList.add('hover');
+                        } else {
+                            s.classList.remove('hover');
+                        }
+                    });
+                });
+            });
+            
+            starsInput.addEventListener('mouseleave', function() {
+                stars.forEach(s => s.classList.remove('hover'));
+            });
+        }
+
+        // Gestion des étoiles pour l'édition
+        const starsInputEdit = document.getElementById('starsInputEdit');
+        const noteInputEdit = document.getElementById('noteInputEdit');
+        
+        if (starsInputEdit && noteInputEdit) {
+            const starsEdit = starsInputEdit.querySelectorAll('.star');
+            
+            starsEdit.forEach(star => {
+                star.addEventListener('click', function() {
+                    const value = parseInt(this.dataset.value);
+                    noteInputEdit.value = value;
+                    
+                    starsEdit.forEach(s => {
+                        if (parseInt(s.dataset.value) <= value) {
+                            s.classList.add('active');
+                        } else {
+                            s.classList.remove('active');
+                        }
+                    });
+                });
+                
+                star.addEventListener('mouseenter', function() {
+                    const value = parseInt(this.dataset.value);
+                    starsEdit.forEach(s => {
+                        if (parseInt(s.dataset.value) <= value) {
+                            s.classList.add('hover');
+                        } else {
+                            s.classList.remove('hover');
+                        }
+                    });
+                });
+            });
+            
+            starsInputEdit.addEventListener('mouseleave', function() {
+                starsEdit.forEach(s => s.classList.remove('hover'));
+            });
+        }
+
+        // Fonction pour trier les commentaires
+        function trierCommentaires(orderBy) {
+            const idBien = <?php echo $bien['id_biens']; ?>;
+            window.location.href = window.location.pathname + '?order_by=' + orderBy;
+        }
+
+        // Fonction pour scroller jusqu'aux commentaires
+        function scrollToComments() {
+            const commentairesListe = document.querySelector('.commentaires-liste');
+            if (commentairesListe) {
+                commentairesListe.scrollIntoView({ 
+                    behavior: 'smooth', 
+                    block: 'start' 
+                });
+            }
+        }
+
+        // Fonction pour liker/unliker un commentaire
+        function toggleLikeCommentaire(commentaireId) {
+            const button = document.querySelector(`.btn-like-commentaire[data-commentaire-id="${commentaireId}"]`);
+            
+            if (!button) return;
+            
+            // Désactiver le bouton temporairement
+            button.disabled = true;
+            
+            fetch('/commentaire/like/' + commentaireId, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // Mettre à jour l'icône et le compteur
+                    const icon = button.querySelector('.like-icon');
+                    const count = button.querySelector('.like-count');
+                    
+                    if (data.action === 'like') {
+                        button.classList.add('liked');
+                        icon.textContent = '❤️';
+                    } else {
+                        button.classList.remove('liked');
+                        icon.textContent = '🤍';
+                    }
+                    
+                    count.textContent = data.likes_count;
+                    
+                    // Animation du bouton
+                    button.classList.add('pulse');
+                    setTimeout(() => button.classList.remove('pulse'), 300);
+                } else {
+                    alert('✗ ' + data.message);
+                }
+            })
+            .catch(error => {
+                console.error('Erreur:', error);
+                alert('Une erreur est survenue.');
+            })
+            .finally(() => {
+                button.disabled = false;
+            });
+        }
+
+        // Fonction pour scroller jusqu'aux commentaires
+        function scrollToComments() {
+            const commentairesListe = document.querySelector('.commentaires-liste');
+            if (commentairesListe) {
+                commentairesListe.scrollIntoView({ 
+                    behavior: 'smooth', 
+                    block: 'start' 
+                });
+            }
+        }
+
+        // Fonction pour supprimer un commentaire
+        function deleteCommentaire(id) {
+            if (!confirm('Êtes-vous sûr de vouloir supprimer votre commentaire ? Cette action est irréversible.')) {
+                return;
+            }
+            
+            const form = document.createElement('form');
+            form.method = 'POST';
+            form.action = '/commentaire/delete/' + id;
+            document.body.appendChild(form);
+            form.submit();
+        }
+
+        // Fonction pour signaler un commentaire
+        function signalerCommentaire(id) {
+            if (!confirm('Voulez-vous signaler ce commentaire comme inapproprié ?')) {
+                return;
+            }
+            
+            fetch('/commentaire/signaler/' + id, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert('✓ ' + data.message);
+                } else {
+                    alert('✗ ' + data.message);
+                }
+            })
+            .catch(error => {
+                console.error('Erreur:', error);
+                alert('Une erreur est survenue lors du signalement.');
+            });
+        }
     </script>
 </body>
 </html>

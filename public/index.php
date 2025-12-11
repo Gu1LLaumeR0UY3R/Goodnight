@@ -116,6 +116,15 @@ $routes = [
     "api/favoris" => ["controller" => "LocataireController", "action" => "manageFavorites"],
     "api/get-user-favorites" => ["controller" => "LocataireController", "action" => "getUserFavorites"],
     
+    // Routes Commentaires
+    "commentaire/add" => ["controller" => "CommentaireController", "action" => "add"],
+    "commentaire/edit/([0-9]+)" => ["controller" => "CommentaireController", "action" => "edit"],
+    "commentaire/delete/([0-9]+)" => ["controller" => "CommentaireController", "action" => "delete"],
+    "commentaire/signaler/([0-9]+)" => ["controller" => "CommentaireController", "action" => "signaler"],
+    "commentaire/get/([0-9]+)" => ["controller" => "CommentaireController", "action" => "getCommentaires"],
+    "commentaire/like/([0-9]+)" => ["controller" => "CommentaireController", "action" => "toggleLike"],
+    "commentaire/top3/([0-9]+)" => ["controller" => "CommentaireController", "action" => "getTop3"],
+    
     "reservation/store" => ["controller" => "ReservationController", "action" => "store"],
     "reservation/cancel/([0-9]+)" => ["controller" => "ReservationController", "action" => "cancel"],
 
