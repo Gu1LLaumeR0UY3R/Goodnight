@@ -121,6 +121,14 @@
                     <p class="admin-box-description">Traiter les signalements utilisateurs</p>
                 </div>
             </div>
+
+            <div class="admin-box glass-card" data-iframe-url="/admin/commentaires-signales" data-title="Commentaires signalés">
+                <span class="admin-box-icon">💬</span>
+                <div>
+                    <h3 class="admin-box-title">Commentaires signalés</h3>
+                    <p class="admin-box-description">Modérer les commentaires inappropriés</p>
+                </div>
+            </div>
         </section>
     </main>
 

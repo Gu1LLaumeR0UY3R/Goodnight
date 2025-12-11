@@ -88,6 +88,11 @@ $routes = [
     "admin/rejeterSignalement/([0-9]+)" => ["controller" => "AdminController", "action" => "rejeterSignalement"],
     "admin/updateStatutBien/([0-9]+)" => ["controller" => "AdminController", "action" => "updateStatutBien"],
 
+    //Partie Commentaires signalés
+    "admin/commentaires-signales" => ["controller" => "AdminController", "action" => "commentairesSignales"],
+    "admin/commentaire/approuver/([0-9]+)" => ["controller" => "AdminController", "action" => "approuverCommentaire"],
+    "admin/commentaire/rejeter/([0-9]+)" => ["controller" => "AdminController", "action" => "rejeterCommentaire"],
+
     //Partie Réservations
     "admin/reservations" => ["controller" => "AdminController", "action" => "reservations"],
     "admin/addReservation" => ["controller" => "AdminController", "action" => "addReservation"],

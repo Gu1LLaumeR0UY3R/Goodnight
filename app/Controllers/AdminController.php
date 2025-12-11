@@ -11,6 +11,7 @@ require_once __DIR__ . "/../Models/TarifModel.php";
 require_once __DIR__ . "/../Models/AdminModel.php";
 require_once __DIR__ . "/../Models/ReservationModel.php";
 require_once __DIR__ . "/../Models/PhotoModel.php";
+require_once __DIR__ . "/../Models/CommentaireModel.php";
 require_once __DIR__ . "/../../lib/Database.php";
 
 class AdminController extends BaseController {
@@ -24,6 +25,7 @@ class AdminController extends BaseController {
     private $adminModel;
     private $reservationModel;
     private $photoModel;
+    private $commentaireModel;
 
     public function __construct() {
         AuthMiddleware::requireRole("Administrateur");
@@ -38,6 +40,7 @@ class AdminController extends BaseController {
         $this->adminModel = new AdminModel();
         $this->reservationModel = new ReservationModel();
         $this->photoModel = new PhotoModel();
+        $this->commentaireModel = new CommentaireModel();
     }
 
     public function index() {
@@ -763,6 +766,88 @@ class AdminController extends BaseController {
         } else {
             echo json_encode(['success' => false, 'message' => 'Erreur lors de la mise à jour']);
         }
+    }
+
+    /**
+     * ==================================================
+     * GESTION DES COMMENTAIRES SIGNALÉS
+     * ==================================================
+     */
+
+    /**
+     * Affiche la liste des commentaires signalés
+     */
+    public function commentairesSignales() {
+        $commentairesSignales = $this->commentaireModel->getCommentairesSignales();
+        
+        $this->render('admin/commentaires_signales', [
+            'commentairesSignales' => $commentairesSignales
+        ]);
+    }
+
+    /**
+     * Approuve un commentaire signalé (retire le signalement)
+     * 
+     * @param int $id ID du commentaire
+     */
+    public function approuverCommentaire($id) {
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            $_SESSION['error'] = "Méthode non autorisée";
+            $this->redirect('/admin/commentaires-signales');
+            return;
+        }
+
+        // Récupérer le commentaire
+        $commentaire = $this->commentaireModel->getById($id);
+        
+        if (!$commentaire) {
+            $_SESSION['error'] = "Commentaire introuvable";
+            $this->redirect('/admin/commentaires-signales');
+            return;
+        }
+
+        // Retirer le signalement (remettre signale à 0)
+        $sql = "UPDATE commentaires SET signale = 0 WHERE id_commentaire = :id";
+        $stmt = $this->commentaireModel->getDb()->prepare($sql);
+        
+        if ($stmt->execute(['id' => $id])) {
+            $_SESSION['success'] = "Le commentaire a été approuvé et le signalement retiré.";
+        } else {
+            $_SESSION['error'] = "Erreur lors de l'approbation du commentaire.";
+        }
+
+        $this->redirect('/admin/commentaires-signales');
+    }
+
+    /**
+     * Rejette un commentaire (change son statut en 'rejete')
+     * 
+     * @param int $id ID du commentaire
+     */
+    public function rejeterCommentaire($id) {
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            $_SESSION['error'] = "Méthode non autorisée";
+            $this->redirect('/admin/commentaires-signales');
+            return;
+        }
+
+        // Récupérer le commentaire
+        $commentaire = $this->commentaireModel->getById($id);
+        
+        if (!$commentaire) {
+            $_SESSION['error'] = "Commentaire introuvable";
+            $this->redirect('/admin/commentaires-signales');
+            return;
+        }
+
+        // Changer le statut en 'rejete'
+        if ($this->commentaireModel->updateStatut($id, 'rejete')) {
+            $_SESSION['success'] = "Le commentaire a été rejeté et n'est plus visible publiquement.";
+        } else {
+            $_SESSION['error'] = "Erreur lors du rejet du commentaire.";
+        }
+
+        $this->redirect('/admin/commentaires-signales');
     }
 }
 
