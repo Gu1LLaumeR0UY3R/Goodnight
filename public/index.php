@@ -146,6 +146,9 @@ $routes = [
     "admin/cadres/create" => ["controller" => "CadreController", "action" => "create"],
     "cadre/store" => ["controller" => "CadreController", "action" => "store"],
     "cadre/delete" => ["controller" => "CadreController", "action" => "delete"],
+
+    // Routes Easter Eggs (Admin)
+    "admin/easter-eggs" => ["controller" => "EasterEggController", "action" => "index"],
 ];
 
 $matchedRoute = null;

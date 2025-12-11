@@ -129,6 +129,15 @@
                     <p class="admin-box-description">Modérer les commentaires inappropriés</p>
                 </div>
             </div>
+
+            <!-- Gamification et Contenu Spécial -->
+            <div class="admin-box glass-card" data-iframe-url="/admin/easter-eggs" data-title="Gestion des Easter Eggs">
+                <span class="admin-box-icon">🥚</span>
+                <div>
+                    <h3 class="admin-box-title">Easter Eggs</h3>
+                    <p class="admin-box-description">Gérer tous les easter eggs du système</p>
+                </div>
+            </div>
         </section>
     </main>
 

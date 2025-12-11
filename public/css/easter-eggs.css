@@ -1,0 +1,566 @@
+/* ========================================
+   EASTER EGGS - STYLES POUR LA GESTION DES EASTER EGGS
+   ======================================== */
+
+/* ========================================
+   PAGE PRINCIPALE ADMIN EASTER EGGS
+   ======================================== */
+
+.admin-page {
+    background: radial-gradient(circle at 20% 20%, rgba(255, 94, 98, 0.12), transparent 35%),
+                radial-gradient(circle at 80% 0%, rgba(255, 153, 102, 0.18), transparent 30%),
+                #0b1021;
+    padding: 24px;
+    min-height: 100vh;
+    color: #e7ecf5;
+}
+
+.admin-page-header {
+    margin-bottom: 24px;
+}
+
+.admin-page-header h2 { 
+    margin: 0; 
+    color: #ffffff;
+    font-size: 2rem;
+    font-weight: 700;
+}
+
+.admin-page-header .subtitle { 
+    margin: 6px 0 0; 
+    color: #c9d1e1;
+    font-size: 1rem;
+}
+
+/* ========================================
+   SECTION DE CONTENU
+   ======================================== */
+
+.admin-content-section {
+    margin-top: 24px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 14px;
+    padding: 20px;
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(12px);
+}
+
+/* ========================================
+   SYSTÈME D'ONGLETS
+   ======================================== */
+
+.tabs-container {
+    width: 100%;
+}
+
+.tabs-nav {
+    display: flex;
+    gap: 10px;
+    border-bottom: 2px solid rgba(255, 255, 255, 0.08);
+    padding-bottom: 6px;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+}
+
+.tab-btn {
+    border: none;
+    background: transparent;
+    padding: 10px 14px;
+    font-weight: 700;
+    color: #9fb0ce;
+    cursor: pointer;
+    border-bottom: 3px solid transparent;
+    transition: all 0.2s ease;
+    letter-spacing: 0.2px;
+    font-size: 1rem;
+}
+
+.tab-btn:hover { 
+    color: #ff9a7a;
+    transform: translateY(-1px);
+}
+
+.tab-btn.active { 
+    color: #ff9a7a; 
+    border-bottom-color: #ff9a7a;
+}
+
+.tab-content { 
+    display: none;
+    animation: fadeIn 0.3s ease;
+}
+
+.tab-content.active { 
+    display: block;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* ========================================
+   EN-TÊTE DE SECTION
+   ======================================== */
+
+.section-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin: 18px 0 20px;
+    flex-wrap: wrap;
+}
+
+.section-header h3 { 
+    margin: 0; 
+    color: #ffffff;
+    font-size: 1.5rem;
+    font-weight: 600;
+}
+
+.text-muted { 
+    color: #aab7d3;
+    font-size: 0.95rem;
+}
+
+.small { 
+    font-size: 0.9rem;
+}
+
+/* ========================================
+   BOUTONS
+   ======================================== */
+
+.btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    border: none;
+    border-radius: 10px;
+    padding: 11px 16px;
+    cursor: pointer;
+    font-weight: 700;
+    transition: all 0.2s ease;
+    text-decoration: none;
+    font-size: 0.95rem;
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, #ff5e62 0%, #ff9966 100%);
+    color: #fff;
+    box-shadow: 0 10px 24px rgba(255, 94, 98, 0.35);
+}
+
+.btn-primary:hover { 
+    transform: translateY(-2px); 
+    box-shadow: 0 12px 28px rgba(255, 94, 98, 0.45);
+}
+
+.btn-ghost {
+    background: rgba(255, 255, 255, 0.04);
+    color: #ff9a7a;
+    border: 1px solid rgba(255, 154, 122, 0.4);
+}
+
+.btn-ghost:hover {
+    background: rgba(255, 255, 255, 0.08);
+    border-color: rgba(255, 154, 122, 0.6);
+}
+
+.btn-danger { 
+    color: #ffb3a1;
+    border-color: rgba(255, 94, 98, 0.4);
+}
+
+.btn-danger:hover {
+    background: rgba(255, 94, 98, 0.15);
+    border-color: rgba(255, 94, 98, 0.6);
+    color: #ff8a7a;
+}
+
+.btn-small { 
+    padding: 9px 12px; 
+    font-size: 0.9rem;
+}
+
+/* ========================================
+   GRILLE DE CARTES (CADRES)
+   ======================================== */
+
+.cards-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 16px;
+    margin-top: 10px;
+}
+
+.card {
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 12px;
+    box-shadow: 0 10px 28px rgba(0, 0, 0, 0.35);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    backdrop-filter: blur(10px);
+    transition: all 0.3s ease;
+}
+
+.card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.45);
+    border-color: rgba(255, 154, 122, 0.3);
+}
+
+.card-media {
+    height: 160px;
+    background: rgba(255, 255, 255, 0.03);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    position: relative;
+}
+
+.card-media::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(255, 94, 98, 0.05), rgba(255, 153, 102, 0.05));
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.card:hover .card-media::before {
+    opacity: 1;
+}
+
+.card-media img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+    transition: transform 0.3s ease;
+}
+
+.card:hover .card-media img {
+    transform: scale(1.05);
+}
+
+.placeholder { 
+    color: #aab7d3; 
+    font-size: 0.95rem;
+    font-style: italic;
+}
+
+.card-body {
+    padding: 14px 16px 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    flex: 1;
+}
+
+.card-body h4 { 
+    margin: 0; 
+    color: #ffffff;
+    font-size: 1.1rem;
+    font-weight: 600;
+}
+
+.card-body p { 
+    margin: 0;
+    line-height: 1.5;
+}
+
+.card-actions {
+    padding: 0 16px 14px;
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+}
+
+/* ========================================
+   ÉTAT VIDE
+   ======================================== */
+
+.empty-state {
+    text-align: center;
+    padding: 40px 20px;
+    color: #aab7d3;
+    grid-column: 1 / -1;
+    background: rgba(255, 255, 255, 0.02);
+    border-radius: 10px;
+    border: 2px dashed rgba(255, 255, 255, 0.1);
+}
+
+.empty-state p {
+    margin: 0;
+    font-size: 1.1rem;
+}
+
+/* ========================================
+   LISTE D'EASTER EGGS (Autres)
+   ======================================== */
+
+.egg-list { 
+    display: flex; 
+    flex-direction: column; 
+    gap: 14px; 
+    margin-top: 10px;
+}
+
+.egg-card {
+    display: grid;
+    grid-template-columns: 60px 1fr;
+    align-items: center;
+    gap: 12px;
+    padding: 4px;
+}
+
+.egg-card:hover {
+    transform: translateY(-2px);
+}
+
+.egg-icon { 
+    font-size: 2rem; 
+    text-align: center;
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
+}
+
+.egg-body {
+    flex: 1;
+}
+
+.egg-body h4 {
+    margin: 0 0 6px;
+    color: #ffffff;
+    font-size: 1.1rem;
+}
+
+.egg-body p {
+    margin: 0;
+}
+
+.badge {
+    display: inline-block;
+    margin-top: 8px;
+    padding: 6px 10px;
+    background: rgba(255, 94, 98, 0.15);
+    color: #ffb3a1;
+    border-radius: 6px;
+    font-size: 0.85rem;
+    border: 1px solid rgba(255, 94, 98, 0.35);
+    font-family: 'Courier New', monospace;
+}
+
+/* ========================================
+   FORMULAIRE D'AJOUT DE CADRE
+   ======================================== */
+
+.form-container {
+    max-width: 700px;
+    margin: 20px auto;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 12px;
+    padding: 30px;
+    box-shadow: 0 10px 28px rgba(0, 0, 0, 0.35);
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    color: #ffffff;
+    font-weight: 600;
+    font-size: 0.95rem;
+}
+
+.form-group input[type="text"],
+.form-group input[type="file"],
+.form-group textarea {
+    width: 100%;
+    padding: 12px 14px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 8px;
+    color: #e7ecf5;
+    font-size: 0.95rem;
+    transition: all 0.2s ease;
+}
+
+.form-group input[type="text"]:focus,
+.form-group textarea:focus {
+    outline: none;
+    border-color: #ff9a7a;
+    background: rgba(255, 255, 255, 0.08);
+    box-shadow: 0 0 0 3px rgba(255, 154, 122, 0.15);
+}
+
+.form-group textarea {
+    resize: vertical;
+    min-height: 100px;
+    font-family: inherit;
+}
+
+.form-group .help-text {
+    display: block;
+    margin-top: 6px;
+    color: #aab7d3;
+    font-size: 0.85rem;
+}
+
+.form-actions {
+    display: flex;
+    gap: 12px;
+    justify-content: flex-end;
+    margin-top: 30px;
+}
+
+/* ========================================
+   PREVIEW DE FICHIER UPLOADÉ
+   ======================================== */
+
+.file-preview {
+    margin-top: 12px;
+    padding: 12px;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 8px;
+    display: none;
+}
+
+.file-preview.active {
+    display: block;
+}
+
+.file-preview img {
+    max-width: 200px;
+    max-height: 200px;
+    display: block;
+    margin: 10px 0;
+    border-radius: 6px;
+}
+
+.file-preview-name {
+    color: #aab7d3;
+    font-size: 0.9rem;
+    margin-bottom: 8px;
+}
+
+/* ========================================
+   MODE RESPONSIVE
+   ======================================== */
+
+@media (max-width: 768px) {
+    .admin-page {
+        padding: 16px;
+    }
+
+    .admin-page-header h2 {
+        font-size: 1.5rem;
+    }
+
+    .section-header { 
+        flex-direction: column; 
+        align-items: flex-start;
+    }
+
+    .cards-grid {
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+        gap: 12px;
+    }
+
+    .card-media { 
+        height: 140px;
+    }
+
+    .egg-card {
+        grid-template-columns: 50px 1fr;
+    }
+
+    .egg-icon {
+        font-size: 1.5rem;
+    }
+
+    .form-container {
+        padding: 20px;
+    }
+
+    .form-actions {
+        flex-direction: column;
+    }
+
+    .btn {
+        width: 100%;
+        justify-content: center;
+    }
+}
+
+@media (max-width: 480px) {
+    .cards-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .tabs-nav {
+        flex-direction: column;
+    }
+
+    .tab-btn {
+        width: 100%;
+        text-align: left;
+        border-bottom: none;
+        border-left: 3px solid transparent;
+        padding-left: 12px;
+    }
+
+    .tab-btn.active {
+        border-bottom-color: transparent;
+        border-left-color: #ff9a7a;
+    }
+}
+
+/* ========================================
+   DARK MODE (déjà dans un thème sombre)
+   ======================================== */
+
+.dark-mode .admin-page {
+    background: radial-gradient(circle at 20% 20%, rgba(255, 94, 98, 0.08), transparent 35%),
+                radial-gradient(circle at 80% 0%, rgba(255, 153, 102, 0.12), transparent 30%),
+                #050911;
+}
+
+/* ========================================
+   ANIMATIONS
+   ======================================== */
+
+@keyframes pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+}
+
+.btn-primary:active {
+    animation: pulse 0.3s ease;
+}
+
+/* ========================================
+   UTILITAIRES
+   ======================================== */
+
+.mt-10 { margin-top: 10px; }
+.mt-20 { margin-top: 20px; }
+.mb-10 { margin-bottom: 10px; }
+.mb-20 { margin-bottom: 20px; }
+
+.text-center { text-align: center; }
+.text-right { text-align: right; }
+
+.d-flex { display: flex; }
+.align-center { align-items: center; }
+.justify-between { justify-content: space-between; }
+.gap-10 { gap: 10px; }
