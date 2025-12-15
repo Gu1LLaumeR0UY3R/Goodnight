@@ -226,10 +226,19 @@ class BienModel extends Model {
             $params['commune'] = '%' . $filters['commune'] . '%';
         }
 
-        // Filtre par type de bien
-        if (!empty($filters['type_bien'])) {
-            $sql .= " AND b.id_TypeBien = :type_bien";
-            $params['type_bien'] = $filters['type_bien'];
+        // Filtre par types de bien (OR: biens correspondant à au moins un des types sélectionnés)
+        if (!empty($filters['types_bien']) && is_array($filters['types_bien'])) {
+            $types = array_values(array_filter($filters['types_bien'], function($v){ return is_numeric($v); }));
+            if (!empty($types)) {
+                $placeholders = [];
+                foreach ($types as $idx => $tid) {
+                    $ph = ":type_bien_" . $idx;
+                    $placeholders[] = $ph;
+                    $params[$ph] = $tid;
+                }
+                $inClause = implode(", ", $placeholders);
+                $sql .= " AND b.id_TypeBien IN (" . $inClause . ")";
+            }
         }
 
         // Filtre par superficie minimale
@@ -256,10 +265,20 @@ class BienModel extends Model {
             $params['prix_max'] = $filters['prix_max'];
         }
 
-        // Filtre par prestation (biens possédant une prestation donnée)
-        if (!empty($filters['prestation'])) {
-            $sql .= " AND EXISTS (SELECT 1 FROM se_compose sc WHERE sc.id_biens = b.id_biens AND sc.id_prestation = :prestation)";
-            $params['prestation'] = $filters['prestation'];
+        // Filtre par prestations (OR: biens possédant au moins une des prestations sélectionnées)
+        if (!empty($filters['prestations']) && is_array($filters['prestations'])) {
+            // Nettoyer et préparer les placeholders
+            $prestations = array_values(array_filter($filters['prestations'], function($v){ return is_numeric($v); }));
+            if (!empty($prestations)) {
+                $placeholders = [];
+                foreach ($prestations as $idx => $pid) {
+                    $ph = ":prestation_" . $idx;
+                    $placeholders[] = $ph;
+                    $params[$ph] = $pid;
+                }
+                $inClause = implode(", ", $placeholders);
+                $sql .= " AND EXISTS (SELECT 1 FROM se_compose sc WHERE sc.id_biens = b.id_biens AND sc.id_prestation IN (" . $inClause . "))";
+            }
         }
 
         $sql .= " GROUP BY b.id_biens";

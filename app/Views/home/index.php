@@ -39,44 +39,90 @@
                         <!-- Commune (hidden pour conserver la recherche) -->
                         <input type="hidden" name="q" value="<?php echo htmlspecialchars($filters['commune'] ?? ''); ?>">
                         
-                        <!-- Type de bien -->
-                        <div>
-                            <label for="type_bien" style="display: block; margin-bottom: 0.5rem; font-weight: 500; color: #555;">Type de bien</label>
-                            <select name="type_bien" id="type_bien" style="width: 100%; padding: 0.6rem; border: 1px solid #ddd; border-radius: 6px; font-size: 0.95rem;">
-                                <option value="">Tous les types</option>
+                        <!-- Types de bien (multi-sélection) -->
+                        <div style="grid-column: span 2;">
+                            <label style="display: block; margin-bottom: 0.5rem; font-weight: 500; color: #555;">Types de bien</label>
+                            
+                            <!-- Boutons de sélection -->
+                            <div style="display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 0.75rem;">
                                 <?php foreach ($typesBiens as $type): ?>
-                                    <option value="<?php echo $type['id_typebien']; ?>" <?php echo (($filters['type_bien'] ?? '') == $type['id_typebien']) ? 'selected' : ''; ?>>
+                                    <button type="button" 
+                                            class="type-bien-btn" 
+                                            data-type-id="<?php echo htmlspecialchars($type['id_typebien']); ?>"
+                                            onclick="toggleTypeBien(<?php echo htmlspecialchars($type['id_typebien']); ?>)"
+                                            style="padding: 0.5rem 1rem; background: white; border: 2px solid #ddd; border-radius: 20px; font-size: 0.9rem; cursor: pointer; transition: all 0.2s; font-weight: 500;">
                                         <?php echo htmlspecialchars($type['desc_type_bien']); ?>
-                                    </option>
+                                    </button>
                                 <?php endforeach; ?>
-                            </select>
+                            </div>
+                            
+                            <!-- Inputs cachés pour le formulaire -->
+                            <div id="hidden-types-inputs"></div>
                         </div>
 
-                        <!-- Prestation -->
-                        <div>
-                            <label for="prestation" style="display: block; margin-bottom: 0.5rem; font-weight: 500; color: #555;">Prestation</label>
-                            <select name="prestation" id="prestation" style="width: 100%; padding: 0.6rem; border: 1px solid #ddd; border-radius: 6px; font-size: 0.95rem;">
-                                <option value="">Toutes les prestations</option>
-                                <?php if (!empty($prestations)): ?>
-                                    <?php foreach ($prestations as $p): ?>
-                                        <option value="<?php echo htmlspecialchars($p['id_prestation']); ?>" <?php echo (($filters['prestation'] ?? '') == $p['id_prestation']) ? 'selected' : ''; ?>>
-                                            <?php echo htmlspecialchars($p['lib_prestation']); ?>
-                                        </option>
-                                    <?php endforeach; ?>
-                                <?php endif; ?>
-                            </select>
+                        <!-- Prestations avec recherche -->
+                        <div style="grid-column: span 2;">
+                            <label style="display: block; margin-bottom: 0.5rem; font-weight: 500; color: #555;">Prestations</label>
+                            <div style="position: relative;">
+                                <input type="text" 
+                                       id="prestation-search" 
+                                       placeholder="Rechercher une prestation (ex: piscine, wifi...)" 
+                                       autocomplete="off"
+                                       style="width: 100%; padding: 0.6rem; border: 1px solid #ddd; border-radius: 6px; font-size: 0.95rem;">
+                                <div id="prestation-autocomplete" style="position: absolute; top: 100%; left: 0; right: 0; background: white; border: 1px solid #ddd; border-top: none; border-radius: 0 0 6px 6px; max-height: 200px; overflow-y: auto; display: none; z-index: 1000; box-shadow: 0 4px 6px rgba(0,0,0,0.1);"></div>
+                            </div>
+                            
+                            <!-- Badges des prestations sélectionnées -->
+                            <div id="selected-prestations" style="display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 0.75rem; min-height: 28px;"></div>
+                            
+                            <!-- Inputs cachés pour le formulaire -->
+                            <div id="hidden-prestations-inputs"></div>
                         </div>
 
-                        <!-- Superficie min -->
-                        <div>
-                            <label for="superficie_min" style="display: block; margin-bottom: 0.5rem; font-weight: 500; color: #555;">Superficie min (m²)</label>
-                            <input type="number" name="superficie_min" id="superficie_min" min="0" placeholder="Ex: 50" value="<?php echo htmlspecialchars($filters['superficie_min'] ?? ''); ?>" style="width: 100%; padding: 0.6rem; border: 1px solid #ddd; border-radius: 6px; font-size: 0.95rem;">
+                        <!-- Slider Couchages -->
+                        <div style="grid-column: span 2;">
+                            <label style="display: block; margin-bottom: 0.5rem; font-weight: 500; color: #555;">
+                                Couchages:
+                                <span id="couchage-range-label" style="color: #667eea; font-weight: 600;">
+                                    <?php 
+                                    $couchageMin = $filters['couchage_min'] ?? 1;
+                                    $couchageMax = $filters['couchage_max'] ?? 10;
+                                    echo htmlspecialchars($couchageMin) . ' - ' . htmlspecialchars($couchageMax);
+                                    ?>
+                                </span>
+                            </label>
+                            <div id="couchage-slider" style="margin: 1rem 0.5rem 0.5rem 0.5rem;"></div>
+                            <div style="display: flex; gap: 1rem; margin-top: 0.5rem;">
+                                <div style="flex: 1;">
+                                    <input type="number" name="couchage_min" id="couchage_min" min="1" max="20" step="1" placeholder="Min" value="<?php echo htmlspecialchars($filters['couchage_min'] ?? ''); ?>" style="width: 100%; padding: 0.5rem; border: 1px solid #ddd; border-radius: 4px; font-size: 0.9rem;">
+                                </div>
+                                <div style="flex: 1;">
+                                    <input type="number" name="couchage_max" id="couchage_max" min="1" max="20" step="1" placeholder="Max" value="<?php echo htmlspecialchars($filters['couchage_max'] ?? ''); ?>" style="width: 100%; padding: 0.5rem; border: 1px solid #ddd; border-radius: 4px; font-size: 0.9rem;">
+                                </div>
+                            </div>
                         </div>
 
-                        <!-- Prix min -->
-                        <div>
-                            <label for="prix_min" style="display: block; margin-bottom: 0.5rem; font-weight: 500; color: #555;">Superficie max (m²)</label>
-                            <input type="number" name="superficie_max" id="superficie_max" min="0" placeholder="Ex: 150" value="<?php echo htmlspecialchars($filters['superficie_max'] ?? ''); ?>" style="width: 100%; padding: 0.6rem; border: 1px solid #ddd; border-radius: 6px; font-size: 0.95rem;">
+                        <!-- Slider Superficie -->
+                        <div style="grid-column: span 2;">
+                            <label style="display: block; margin-bottom: 0.5rem; font-weight: 500; color: #555;">
+                                Superficie (m²): 
+                                <span id="superficie-range-label" style="color: #667eea; font-weight: 600;">
+                                    <?php 
+                                    $superficieMin = $filters['superficie_min'] ?? 0;
+                                    $superficieMax = $filters['superficie_max'] ?? 500;
+                                    echo htmlspecialchars($superficieMin) . ' m² - ' . htmlspecialchars($superficieMax) . ' m²';
+                                    ?>
+                                </span>
+                            </label>
+                            <div id="superficie-slider" style="margin: 1rem 0.5rem 0.5rem 0.5rem;"></div>
+                            <div style="display: flex; gap: 1rem; margin-top: 0.5rem;">
+                                <div style="flex: 1;">
+                                    <input type="number" name="superficie_min" id="superficie_min" min="0" max="500" step="10" placeholder="Min" value="<?php echo htmlspecialchars($filters['superficie_min'] ?? ''); ?>" style="width: 100%; padding: 0.5rem; border: 1px solid #ddd; border-radius: 4px; font-size: 0.9rem;">
+                                </div>
+                                <div style="flex: 1;">
+                                    <input type="number" name="superficie_max" id="superficie_max" min="0" max="500" step="10" placeholder="Max" value="<?php echo htmlspecialchars($filters['superficie_max'] ?? ''); ?>" style="width: 100%; padding: 0.5rem; border: 1px solid #ddd; border-radius: 4px; font-size: 0.9rem;">
+                                </div>
+                            </div>
                         </div>
 
                         <!-- Slider Prix -->
@@ -92,8 +138,34 @@
                                 </span>
                             </label>
                             <div id="prix-slider" style="margin: 1rem 0.5rem 0.5rem 0.5rem;"></div>
-                            <input type="hidden" name="prix_min" id="prix_min" value="<?php echo htmlspecialchars($filters['prix_min'] ?? ''); ?>">
-                            <input type="hidden" name="prix_max" id="prix_max" value="<?php echo htmlspecialchars($filters['prix_max'] ?? ''); ?>">
+                            <div style="display: flex; gap: 1rem; margin-top: 0.5rem;">
+                                <div style="flex: 1;">
+                                    <input type="number" name="prix_min" id="prix_min" min="0" max="10000" step="50" placeholder="Min" value="<?php echo htmlspecialchars($filters['prix_min'] ?? ''); ?>" style="width: 100%; padding: 0.5rem; border: 1px solid #ddd; border-radius: 4px; font-size: 0.9rem;">
+                                </div>
+                                <div style="flex: 1;">
+                                    <input type="number" name="prix_max" id="prix_max" min="0" max="10000" step="50" placeholder="Max" value="<?php echo htmlspecialchars($filters['prix_max'] ?? ''); ?>" style="width: 100%; padding: 0.5rem; border: 1px solid #ddd; border-radius: 4px; font-size: 0.9rem;">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Animaux acceptés + Tri -->
+                        <div>
+                            <label style="display: block; margin-bottom: 0.5rem; font-weight: 500; color: #555;">Animaux acceptés</label>
+                            <label style="display: inline-flex; align-items: center; gap: 0.5rem; cursor: pointer; font-weight: 500; color: #555;">
+                                <input type="checkbox" name="animaux" value="1" <?php echo (!empty($filters['animaux'])) ? 'checked' : ''; ?> style="width: 18px; height: 18px;">
+                                Oui
+                            </label>
+                        </div>
+
+                        <div>
+                            <label for="tri" style="display: block; margin-bottom: 0.5rem; font-weight: 500; color: #555;">Trier par</label>
+                            <select name="tri" id="tri" style="width: 100%; padding: 0.6rem; border: 1px solid #ddd; border-radius: 6px; font-size: 0.95rem;">
+                                <option value="">Par défaut</option>
+                                <option value="prix_asc" <?php echo (($filters['tri'] ?? '') === 'prix_asc') ? 'selected' : ''; ?>>Prix croissant</option>
+                                <option value="prix_desc" <?php echo (($filters['tri'] ?? '') === 'prix_desc') ? 'selected' : ''; ?>>Prix décroissant</option>
+                                <option value="superficie_asc" <?php echo (($filters['tri'] ?? '') === 'superficie_asc') ? 'selected' : ''; ?>>Superficie croissante</option>
+                                <option value="superficie_desc" <?php echo (($filters['tri'] ?? '') === 'superficie_desc') ? 'selected' : ''; ?>>Superficie décroissante</option>
+                            </select>
                         </div>
 
                         <!-- Boutons -->
@@ -186,8 +258,9 @@
     </style>
 
     <script>
-        // Initialiser le slider de prix
+        // Initialiser les sliders
         $(function() {
+            // Slider de prix
             var prixMin = <?php echo !empty($filters['prix_min']) ? intval($filters['prix_min']) : 0; ?>;
             var prixMax = <?php echo !empty($filters['prix_max']) ? intval($filters['prix_max']) : 5000; ?>;
             
@@ -203,7 +276,132 @@
                     $("#prix_max").val(ui.values[1]);
                 }
             });
+            
+            // Slider de superficie
+            var superficieMin = <?php echo !empty($filters['superficie_min']) ? intval($filters['superficie_min']) : 0; ?>;
+            var superficieMax = <?php echo !empty($filters['superficie_max']) ? intval($filters['superficie_max']) : 500; ?>;
+            
+            $("#superficie-slider").slider({
+                range: true,
+                min: 0,
+                max: 500,
+                step: 10,
+                values: [superficieMin, superficieMax],
+                slide: function(event, ui) {
+                    $("#superficie-range-label").text(ui.values[0] + " m² - " + ui.values[1] + " m²");
+                    $("#superficie_min").val(ui.values[0]);
+                    $("#superficie_max").val(ui.values[1]);
+                }
+            });
+
+            // Slider de couchages
+            var couchageMin = <?php echo !empty($filters['couchage_min']) ? intval($filters['couchage_min']) : 1; ?>;
+            var couchageMax = <?php echo !empty($filters['couchage_max']) ? intval($filters['couchage_max']) : 10; ?>;
+
+            $("#couchage-slider").slider({
+                range: true,
+                min: 1,
+                max: 20,
+                step: 1,
+                values: [couchageMin, couchageMax],
+                slide: function(event, ui) {
+                    $("#couchage-range-label").text(ui.values[0] + " - " + ui.values[1]);
+                    $("#couchage_min").val(ui.values[0]);
+                    $("#couchage_max").val(ui.values[1]);
+                }
+            });
+            
+            // Synchroniser les inputs manuels avec les sliders
+            $("#prix_min, #prix_max").on('change', function() {
+                var min = parseInt($("#prix_min").val()) || 0;
+                var max = parseInt($("#prix_max").val()) || 5000;
+                if (min > max) {
+                    var temp = min;
+                    min = max;
+                    max = temp;
+                    $("#prix_min").val(min);
+                    $("#prix_max").val(max);
+                }
+                $("#prix-slider").slider('values', [min, max]);
+                $("#prix-range-label").text(min + " € - " + max + " €");
+            });
+            
+            $("#superficie_min, #superficie_max").on('change', function() {
+                var min = parseInt($("#superficie_min").val()) || 0;
+                var max = parseInt($("#superficie_max").val()) || 500;
+                if (min > max) {
+                    var temp = min;
+                    min = max;
+                    max = temp;
+                    $("#superficie_min").val(min);
+                    $("#superficie_max").val(max);
+                }
+                $("#superficie-slider").slider('values', [min, max]);
+                $("#superficie-range-label").text(min + " m² - " + max + " m²");
+            });
+
+            $("#couchage_min, #couchage_max").on('change', function() {
+                var min = parseInt($("#couchage_min").val()) || 1;
+                var max = parseInt($("#couchage_max").val()) || 10;
+                if (min < 1) min = 1;
+                if (max < 1) max = 1;
+                if (min > max) {
+                    var temp = min;
+                    min = max;
+                    max = temp;
+                    $("#couchage_min").val(min);
+                    $("#couchage_max").val(max);
+                }
+                $("#couchage-slider").slider('values', [min, max]);
+                $("#couchage-range-label").text(min + " - " + max);
+            });
         });
+
+        // ========== GESTION DES TYPES DE BIEN (MULTI-SÉLECTION) ==========
+        const selectedTypesBien = new Set(<?php echo json_encode($filters['types_bien'] ?? []); ?>);
+        const hiddenTypesInputsDiv = document.getElementById('hidden-types-inputs');
+        
+        // Mettre à jour l'affichage des types sélectionnés
+        function renderSelectedTypes() {
+            hiddenTypesInputsDiv.innerHTML = '';
+            
+            // Mettre à jour l'apparence des boutons
+            document.querySelectorAll('.type-bien-btn').forEach(btn => {
+                const typeId = btn.getAttribute('data-type-id');
+                if (selectedTypesBien.has(typeId)) {
+                    btn.style.background = 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)';
+                    btn.style.color = 'white';
+                    btn.style.borderColor = '#667eea';
+                } else {
+                    btn.style.background = 'white';
+                    btn.style.color = '#555';
+                    btn.style.borderColor = '#ddd';
+                }
+            });
+            
+            // Créer les inputs cachés pour le formulaire
+            selectedTypesBien.forEach(id => {
+                const input = document.createElement('input');
+                input.type = 'hidden';
+                input.name = 'types_bien[]';
+                input.value = id;
+                hiddenTypesInputsDiv.appendChild(input);
+            });
+        }
+        
+        // Toggle un type de bien
+        function toggleTypeBien(id) {
+            const idStr = id.toString();
+            if (selectedTypesBien.has(idStr)) {
+                selectedTypesBien.delete(idStr);
+            } else {
+                selectedTypesBien.add(idStr);
+            }
+            renderSelectedTypes();
+        }
+        
+        // Initialiser l'affichage
+        renderSelectedTypes();
 
         document.getElementById('toggle-filters').addEventListener('click', function() {
             const panel = document.getElementById('filters-panel');
@@ -226,6 +424,103 @@
         document.getElementById('toggle-filters').innerHTML = '<svg style="width: 1.3rem; height: 1.3rem;" fill="none" stroke-width="2" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"></path></svg>';
         document.getElementById('toggle-filters').title = 'Fermer les filtres';
         <?php endif; ?>
+
+        // ========== GESTION DES PRESTATIONS (AUTOCOMPLÉTION) ==========
+        const prestationsData = <?php echo json_encode($prestations ?? []); ?>;
+        const selectedPrestations = new Set(<?php echo json_encode($filters['prestations'] ?? []); ?>);
+        
+        const searchInput = document.getElementById('prestation-search');
+        const autocompleteDiv = document.getElementById('prestation-autocomplete');
+        const selectedDiv = document.getElementById('selected-prestations');
+        const hiddenInputsDiv = document.getElementById('hidden-prestations-inputs');
+        
+        // Afficher les prestations déjà sélectionnées
+        function renderSelectedPrestations() {
+            selectedDiv.innerHTML = '';
+            hiddenInputsDiv.innerHTML = '';
+            
+            if (selectedPrestations.size === 0) {
+                selectedDiv.innerHTML = '<span style="color: #999; font-size: 0.9rem;">Aucune prestation sélectionnée</span>';
+                return;
+            }
+            
+            selectedPrestations.forEach(id => {
+                const prestation = prestationsData.find(p => p.id_prestation == id);
+                if (!prestation) return;
+                
+                // Badge visuel
+                const badge = document.createElement('span');
+                badge.style.cssText = 'display: inline-flex; align-items: center; gap: 0.4rem; padding: 0.4rem 0.7rem; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border-radius: 16px; font-size: 0.85rem; font-weight: 500;';
+                badge.innerHTML = `${prestation.lib_prestation} <button type="button" onclick="removePrestationFilter(${id})" style="background: none; border: none; color: white; cursor: pointer; font-size: 1rem; line-height: 1; padding: 0; margin: 0;">×</button>`;
+                selectedDiv.appendChild(badge);
+                
+                // Input caché pour le formulaire
+                const input = document.createElement('input');
+                input.type = 'hidden';
+                input.name = 'prestations[]';
+                input.value = id;
+                hiddenInputsDiv.appendChild(input);
+            });
+        }
+        
+        // Recherche et autocomplétion
+        searchInput.addEventListener('input', function() {
+            const query = this.value.trim().toLowerCase();
+            
+            if (query.length < 2) {
+                autocompleteDiv.style.display = 'none';
+                return;
+            }
+            
+            const filtered = prestationsData.filter(p => 
+                p.lib_prestation.toLowerCase().includes(query) && !selectedPrestations.has(p.id_prestation)
+            );
+            
+            if (filtered.length === 0) {
+                autocompleteDiv.innerHTML = '<div style="padding: 0.75rem; color: #999; text-align: center;">Aucune prestation trouvée</div>';
+                autocompleteDiv.style.display = 'block';
+                return;
+            }
+            
+            let html = '';
+            filtered.forEach(prestation => {
+                html += `
+                    <div onclick="addPrestationFilter(${prestation.id_prestation})" 
+                         style="padding: 0.75rem; cursor: pointer; border-bottom: 1px solid #f0f0f0; transition: background 0.2s;"
+                         onmouseover="this.style.background='#f8f9ff'"
+                         onmouseout="this.style.background='white'">
+                        ${prestation.lib_prestation}
+                    </div>
+                `;
+            });
+            
+            autocompleteDiv.innerHTML = html;
+            autocompleteDiv.style.display = 'block';
+        });
+        
+        // Fermer l'autocomplétion en cliquant ailleurs
+        document.addEventListener('click', function(e) {
+            if (!e.target.closest('#prestation-search') && !e.target.closest('#prestation-autocomplete')) {
+                autocompleteDiv.style.display = 'none';
+            }
+        });
+        
+        // Ajouter une prestation
+        function addPrestationFilter(id) {
+            selectedPrestations.add(id.toString());
+            renderSelectedPrestations();
+            searchInput.value = '';
+            autocompleteDiv.style.display = 'none';
+        }
+        
+        // Retirer une prestation
+        function removePrestationFilter(id) {
+            selectedPrestations.delete(id.toString());
+            renderSelectedPrestations();
+        }
+        
+        // Initialiser l'affichage
+        renderSelectedPrestations();
     </script>
 
     <script src="/js/autocomplete.js"></script>

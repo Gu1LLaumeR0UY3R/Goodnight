@@ -32,12 +32,16 @@ class HomeController extends BaseController {
         // Récupérer les filtres s'ils existent
         $filters = [
             'commune' => $_GET['q'] ?? '',
-            'type_bien' => $_GET['type_bien'] ?? '',
+            'types_bien' => isset($_GET['types_bien']) ? (is_array($_GET['types_bien']) ? $_GET['types_bien'] : array_filter([$_GET['types_bien']])) : [],
             'superficie_min' => $_GET['superficie_min'] ?? '',
             'superficie_max' => $_GET['superficie_max'] ?? '',
             'prix_min' => $_GET['prix_min'] ?? '',
             'prix_max' => $_GET['prix_max'] ?? '',
-            'prestation' => $_GET['prestation'] ?? ''
+            'prestations' => isset($_GET['prestations']) ? (is_array($_GET['prestations']) ? $_GET['prestations'] : array_filter([$_GET['prestations']])) : [],
+            'couchage_min' => $_GET['couchage_min'] ?? '',
+            'couchage_max' => $_GET['couchage_max'] ?? '',
+            'animaux' => isset($_GET['animaux']) ? $_GET['animaux'] : '',
+            'tri' => $_GET['tri'] ?? ''
         ];
 
         // Appliquer les filtres s'il y en a
@@ -59,12 +63,16 @@ class HomeController extends BaseController {
     public function search() {
         $filters = [
             'commune' => $_GET['q'] ?? '',
-            'type_bien' => $_GET['type_bien'] ?? '',
+            'types_bien' => isset($_GET['types_bien']) ? (is_array($_GET['types_bien']) ? $_GET['types_bien'] : array_filter([$_GET['types_bien']])) : [],
             'superficie_min' => $_GET['superficie_min'] ?? '',
             'superficie_max' => $_GET['superficie_max'] ?? '',
             'prix_min' => $_GET['prix_min'] ?? '',
             'prix_max' => $_GET['prix_max'] ?? '',
-            'prestation' => $_GET['prestation'] ?? ''
+            'prestations' => isset($_GET['prestations']) ? (is_array($_GET['prestations']) ? $_GET['prestations'] : array_filter([$_GET['prestations']])) : [],
+            'couchage_min' => $_GET['couchage_min'] ?? '',
+            'couchage_max' => $_GET['couchage_max'] ?? '',
+            'animaux' => isset($_GET['animaux']) ? $_GET['animaux'] : '',
+            'tri' => $_GET['tri'] ?? ''
         ];
 
         $hasFilters = !empty(array_filter($filters));
