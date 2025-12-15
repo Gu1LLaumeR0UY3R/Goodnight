@@ -117,9 +117,8 @@ $routes = [
     // Routes Locataire
     "locataire" => ["controller" => "LocataireController", "action" => "index"],
     "locataire/myReservations" => ["controller" => "ReservationController", "action" => "myReservations"],
-    "locataire/myFavorites" => ["controller" => "LocataireController", "action" => "myFavorites"],
-    "api/favoris" => ["controller" => "LocataireController", "action" => "manageFavorites"],
-    "api/get-user-favorites" => ["controller" => "LocataireController", "action" => "getUserFavorites"],
+    "api/favoris" => ["controller" => "ProfileController", "action" => "manageFavorites"],
+    "api/get-user-favorites" => ["controller" => "ProfileController", "action" => "getUserFavorites"],
     
     // Routes Commentaires
     "commentaire/add" => ["controller" => "CommentaireController", "action" => "add"],
@@ -140,6 +139,10 @@ $routes = [
     "profile/updateProfile" => ["controller" => "ProfileController", "action" => "updateProfile"],
     "profile/updateFrame" => ["controller" => "ProfileController", "action" => "updateFrame"],
     "profile/cadre" => ["controller" => "ProfileController", "action" => "unlockFrames"],
+    
+    // Route Favoris (accessible à tous les utilisateurs connectés)
+    "favoris" => ["controller" => "ProfileController", "action" => "myFavorites"],
+    "locataire/myFavorites" => ["controller" => "ProfileController", "action" => "myFavorites"], // Redirection ancienne route
     
     // Routes Cadres (Admin)
     "admin/cadres" => ["controller" => "CadreController", "action" => "index"],

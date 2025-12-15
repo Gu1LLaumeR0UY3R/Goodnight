@@ -33,11 +33,11 @@ $userPfp = $_SESSION['user_pfp'] ?? null;
                     <li><a href="/proprietaire" class="navbar-link">Tableau de bord</a></li>
                     <li><a href="/proprietaire/myBiens" class="navbar-link">Mes Biens</a></li>
                     <li><a href="/proprietaire/myReservations" class="navbar-link">Mes Réservations</a></li>
-                    <li><a href="/locataire/myFavorites" class="navbar-link">Mes Favoris</a></li>
+                    <li><a href="/favoris" class="navbar-link">Mes Favoris</a></li>
                 <?php elseif ($isLoggedIn && in_array('Locataire', $userRoles)): ?>
                     <li><a href="/locataire" class="navbar-link">Tableau de bord</a></li>
                     <li><a href="/locataire/myReservations" class="navbar-link">Mes Réservations</a></li>
-                    <li><a href="/locataire/myFavorites" class="navbar-link">Mes Favoris</a></li>
+                    <li><a href="/favoris" class="navbar-link">Mes Favoris</a></li>
 
                 <?php endif; ?>
             </ul>
