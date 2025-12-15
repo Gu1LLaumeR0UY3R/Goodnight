@@ -5,6 +5,7 @@ require_once __DIR__ . "/../Models/BienModel.php";
 require_once __DIR__ . "/../Models/TypeBienModel.php";
 require_once __DIR__ . "/../Models/CommuneModel.php";
 require_once __DIR__ . "/../Models/PhotoModel.php";
+require_once __DIR__ . "/../Models/PrestationModel.php";
 // require_once __DIR__ . "/../Models/ReservationModel.php"; // Commenté pour l'instant
 
 class HomeController extends BaseController {
@@ -13,17 +14,20 @@ class HomeController extends BaseController {
     private $communeModel;
     private $photoModel;
     private $reservationModel;
+    private $prestationModel;
 
     public function __construct() {
         $this->bienModel = new BienModel();
         $this->typeBienModel = new TypeBienModel();
         $this->communeModel = new CommuneModel();
         $this->photoModel = new PhotoModel();
+        $this->prestationModel = new PrestationModel();
         // $this->reservationModel = new ReservationModel(); // Commenté pour l'instant
     }
 
     public function index() {
         $typesBiens = $this->typeBienModel->getAll();
+        $prestations = $this->prestationModel->getAll();
         
         // Récupérer les filtres s'ils existent
         $filters = [
@@ -32,7 +36,8 @@ class HomeController extends BaseController {
             'superficie_min' => $_GET['superficie_min'] ?? '',
             'superficie_max' => $_GET['superficie_max'] ?? '',
             'prix_min' => $_GET['prix_min'] ?? '',
-            'prix_max' => $_GET['prix_max'] ?? ''
+            'prix_max' => $_GET['prix_max'] ?? '',
+            'prestation' => $_GET['prestation'] ?? ''
         ];
 
         // Appliquer les filtres s'il y en a
@@ -45,6 +50,7 @@ class HomeController extends BaseController {
 
         $this->render("home/index", [
             "typesBiens" => $typesBiens,
+            "prestations" => $prestations,
             "biens" => $biens,
             "filters" => $filters
         ]);
@@ -57,7 +63,8 @@ class HomeController extends BaseController {
             'superficie_min' => $_GET['superficie_min'] ?? '',
             'superficie_max' => $_GET['superficie_max'] ?? '',
             'prix_min' => $_GET['prix_min'] ?? '',
-            'prix_max' => $_GET['prix_max'] ?? ''
+            'prix_max' => $_GET['prix_max'] ?? '',
+            'prestation' => $_GET['prestation'] ?? ''
         ];
 
         $hasFilters = !empty(array_filter($filters));
@@ -68,9 +75,11 @@ class HomeController extends BaseController {
         }
         
         $typesBiens = $this->typeBienModel->getAll();
+        $prestations = $this->prestationModel->getAll();
 
         $this->render("home/index", [
             "typesBiens" => $typesBiens,
+            "prestations" => $prestations,
             "biens" => $biens,
             "filters" => $filters
         ]);
@@ -84,6 +93,9 @@ class HomeController extends BaseController {
     }
 
     public function details($id) {
+        // Exiger la connexion avant d'afficher la page de description du bien
+        require_once __DIR__ . '/AuthMiddleware.php';
+        AuthMiddleware::requireLogin();
         $bien = $this->bienModel->getBienWithDetailsById($id);
         
         if (!$bien) {

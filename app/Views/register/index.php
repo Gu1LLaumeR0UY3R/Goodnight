@@ -250,10 +250,29 @@
 
             attachDigitsOnlyBehavior(input);
 
+            // Empêcher la saisie du signe + dans le champ (le préfixe est géré par intl-tel-input)
+            input.addEventListener('input', function() {
+                const before = input.selectionStart || 0;
+                const cleaned = input.value.replace(/\+/g, '');
+                if (cleaned !== input.value) {
+                    input.value = cleaned;
+                    const newPos = Math.max(0, before - 1);
+                    try { input.setSelectionRange(newPos, newPos); } catch (e) {}
+                }
+            });
+
+            function placeCaretAtEnd() {
+                const len = input.value.length;
+                try { input.setSelectionRange(len, len); } catch (e) {}
+            }
+
             // init iti
             const iti = window.intlTelInput(input, {
                 initialCountry: 'fr',
                 separateDialCode: true,
+                formatOnDisplay: true,
+                autoPlaceholder: 'aggressive',
+                nationalMode: true,
                 // load utils so that isValidNumber, getNumber, getValidationError work
                 utilsScript: '/lib/intl-tel-input/utils.js'
             });
@@ -269,6 +288,16 @@
                 }
 
                 try {
+                    // Pour la France, si l'utilisateur tape sans le 0, on l'ajoute temporairement pour validation
+                    const selectedCountry = iti.getSelectedCountryData();
+                    let valueToValidate = raw;
+                    
+                    // Si c'est la France et que le numéro commence par 6 ou 7 (mobile), ajouter le 0
+                    if (selectedCountry.iso2 === 'fr' && /^[67]/.test(raw.replace(/\s/g, ''))) {
+                        valueToValidate = '0' + raw;
+                        input.value = valueToValidate;
+                    }
+                    
                     if (typeof iti.isValidNumber === 'function' && iti.isValidNumber()) {
                         const number = (window.intlTelInputUtils && window.intlTelInputUtils.numberFormat)
                             ? iti.getNumber(window.intlTelInputUtils.numberFormat.E164) || ''
@@ -298,17 +327,43 @@
                 }
             }
 
+            // Format automatique pendant la saisie
+            input.addEventListener('input', function() {
+                // Laisser intl-tel-input gérer le formatage si utils est chargé
+                if (window.intlTelInputUtils) {
+                    setTimeout(updatePhoneNumber, 50);
+                }
+            });
+
+            // Positionner le curseur à la fin au focus pour éviter de taper avant l'indicatif
+            input.addEventListener('focus', function() {
+                placeCaretAtEnd();
+            });
+
+            // Empêcher le déplacement du curseur avant le numéro lors des clics
+            ['click', 'mouseup'].forEach(evt => {
+                input.addEventListener(evt, function() {
+                    setTimeout(placeCaretAtEnd, 0);
+                });
+            });
+
             input.addEventListener('blur', updatePhoneNumber);
             input.addEventListener('change', updatePhoneNumber);
             input.addEventListener('keyup', updatePhoneNumber);
 
             if (iti && iti.promise && typeof iti.promise.then === 'function') {
                 iti.promise.then(function() {
-                    input.addEventListener('countrychange', updatePhoneNumber);
+                    input.addEventListener('countrychange', function() {
+                        updatePhoneNumber();
+                        placeCaretAtEnd();
+                    });
                     updatePhoneNumber();
                 });
             } else {
-                input.addEventListener('countrychange', updatePhoneNumber);
+                input.addEventListener('countrychange', function() {
+                    updatePhoneNumber();
+                    placeCaretAtEnd();
+                });
                 setTimeout(updatePhoneNumber, 200);
             }
 

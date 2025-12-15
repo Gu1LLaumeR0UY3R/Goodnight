@@ -52,6 +52,21 @@
                             </select>
                         </div>
 
+                        <!-- Prestation -->
+                        <div>
+                            <label for="prestation" style="display: block; margin-bottom: 0.5rem; font-weight: 500; color: #555;">Prestation</label>
+                            <select name="prestation" id="prestation" style="width: 100%; padding: 0.6rem; border: 1px solid #ddd; border-radius: 6px; font-size: 0.95rem;">
+                                <option value="">Toutes les prestations</option>
+                                <?php if (!empty($prestations)): ?>
+                                    <?php foreach ($prestations as $p): ?>
+                                        <option value="<?php echo htmlspecialchars($p['id_prestation']); ?>" <?php echo (($filters['prestation'] ?? '') == $p['id_prestation']) ? 'selected' : ''; ?>>
+                                            <?php echo htmlspecialchars($p['lib_prestation']); ?>
+                                        </option>
+                                    <?php endforeach; ?>
+                                <?php endif; ?>
+                            </select>
+                        </div>
+
                         <!-- Superficie min -->
                         <div>
                             <label for="superficie_min" style="display: block; margin-bottom: 0.5rem; font-weight: 500; color: #555;">Superficie min (m²)</label>

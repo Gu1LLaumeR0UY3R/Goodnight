@@ -256,6 +256,12 @@ class BienModel extends Model {
             $params['prix_max'] = $filters['prix_max'];
         }
 
+        // Filtre par prestation (biens possédant une prestation donnée)
+        if (!empty($filters['prestation'])) {
+            $sql .= " AND EXISTS (SELECT 1 FROM se_compose sc WHERE sc.id_biens = b.id_biens AND sc.id_prestation = :prestation)";
+            $params['prestation'] = $filters['prestation'];
+        }
+
         $sql .= " GROUP BY b.id_biens";
 
         $stmt = $this->db->prepare($sql);
