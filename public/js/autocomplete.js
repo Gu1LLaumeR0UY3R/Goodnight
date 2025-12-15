@@ -42,8 +42,9 @@ $(function() {
          * @param {Object} ui - Contient ui.item (l'élément survolé avec label et value)
          */
         focus: function(event, ui) {
-            // Affiche le nom de la commune (label) au lieu de l'ID (value)
-            $("#commune_search").val(ui.item.label);
+            // Extrait uniquement le nom de la ville en retirant le code postal entre parenthèses
+            var villeNom = ui.item.label.replace(/\s*\([^)]*\)\s*$/, '').trim();
+            $("#commune_search").val(villeNom);
             return false; // Empêche le comportement par défaut
         },
         
@@ -53,9 +54,9 @@ $(function() {
          * @param {Object} ui - Contient ui.item (l'élément sélectionné avec label et value)
          */
         select: function(event, ui) {
-            // Utilise le nom de la commune (label) au lieu de l'ID (value)
-            // Cela permet une recherche par nom de commune lisible
-            $("#commune_search").val(ui.item.label);
+            // Extrait uniquement le nom de la ville en retirant le code postal entre parenthèses
+            var villeNom = ui.item.label.replace(/\s*\([^)]*\)\s*$/, '').trim();
+            $("#commune_search").val(villeNom);
             return false; // Empêche le comportement par défaut
         }
     });

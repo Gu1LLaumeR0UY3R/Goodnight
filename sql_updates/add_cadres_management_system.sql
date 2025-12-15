@@ -10,3 +10,7 @@ CREATE TABLE IF NOT EXISTS `cadres` (
     `date_creation` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     `date_modification` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- Insérer les cadres par défaut
+INSERT INTO `cadres` (`nom`, `chemin_fichier`, `description`) VALUES
+('Par défaut', NULL, 'Pas de cadre, affichage normal');

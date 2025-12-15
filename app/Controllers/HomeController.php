@@ -24,27 +24,55 @@ class HomeController extends BaseController {
 
     public function index() {
         $typesBiens = $this->typeBienModel->getAll();
-        $biens = $this->bienModel->getBiensWithDetails();
+        
+        // Récupérer les filtres s'ils existent
+        $filters = [
+            'commune' => $_GET['q'] ?? '',
+            'type_bien' => $_GET['type_bien'] ?? '',
+            'superficie_min' => $_GET['superficie_min'] ?? '',
+            'superficie_max' => $_GET['superficie_max'] ?? '',
+            'prix_min' => $_GET['prix_min'] ?? '',
+            'prix_max' => $_GET['prix_max'] ?? ''
+        ];
+
+        // Appliquer les filtres s'il y en a
+        $hasFilters = !empty(array_filter($filters));
+        if ($hasFilters) {
+            $biens = $this->bienModel->searchBiensWithFilters($filters);
+        } else {
+            $biens = $this->bienModel->getBiensWithDetails();
+        }
 
         $this->render("home/index", [
             "typesBiens" => $typesBiens,
-            "biens" => $biens
+            "biens" => $biens,
+            "filters" => $filters
         ]);
     }
 
     public function search() {
-        $searchTerm = $_GET["q"] ?? "";
-        if (!empty($searchTerm)) {
-            $biens = $this->bienModel->searchBiensByCommune($searchTerm);
+        $filters = [
+            'commune' => $_GET['q'] ?? '',
+            'type_bien' => $_GET['type_bien'] ?? '',
+            'superficie_min' => $_GET['superficie_min'] ?? '',
+            'superficie_max' => $_GET['superficie_max'] ?? '',
+            'prix_min' => $_GET['prix_min'] ?? '',
+            'prix_max' => $_GET['prix_max'] ?? ''
+        ];
+
+        $hasFilters = !empty(array_filter($filters));
+        if ($hasFilters) {
+            $biens = $this->bienModel->searchBiensWithFilters($filters);
         } else {
             $biens = $this->bienModel->getBiensWithDetails();
         }
+        
         $typesBiens = $this->typeBienModel->getAll();
 
         $this->render("home/index", [
             "typesBiens" => $typesBiens,
             "biens" => $biens,
-            "searchTerm" => $searchTerm
+            "filters" => $filters
         ]);
     }
 

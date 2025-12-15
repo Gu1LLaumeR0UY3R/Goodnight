@@ -191,6 +191,78 @@ class BienModel extends Model {
         return $stmt->fetchAll();
     }
 
+    public function searchBiensWithFilters($filters = []) {
+        require_once __DIR__ . "/SaisonModel.php";
+        $saisonModel = new SaisonModel();
+        $currentSaisonId = $saisonModel->getCurrentSaisonId();
+        $currentYear = date('Y');
+
+        $sql = "
+            SELECT 
+                b.*,
+                tb.desc_type_bien as type_bien_nom,
+                c.ville_nom as commune_nom,
+                c.ville_latitude_deg,
+                c.ville_longitude_deg,
+                (SELECT lien_photo FROM photos WHERE id_biens = b.id_biens ORDER BY id_photo ASC LIMIT 1) as premiere_photo,
+                IFNULL((SELECT prix_semaine FROM tarifs WHERE id_biens = b.id_biens AND annee = :currentYear AND id_saison = :currentSaisonId LIMIT 1), NULL) as prix_semaine
+            FROM biens b 
+            LEFT JOIN Type_Bien tb ON b.id_TypeBien = tb.id_typebien 
+            LEFT JOIN commune c ON b.id_commune = c.id_commune
+            LEFT JOIN tarifs t ON b.id_biens = t.id_biens AND t.annee = :currentYear2 AND t.id_saison = :currentSaisonId2
+            WHERE b.statut_validation = 'valide'
+        ";
+
+        $params = [
+            'currentYear' => $currentYear,
+            'currentSaisonId' => $currentSaisonId ?? 0,
+            'currentYear2' => $currentYear,
+            'currentSaisonId2' => $currentSaisonId ?? 0
+        ];
+
+        // Filtre par commune
+        if (!empty($filters['commune'])) {
+            $sql .= " AND c.ville_nom LIKE :commune";
+            $params['commune'] = '%' . $filters['commune'] . '%';
+        }
+
+        // Filtre par type de bien
+        if (!empty($filters['type_bien'])) {
+            $sql .= " AND b.id_TypeBien = :type_bien";
+            $params['type_bien'] = $filters['type_bien'];
+        }
+
+        // Filtre par superficie minimale
+        if (!empty($filters['superficie_min'])) {
+            $sql .= " AND b.superficie_biens >= :superficie_min";
+            $params['superficie_min'] = $filters['superficie_min'];
+        }
+
+        // Filtre par superficie maximale
+        if (!empty($filters['superficie_max'])) {
+            $sql .= " AND b.superficie_biens <= :superficie_max";
+            $params['superficie_max'] = $filters['superficie_max'];
+        }
+
+        // Filtre par prix minimal
+        if (!empty($filters['prix_min'])) {
+            $sql .= " AND t.prix_semaine >= :prix_min";
+            $params['prix_min'] = $filters['prix_min'];
+        }
+
+        // Filtre par prix maximal
+        if (!empty($filters['prix_max'])) {
+            $sql .= " AND t.prix_semaine <= :prix_max";
+            $params['prix_max'] = $filters['prix_max'];
+        }
+
+        $sql .= " GROUP BY b.id_biens";
+
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute($params);
+        return $stmt->fetchAll();
+    }
+
     public function searchBiensByCommune($communeNom) {
         require_once __DIR__ . "/SaisonModel.php";
         $saisonModel = new SaisonModel();
