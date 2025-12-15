@@ -22,7 +22,7 @@
     display: flex;
     gap: 3rem;
     padding: 2rem;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: linear-gradient(135deg, #FF8C42 0%, #FF5A5F 100%);
     border-radius: 12px;
     color: white;
     margin-bottom: 2rem;
@@ -149,8 +149,8 @@
 .commentaire-form input[type="text"]:focus,
 .commentaire-form textarea:focus {
     outline: none;
-    border-color: #667eea;
-    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    border-color: #FF8C42;
+    box-shadow: 0 0 0 3px rgba(255, 140, 66, 0.1);
 }
 
 .commentaire-form textarea {
@@ -196,7 +196,7 @@
 
 .btn-submit-commentaire {
     flex: 1;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: linear-gradient(135deg, #FF8C42 0%, #FF5A5F 100%);
     color: white;
     border: none;
     padding: 0.875rem 1.5rem;
@@ -303,15 +303,15 @@
 }
 
 .commentaires-tri select:hover {
-    border-color: #667eea;
-    box-shadow: 0 4px 8px rgba(102, 126, 234, 0.15);
+    border-color: #FF8C42;
+    box-shadow: 0 4px 8px rgba(255, 140, 66, 0.15);
 }
 
 .commentaires-tri select:focus {
     outline: none;
-    border-color: #667eea;
-    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
-    background-color: #f8f9ff;
+    border-color: #FF8C42;
+    box-shadow: 0 0 0 3px rgba(255, 140, 66, 0.1);
+    background-color: #fff5f0;
 }
 
 /* Carte de commentaire */
@@ -347,7 +347,7 @@
     height: 48px;
     border-radius: 50%;
     overflow: hidden;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: linear-gradient(135deg, #FF8C42 0%, #FF5A5F 100%);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -712,7 +712,7 @@
 
 /* Bouton "Voir tous les avis" */
 .btn-voir-avis {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: linear-gradient(135deg, #FF8C42 0%, #FF5A5F 100%);
     color: white;
     border: none;
     padding: 1rem 2rem;
@@ -721,7 +721,7 @@
     font-weight: 600;
     cursor: pointer;
     transition: all 0.3s ease;
-    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+    box-shadow: 0 4px 12px rgba(255, 140, 66, 0.3);
 }
 
 .btn-voir-avis:hover {

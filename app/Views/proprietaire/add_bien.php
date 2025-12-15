@@ -439,6 +439,36 @@
             </fieldset>
 
             <fieldset class="form-section">
+                <legend>Prestations et Équipements</legend>
+                <div class="accordion-container">
+                    <div class="accordion-header" onclick="togglePrestations()">
+                        <div class="accordion-title">
+                            ✨ Gérer les prestations et équipements (<?php echo count($prestations); ?> disponibles)
+                        </div>
+                        <span class="accordion-icon" id="accordion-icon-prestations">▼</span>
+                    </div>
+                    <div class="accordion-content" id="accordion-content-prestations">
+                        <div id="prestations-container" class="tarifs-grid">
+                            <?php foreach ($prestations as $prestation): ?>
+                                <div class="tarif-group">
+                                    <h4>🛠️ <?php echo htmlspecialchars($prestation["lib_prestation"]); ?></h4>
+                                    <div class="form-group">
+                                        <label for="prestation_<?php echo htmlspecialchars($prestation["id_prestation"]); ?>">Quantité :</label>
+                                        <input type="number" 
+                                               id="prestation_<?php echo htmlspecialchars($prestation["id_prestation"]); ?>" 
+                                               name="prestations[<?php echo htmlspecialchars($prestation["id_prestation"]); ?>]" 
+                                               min="0" 
+                                               value="0"
+                                               placeholder="Ex: 1">
+                                    </div>
+                                </div>
+                            <?php endforeach; ?>
+                        </div>
+                    </div>
+                </div>
+            </fieldset>
+
+            <fieldset class="form-section">
                 <legend>Photos du Bien</legend>
                 <div class="form-group full-width">
                     <div class="photo-drop-zone">
@@ -475,6 +505,16 @@
             const header = document.querySelector('.accordion-header');
             const content = document.getElementById('accordion-content-tarifs');
             const icon = document.getElementById('accordion-icon');
+            
+            header.classList.toggle('active');
+            content.classList.toggle('active');
+        }
+
+        // Fonction pour ouvrir/fermer l'accordéon des prestations
+        function togglePrestations() {
+            const header = document.querySelectorAll('.accordion-header')[1]; // Deuxième accordéon
+            const content = document.getElementById('accordion-content-prestations');
+            const icon = document.getElementById('accordion-icon-prestations');
             
             header.classList.toggle('active');
             content.classList.toggle('active');

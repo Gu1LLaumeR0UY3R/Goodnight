@@ -92,6 +92,19 @@ class ProprietaireController extends BaseController {
                         }
                     }
                 }
+
+                // Gérer l'ajout des prestations
+                if (isset($_POST["prestations"]) && is_array($_POST["prestations"])) {
+                    $prestationsToSave = [];
+                    foreach ($_POST["prestations"] as $id_prestation => $quantite) {
+                        if (!empty($quantite) && $quantite > 0) {
+                            $prestationsToSave[$id_prestation] = $quantite;
+                        }
+                    }
+                    if (!empty($prestationsToSave)) {
+                        $this->prestationModel->updateBienPrestations($bienId, $prestationsToSave);
+                    }
+                }
             }
             
             $this->redirect("/proprietaire/myBiens");
@@ -100,7 +113,8 @@ class ProprietaireController extends BaseController {
         $typesBiens = $this->typeBienModel->getAll();
         $communes = $this->communeModel->getAll();
         $saisons = $this->saisonModel->getAll();
-        $this->render("proprietaire/add_bien", ["typesBiens" => $typesBiens, "communes" => $communes, "saisons" => $saisons]);
+        $prestations = $this->prestationModel->getAll();
+        $this->render("proprietaire/add_bien", ["typesBiens" => $typesBiens, "communes" => $communes, "saisons" => $saisons, "prestations" => $prestations]);
     }
 
     public function editBien($id) {
