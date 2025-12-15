@@ -152,8 +152,8 @@ class LoginController extends BaseController
             return;
         }
 
-        if (!preg_match('/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/', $password)) {
-            $_SESSION["error"] = "Mot de passe trop faible (8+ caractères, maj, min, chiffre, spécial).";
+        if (!preg_match('/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{12,}$/', $password)) {
+            $_SESSION["error"] = "Mot de passe trop faible (12+ caractères, majuscule, minuscule, chiffre, caractère spécial).";
             $this->redirect("/login/reset");
             return;
         }

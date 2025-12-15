@@ -58,6 +58,14 @@ class RegisterController extends BaseController {
                 return;
             }
 
+            // Validation de la force du mot de passe
+            if (!preg_match('/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{12,}$/', $password)) {
+                $_SESSION["error"] = "Mot de passe trop faible (12+ caractères, majuscule, minuscule, chiffre, caractère spécial).";
+                $_SESSION["old_data"] = $_POST;
+                $this->redirect("/register");
+                return;
+            }
+
             // Vérifier que l'email n'existe pas déjà
             $existingUser = $this->userModel->getUserByEmail($email);
             if ($existingUser) {

@@ -10,6 +10,7 @@
     <link rel="stylesheet" href="/css/sunset-background.css">
     <link rel="stylesheet" href="/lib/intl-tel-input/intlTelInput.min.css">
     <link rel="stylesheet" href="https://code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
+    <script src="https://cdn.jsdelivr.net/npm/heroicons@2.0.18/outline/index.js"></script>
 
 </head>
 <body class="home-sunset">
@@ -43,21 +44,15 @@
                     <div class="choice-wrapper">
                         <label class="choice-label">Je m'inscris en tant que :</label>
                         <div class="radio-buttons-group">
-                            <input type="radio" name="role_choice" value="proprietaire" id="proprietaire" checked>
-                            <label for="proprietaire" class="btn-radio">Propriétaire</label>
-                            <input type="radio" name="role_choice" value="locataire" id="locataire">
+                            <input type="radio" name="role_choice" value="locataire" id="locataire" checked>
                             <label for="locataire" class="btn-radio">Locataire</label>
+                            <input type="radio" name="role_choice" value="proprietaire" id="proprietaire">
+                            <label for="proprietaire" class="btn-radio">Propriétaire</label>
                         </div>
                     </div>
                 </div>
 
                 <div class="form-columns">
-                    <div class="form-column">
-                        <div id="form-physique" class="form-section hidden">
-                            <label for="date_naissance">Date de naissance :</label>
-                            <input type="date" id="date_naissance" name="date_naissance" value="<?php echo htmlspecialchars($old_data['date_naissance'] ?? ''); ?>">
-                        </div>
-                    </div>
                     <div class="form-column">
                         <div class="form-section">
                             <label for="tel">Téléphone :</label>
@@ -65,11 +60,19 @@
                             <input type="hidden" id="full_tel" name="tel_locataire_formatted">
                         </div>
                     </div>
+                    <div class="form-column">
+                        <div id="form-physique" class="form-section hidden">
+                            <label for="date_naissance">Date de naissance :</label>
+                            <input type="date" id="date_naissance" name="date_naissance" value="<?php echo htmlspecialchars($old_data['date_naissance'] ?? ''); ?>">
+                        </div>
+                        <div id="form-morale-raison" class="form-section hidden">
+                            <label for="raison_sociale">Raison Sociale :</label>
+                            <input type="text" id="raison_sociale" name="raison_sociale" value="<?php echo htmlspecialchars($old_data['raison_sociale'] ?? ''); ?>">
+                        </div>
+                    </div>
                 </div>
 
-                <div id="form-morale" class="form-section full-width hidden">
-                    <label for="raison_sociale">Raison Sociale :</label>
-                    <input type="text" id="raison_sociale" name="raison_sociale" value="<?php echo htmlspecialchars($old_data['raison_sociale'] ?? ''); ?>">
+                <div id="form-morale-siret" class="form-section full-width hidden">
                     <label for="siret">SIRET :</label>
                     <input type="text" id="siret" name="siret" value="<?php echo htmlspecialchars($old_data['siret'] ?? ''); ?>" maxlength="14">
                 </div>
@@ -115,12 +118,28 @@
 
                 <div class="form-section full-width">
                     <label for="password">Mot de passe :</label>
-                    <input type="password" id="password" name="password" required>
+                    <div class="password-wrapper">
+                        <input type="password" id="password" name="password" required minlength="12">
+                        <button type="button" id="togglePassword1" class="toggle-password" aria-label="Afficher le mot de passe"></button>
+                    </div>
+                    <small class="password-requirements">
+                        Minimum 12 caractères, 1 majuscule, 1 minuscule, 1 chiffre, 1 caractère spécial (@$!%*?&)
+                    </small>
+                    <div id="password-strength" class="password-strength" style="display: none;">
+                        <div class="strength-bar">
+                            <div class="strength-bar-fill" id="strength-bar-fill"></div>
+                        </div>
+                        <span id="strength-text"></span>
+                    </div>
                 </div>
 
                 <div class="form-section full-width">
                     <label for="confirm_password">Confirmer le mot de passe :</label>
-                    <input type="password" id="confirm_password" name="confirm_password" required>
+                    <div class="password-wrapper">
+                        <input type="password" id="confirm_password" name="confirm_password" required minlength="12">
+                        <button type="button" id="togglePassword2" class="toggle-password" aria-label="Afficher le mot de passe"></button>
+                    </div>
+                    <small id="confirm-password-feedback" class="password-feedback" style="display: none;"></small>
                 </div>
 
                 <button type="submit" class="full-width">S'inscrire</button>
@@ -140,17 +159,20 @@
         function toggleUserType() {
             const physiqueRadio = document.getElementById('physique');
             const physiqueFields = document.getElementById('form-physique');
-            const moraleFields = document.getElementById('form-morale');
+            const moraleRaisonFields = document.getElementById('form-morale-raison');
+            const moraleSiretFields = document.getElementById('form-morale-siret');
 
             if (physiqueRadio.checked) {
                 physiqueFields.classList.remove('hidden');
-                moraleFields.classList.add('hidden');
+                moraleRaisonFields.classList.add('hidden');
+                moraleSiretFields.classList.add('hidden');
                 document.getElementById('date_naissance').required = true;
                 document.getElementById('raison_sociale').required = false;
                 document.getElementById('siret').required = false;
             } else {
                 physiqueFields.classList.add('hidden');
-                moraleFields.classList.remove('hidden');
+                moraleRaisonFields.classList.remove('hidden');
+                moraleSiretFields.classList.remove('hidden');
                 document.getElementById('date_naissance').required = false;
                 document.getElementById('raison_sociale').required = true;
                 document.getElementById('siret').required = true;
@@ -299,8 +321,162 @@
                         e.preventDefault();
                         input.focus();
                     }
+                    
+                    // Validation du mot de passe
+                    const password = document.getElementById('password').value;
+                    const confirmPassword = document.getElementById('confirm_password').value;
+                    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{12,}$/;
+                    
+                    if (!passwordRegex.test(password)) {
+                        e.preventDefault();
+                        alert('Le mot de passe doit contenir au minimum 12 caractères, 1 majuscule, 1 minuscule, 1 chiffre et 1 caractère spécial (@$!%*?&).');
+                        document.getElementById('password').focus();
+                        return;
+                    }
+                    
+                    if (password !== confirmPassword) {
+                        e.preventDefault();
+                        alert('Les mots de passe ne correspondent pas.');
+                        document.getElementById('confirm_password').focus();
+                        return;
+                    }
                 });
             }
+            
+            // Validation en temps réel du mot de passe
+            const passwordInput = document.getElementById('password');
+            const confirmPasswordInput = document.getElementById('confirm_password');
+            const strengthIndicator = document.getElementById('password-strength');
+            const strengthBar = document.getElementById('strength-bar-fill');
+            const strengthText = document.getElementById('strength-text');
+            
+            function checkPasswordStrength(password) {
+                if (!password) {
+                    return { score: 0, text: '', color: '' };
+                }
+                
+                let score = 0;
+                const criteria = {
+                    length: password.length >= 12,
+                    lowercase: /[a-z]/.test(password),
+                    uppercase: /[A-Z]/.test(password),
+                    digit: /\d/.test(password),
+                    special: /[@$!%*?&]/.test(password)
+                };
+                
+                // Calculer le score
+                if (criteria.length) score++;
+                if (criteria.lowercase) score++;
+                if (criteria.uppercase) score++;
+                if (criteria.digit) score++;
+                if (criteria.special) score++;
+                
+                let text = '';
+                let color = '';
+                
+                if (score === 5) {
+                    text = 'Fort';
+                    color = '#28a745';
+                } else if (score >= 3) {
+                    text = 'Moyen';
+                    color = '#ffc107';
+                } else {
+                    text = 'Faible';
+                    color = '#dc3545';
+                }
+                
+                return { score: score * 20, text, color };
+            }
+            
+            if (passwordInput) {
+                passwordInput.addEventListener('input', function() {
+                    const password = this.value;
+                    
+                    if (password.length > 0) {
+                        strengthIndicator.style.display = 'block';
+                        const strength = checkPasswordStrength(password);
+                        strengthBar.style.width = strength.score + '%';
+                        strengthBar.style.backgroundColor = strength.color;
+                        strengthText.textContent = strength.text;
+                        strengthText.style.color = strength.color;
+                    } else {
+                        strengthIndicator.style.display = 'none';
+                    }
+                });
+            }
+            
+            if (confirmPasswordInput) {
+                const confirmWrapper = confirmPasswordInput.closest('.password-wrapper');
+                const confirmFeedback = document.getElementById('confirm-password-feedback');
+                
+                confirmPasswordInput.addEventListener('input', function() {
+                    const password = passwordInput.value;
+                    const confirmPassword = this.value;
+                    
+                    if (confirmPassword.length > 0) {
+                        if (password === confirmPassword) {
+                            if (confirmWrapper) {
+                                confirmWrapper.style.borderColor = '#28a745';
+                                confirmWrapper.style.borderWidth = '2px';
+                            }
+                            if (confirmFeedback) {
+                                confirmFeedback.style.display = 'block';
+                                confirmFeedback.textContent = '✓ Les mots de passe correspondent';
+                                confirmFeedback.style.color = '#28a745';
+                            }
+                        } else {
+                            if (confirmWrapper) {
+                                confirmWrapper.style.borderColor = '#dc3545';
+                                confirmWrapper.style.borderWidth = '1.5px';
+                            }
+                            if (confirmFeedback) {
+                                confirmFeedback.style.display = 'block';
+                                confirmFeedback.textContent = '✗ Les mots de passe ne correspondent pas';
+                                confirmFeedback.style.color = '#dc3545';
+                            }
+                        }
+                    } else {
+                        if (confirmWrapper) {
+                            confirmWrapper.style.borderColor = '';
+                            confirmWrapper.style.borderWidth = '';
+                        }
+                        if (confirmFeedback) {
+                            confirmFeedback.style.display = 'none';
+                        }
+                    }
+                });
+            }
+            
+            // Toggle visibilité du mot de passe
+            const toggles = [
+                { btn: 'togglePassword1', input: 'password' },
+                { btn: 'togglePassword2', input: 'confirm_password' }
+            ];
+            
+            // SVG Heroicon Eye
+            const eyeIcon = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>';
+            
+            // SVG Heroicon EyeSlash
+            const eyeSlashIcon = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path><line x1="1" y1="1" x2="23" y2="23"></line></svg>';
+            
+            toggles.forEach(({ btn, input }) => {
+                const toggle = document.getElementById(btn);
+                const inputField = document.getElementById(input);
+                
+                if (toggle && inputField) {
+                    toggle.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        const isPassword = inputField.type === 'password';
+                        inputField.type = isPassword ? 'text' : 'password';
+                        
+                        // Changer l'icône
+                        toggle.innerHTML = isPassword ? eyeSlashIcon : eyeIcon;
+                    });
+                    
+                    // Initialiser l'icône
+                    toggle.innerHTML = eyeIcon;
+                }
+            });
         });
     </script>
 </body>
