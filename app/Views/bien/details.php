@@ -39,7 +39,10 @@
                     
                     <!-- Bouton de signalement -->
                     <button onclick="openSignalementModal()" class="btn-signaler" title="Signaler ce bien">
-                        🚩 Signaler
+                        <svg style="width: 1.1rem; height: 1.1rem; display: inline-block; vertical-align: middle; margin-right: 0.3rem;" data-slot="icon" fill="none" stroke-width="1.5" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M3 3v1.5M3 21v-6m0 0 2.77-.693a9 9 0 0 1 6.208.682l.108.054a9 9 0 0 0 6.086.71l3.114-.732a48.524 48.524 0 0 1-.005-10.499l-3.11.732a9 9 0 0 1-6.085-.711l-.108-.054a9 9 0 0 0-6.208-.682L3 4.5M3 15V4.5"></path>
+                        </svg>
+                        Signaler
                     </button>
                 </div>
             </div>
@@ -119,11 +122,11 @@
           <div style="background: white; padding: 1rem; border-radius: 8px; margin-bottom: 1rem; display: flex; gap: 2rem; justify-content: center; align-items: center;">
               <div style="display: flex; align-items: center; gap: 0.5rem;">
                   <span style="display: inline-block; width: 20px; height: 20px; background: #4caf50; border-radius: 4px;"></span>
-                  <span style="color: var(--text-dark); font-weight: 500;">Réservations</span>
+                  <span style="color: #000000; font-weight: 500;">Réservations</span>
               </div>
               <div style="display: flex; align-items: center; gap: 0.5rem;">
                   <span style="display: inline-block; width: 20px; height: 20px; background: #ff7f50; border-radius: 4px;"></span>
-                  <span style="color: var(--text-dark); font-weight: 500;">Périodes bloquées</span>
+                  <span style="color: #000000; font-weight: 500;">Périodes bloquées</span>
               </div>
           </div>
           
@@ -476,7 +479,12 @@
                                     <?php endif; ?>
 
                                     <?php if ($userId && $commentaire['id_locataire'] != $userId): ?>
-                                        <button class="btn-signaler-commentaire" onclick="signalerCommentaire(<?php echo $commentaire['id_commentaire']; ?>)">🚩 Signaler</button>
+                                        <button class="btn-signaler-commentaire" onclick="signalerCommentaire(<?php echo $commentaire['id_commentaire']; ?>)">
+                                            <svg style="width: 0.9rem; height: 0.9rem; display: inline-block; vertical-align: middle; margin-right: 0.25rem;" data-slot="icon" fill="none" stroke-width="1.5" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                                                <path stroke-linecap="round" stroke-linejoin="round" d="M3 3v1.5M3 21v-6m0 0 2.77-.693a9 9 0 0 1 6.208.682l.108.054a9 9 0 0 0 6.086.71l3.114-.732a48.524 48.524 0 0 1-.005-10.499l-3.11.732a9 9 0 0 1-6.085-.711l-.108-.054a9 9 0 0 0-6.208-.682L3 4.5M3 15V4.5"></path>
+                                            </svg>
+                                            Signaler
+                                        </button>
                                     <?php endif; ?>
                                 </div>
                             </div>
@@ -740,7 +748,12 @@
     <div id="signalementModal" class="signalement-modal">
         <div class="signalement-modal-content">
             <span class="signalement-close" onclick="closeSignalementModal()">&times;</span>
-            <h2>🚩 Signaler ce bien</h2>
+            <h2>
+                <svg style="width: 1.5rem; height: 1.5rem; display: inline-block; vertical-align: middle; margin-right: 0.5rem;" data-slot="icon" fill="none" stroke-width="1.5" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M3 3v1.5M3 21v-6m0 0 2.77-.693a9 9 0 0 1 6.208.682l.108.054a9 9 0 0 0 6.086.71l3.114-.732a48.524 48.524 0 0 1-.005-10.499l-3.11.732a9 9 0 0 1-6.085-.711l-.108-.054a9 9 0 0 0-6.208-.682L3 4.5M3 15V4.5"></path>
+                </svg>
+                Signaler ce bien
+            </h2>
             <p style="color: #666; margin-bottom: 20px;">Aidez-nous à maintenir la qualité de la plateforme en signalant tout contenu inapproprié ou trompeur.</p>
             
             <form id="signalementForm" action="/signaler/<?php echo $bien['id_biens']; ?>" method="POST">

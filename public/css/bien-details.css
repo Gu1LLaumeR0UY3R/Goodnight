@@ -12,8 +12,7 @@
 .bien-details,
 .bien-calendar-container,
 .reservation-section-calendar {
-  max-width: 1200px;
-  margin: 0 auto 2rem;
+  margin-bottom: 2rem;
   padding: 2rem;
   background: white;
   border: 1px solid rgba(0, 0, 0, 0.06);
