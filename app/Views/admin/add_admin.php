@@ -20,8 +20,8 @@
             <input type="email" class="form-control" id="email_admin" name="email_admin" required>
         </div>
         <div class="mb-3">
-            <label for="mot_de_passe" class="form-label">Mot de passe :</label>
-            <input type="password" class="form-control" id="mot_de_passe" name="mot_de_passe" required>
+            <label for="mot_de_passe_admin" class="form-label">Mot de passe :</label>
+            <input type="password" class="form-control" id="mot_de_passe_admin" name="mot_de_passe_admin" required>
         </div>
         <div class="mb-3 form-check">
             <input type="checkbox" class="form-check-input" id="is_admin" name="is_admin" value="1">
