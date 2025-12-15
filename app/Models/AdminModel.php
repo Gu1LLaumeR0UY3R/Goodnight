@@ -18,8 +18,8 @@ class AdminModel extends Model {
 
     public function create($data) {
         // Implémentation pour la création d'un administrateur
-        // Exemple: INSERT INTO admin (nom_admin, email_admin, mot_de_passe, is_admin) VALUES (:nom_admin, :email_admin, :mot_de_passe, :is_admin)
-        $stmt = $this->db->prepare("INSERT INTO " . $this->table . " (nom_admin, email_admin, mot_de_passe, is_admin) VALUES (:nom_admin, :email_admin, :mot_de_passe, :is_admin)");
+        // Exemple: INSERT INTO admin (nom_admin, email_admin, mot_de_passe_admin, is_admin) VALUES (:nom_admin, :email_admin, :mot_de_passe_admin, :is_admin)
+        $stmt = $this->db->prepare("INSERT INTO " . $this->table . " (nom_admin, email_admin, mot_de_passe_admin, is_admin) VALUES (:nom_admin, :email_admin, :mot_de_passe_admin, :is_admin)");
         return $stmt->execute($data);
     }
 

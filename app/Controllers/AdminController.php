@@ -91,7 +91,7 @@ class AdminController extends BaseController {
             $data = [
                 "nom_admin" => $_POST["nom_admin"],
                 "email_admin" => $_POST["email_admin"],
-                "mot_de_passe" => password_hash($_POST["mot_de_passe"], PASSWORD_DEFAULT),
+                "mot_de_passe_admin" => password_hash($_POST["mot_de_passe_admin"], PASSWORD_DEFAULT),
                 "is_admin" => isset($_POST["is_admin"]) ? 1 : 0
             ];
             $this->adminModel->create($data);
