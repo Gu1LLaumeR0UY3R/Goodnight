@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="/css/style.css">
     <link rel="stylesheet" href="/css/navbar.css">
     <link rel="stylesheet" href="/css/photo-upload.css">
+    <link rel="stylesheet" href="/css/prestations.css">
     <link rel="stylesheet" href="/css/sunset-background.css">
     <link rel="stylesheet" href="//code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
     <style>
@@ -242,111 +243,7 @@
             margin-bottom: 0;
         }
 
-        /* Zone de photos avec drag and drop */
-        .photo-drop-zone {
-            background: linear-gradient(135deg, #e8f5e9, #c8e6c9);
-            border: 3px dashed #4caf50;
-            border-radius: 12px;
-            padding: 3rem 2rem;
-            text-align: center;
-            transition: all 0.3s ease;
-            cursor: pointer;
-            position: relative;
-        }
-
-        .photo-drop-zone:hover {
-            background: linear-gradient(135deg, #c8e6c9, #a5d6a7);
-            border-color: #43a047;
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(76, 175, 80, 0.3);
-        }
-
-        .photo-drop-zone.dragover {
-            background: linear-gradient(135deg, #a5d6a7, #81c784);
-            border-color: #2e7d32;
-            border-width: 4px;
-        }
-
-        .drop-zone-text {
-            color: #2e7d32;
-            font-size: 1.125rem;
-            margin-bottom: 1rem;
-        }
-
-        .drop-zone-text strong {
-            display: block;
-            font-size: 1.375rem;
-            font-weight: 700;
-            margin-bottom: 0.5rem;
-        }
-
-        .photo-drop-zone input[type="file"] {
-            display: none;
-        }
-
-        .photo-preview-container {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-            gap: 1rem;
-            margin-top: 1.5rem;
-        }
-
-        .photo-preview-item {
-            position: relative;
-            aspect-ratio: 1;
-            border-radius: 10px;
-            overflow: hidden;
-            border: 2px solid var(--border-color, #e0e0e0);
-            background: var(--bg-secondary, #fff);
-        }
-
-        .photo-preview-item img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            display: block;
-        }
-
-        .photo-remove-btn {
-            position: absolute;
-            top: 8px;
-            right: 8px;
-            width: 32px;
-            height: 32px;
-            border-radius: 50%;
-            border: none;
-            background: rgba(239, 68, 68, 0.95);
-            color: #fff;
-            font-size: 20px;
-            line-height: 1;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.2);
-            transition: transform 0.15s ease, background 0.15s ease, box-shadow 0.15s ease;
-            z-index: 2;
-        }
-
-        .photo-remove-btn:hover {
-            background: #DC2626;
-            transform: scale(1.06);
-            box-shadow: 0 4px 10px rgba(0,0,0,0.25);
-        }
-
-        .photo-file-name {
-            position: absolute;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            padding: 6px 10px;
-            font-size: 12px;
-            background: linear-gradient(to top, rgba(0,0,0,0.55), rgba(0,0,0,0));
-            color: #fff;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
+        /* Zone de photos: styles unifiés via /css/photo-upload.css */
 
         /* Bouton de soumission */
         .submit-button {
@@ -515,7 +412,7 @@
                         </div>
 
                         <!-- Prestations sélectionnées -->
-                        <div id="prestations-selected" style="display: flex; flex-wrap: wrap; gap: 0.75rem; margin-top: 1.5rem; min-height: 50px; align-content: flex-start;">
+                        <div id="prestations-selected">
                             <!-- Les prestations sélectionnées s'ajouteront dynamiquement ici -->
                         </div>
 
@@ -556,6 +453,7 @@
     <script src="/js/autocomplete.js"></script>
     <script src="/js/register.js"></script>
     <script src="/js/photo-upload.js"></script>
+    <script src="/js/prestations.js"></script>
     <script>
         // Fonction pour ouvrir/fermer l'accordéon des tarifs
         function toggleTarifs() {
@@ -577,151 +475,9 @@
             content.classList.toggle('active');
         }
 
-        // ========== GESTION DES PRESTATIONS (AUTOCOMPLÉTION) ==========
-        const prestationsData = <?php echo json_encode($prestations ?? []); ?>;
-        const selectedPrestations = new Map(); // Map pour stocker {id -> {nom, quantite}}
-        
-        const searchInput = document.getElementById('prestation-search');
-        const autocompleteDiv = document.getElementById('prestation-autocomplete');
-        const selectedDiv = document.getElementById('prestations-selected');
-        const hiddenInput = document.getElementById('prestations-data');
-        
-        // Écouter les changements dans le champ de recherche
-        searchInput.addEventListener('input', function() {
-            const query = this.value.trim().toLowerCase();
-            
-            if (query.length < 1) {
-                autocompleteDiv.style.display = 'none';
-                return;
-            }
-            
-            // Filtrer les prestations qui ne sont pas déjà sélectionnées
-            const filtered = prestationsData.filter(p => 
-                p.lib_prestation.toLowerCase().includes(query) && !selectedPrestations.has(p.id_prestation.toString())
-            );
-            
-            if (filtered.length === 0) {
-                autocompleteDiv.innerHTML = '<div style="padding: 0.875rem; color: #999; text-align: center;">Aucune prestation trouvée</div>';
-                autocompleteDiv.style.display = 'block';
-                return;
-            }
-            
-            let html = '';
-            filtered.forEach(prestation => {
-                html += `
-                    <div onclick="addPrestationToForm(${prestation.id_prestation}, '${prestation.lib_prestation.replace(/'/g, "\\'")}', event)" 
-                         style="padding: 0.875rem; cursor: pointer; border-bottom: 1px solid #f0f0f0; transition: background 0.2s; font-size: 0.95rem;"
-                         onmouseover="this.style.background='#f8f9ff'"
-                         onmouseout="this.style.background='white'">
-                        ${prestation.lib_prestation}
-                    </div>
-                `;
-            });
-            
-            autocompleteDiv.innerHTML = html;
-            autocompleteDiv.style.display = 'block';
-        });
-        
-        // Fermer l'autocomplétion en cliquant ailleurs
-        document.addEventListener('click', function(e) {
-            if (!e.target.closest('#prestation-search') && !e.target.closest('#prestation-autocomplete')) {
-                autocompleteDiv.style.display = 'none';
-            }
-        });
-        
-        // Ajouter une prestation au formulaire
-        function addPrestationToForm(id, nom, event) {
-            event.preventDefault();
-            const idStr = id.toString();
-            
-            // Vérifier si la prestation n'est pas déjà sélectionnée
-            if (!selectedPrestations.has(idStr)) {
-                selectedPrestations.set(idStr, { nom: nom, quantite: 1 });
-                renderSelectedPrestations();
-                searchInput.value = '';
-                autocompleteDiv.style.display = 'none';
-            }
-        }
-        
-        // Augmenter la quantité
-        function increasePrestationQty(id) {
-            const idStr = id.toString();
-            if (selectedPrestations.has(idStr)) {
-                const prestation = selectedPrestations.get(idStr);
-                prestation.quantite += 1;
-                renderSelectedPrestations();
-            }
-        }
-        
-        // Diminuer la quantité
-        function decreasePrestationQty(id) {
-            const idStr = id.toString();
-            if (selectedPrestations.has(idStr)) {
-                const prestation = selectedPrestations.get(idStr);
-                if (prestation.quantite > 1) {
-                    prestation.quantite -= 1;
-                    renderSelectedPrestations();
-                }
-            }
-        }
-        
-        // Supprimer une prestation
-        function removePrestationFromForm(id) {
-            const idStr = id.toString();
-            selectedPrestations.delete(idStr);
-            renderSelectedPrestations();
-        }
-        
-        // Afficher les prestations sélectionnées
-        function renderSelectedPrestations() {
-            selectedDiv.innerHTML = '';
-            
-            if (selectedPrestations.size === 0) {
-                selectedDiv.innerHTML = '<p style="color: #999; font-size: 0.9rem;">Aucune prestation sélectionnée</p>';
-            } else {
-                selectedPrestations.forEach((prestation, id) => {
-                    const badge = document.createElement('div');
-                    badge.style.cssText = `
-                        display: flex;
-                        align-items: center;
-                        gap: 0.5rem;
-                        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-                        color: white;
-                        padding: 0.75rem 1rem;
-                        border-radius: 20px;
-                        font-weight: 500;
-                        box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
-                    `;
-                    
-                    badge.innerHTML = `
-                        <span>${prestation.nom}</span>
-                        <div style="display: flex; align-items: center; gap: 0.5rem; background: rgba(255, 255, 255, 0.2); padding: 0.25rem 0.5rem; border-radius: 12px;">
-                            <button type="button" onclick="decreasePrestationQty(${id})" style="background: rgba(255, 255, 255, 0.3); border: none; color: white; width: 24px; height: 24px; border-radius: 50%; cursor: pointer; font-weight: bold; display: flex; align-items: center; justify-content: center; transition: background 0.2s;" onmouseover="this.style.background='rgba(255, 255, 255, 0.5)'" onmouseout="this.style.background='rgba(255, 255, 255, 0.3)'">−</button>
-                            <span style="min-width: 20px; text-align: center; font-weight: bold;">${prestation.quantite}</span>
-                            <button type="button" onclick="increasePrestationQty(${id})" style="background: rgba(255, 255, 255, 0.3); border: none; color: white; width: 24px; height: 24px; border-radius: 50%; cursor: pointer; font-weight: bold; display: flex; align-items: center; justify-content: center; transition: background 0.2s;" onmouseover="this.style.background='rgba(255, 255, 255, 0.5)'" onmouseout="this.style.background='rgba(255, 255, 255, 0.3)'">+</button>
-                        </div>
-                        <button type="button" onclick="removePrestationFromForm(${id})" style="background: rgba(255, 255, 255, 0.2); border: none; color: white; width: 24px; height: 24px; border-radius: 50%; cursor: pointer; font-weight: bold; display: flex; align-items: center; justify-content: center; transition: background 0.2s; margin-left: 0.5rem;" onmouseover="this.style.background='rgba(255, 68, 68, 0.8)'" onmouseout="this.style.background='rgba(255, 255, 255, 0.2)'">×</button>
-                    `;
-                    
-                    selectedDiv.appendChild(badge);
-                });
-            }
-            
-            // Mettre à jour le champ hidden avec les données
-            updateHiddenPrestationsData();
-        }
-        
-        // Mettre à jour le champ hidden avec les données sérialisées
-        function updateHiddenPrestationsData() {
-            const data = {};
-            selectedPrestations.forEach((prestation, id) => {
-                data[id] = prestation.quantite;
-            });
-            hiddenInput.value = JSON.stringify(data);
-        }
-        
-        // Initialiser l'affichage
-        renderSelectedPrestations();
+        // Données pour le module prestations (utilisé par /js/prestations.js)
+        window.prestationsData = <?php echo json_encode($prestations ?? []); ?>;
+        window.bienPrestations = [];
     </script>
 </body>
 </html>

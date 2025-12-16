@@ -5,8 +5,8 @@
 /* Badge de notification pastel */
 .notification-badge {
   position: absolute;
-  top: 10px;
-  right: 10px;
+  top: -15px;
+  right: -15px;
   background: linear-gradient(135deg, #FFE5B4 0%, #FFD7B5 100%);
   color: #8B5A3C;
   width: 65px;
@@ -72,15 +72,7 @@
   animation: bounce-notification 2.5s ease-in-out infinite, pulse-notification 2s ease-in-out infinite;
 }
 
-/* Card avec notification */
-.admin-box {
-  position: relative;
-  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-}
 
-.admin-box:hover {
-  transform: translateY(-8px);
-}
 
 .admin-box.has-notification {
   box-shadow: 0 12px 35px rgba(255, 182, 193, 0.3);
