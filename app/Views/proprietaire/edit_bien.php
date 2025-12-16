@@ -471,6 +471,42 @@
                 </div>
             </fieldset>
 
+            <fieldset class="form-section">
+                <legend>Prestations et Équipements</legend>
+                <div class="accordion-container">
+                    <div class="accordion-header" onclick="togglePrestations()">
+                        <div class="accordion-title">
+                            ✨ Gérer les prestations et équipements
+                        </div>
+                        <span class="accordion-icon" id="accordion-icon-prestations">▼</span>
+                    </div>
+                    <div class="accordion-content" id="accordion-content-prestations">
+                        <!-- Barre de recherche avec autocomplétion -->
+                        <div style="margin-bottom: 1.5rem; position: relative;">
+                            <label for="prestation-search" style="display: block; margin-bottom: 0.5rem; font-weight: 600; color: var(--text-primary);">Ajouter une prestation :</label>
+                            <div style="position: relative;">
+                                <input type="text" 
+                                       id="prestation-search" 
+                                       placeholder="Tapez le nom d'une prestation (ex: piscine, wifi...)" 
+                                       autocomplete="off"
+                                       style="width: 100%; padding: 0.875rem; border: 2px solid var(--border-color, #e0e0e0); border-radius: 8px; font-size: 1rem; font-family: inherit; background: white; color: var(--text-primary); transition: all 0.2s;">
+                                <div id="prestation-autocomplete" 
+                                     style="position: absolute; top: 100%; left: 0; right: 0; background: white; border: 2px solid var(--border-color, #e0e0e0); border-top: none; border-radius: 0 0 8px 8px; max-height: 250px; overflow-y: auto; display: none; z-index: 1000; box-shadow: 0 4px 6px rgba(0,0,0,0.1); margin-top: -2px;">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Prestations sélectionnées -->
+                        <div id="prestations-selected" style="display: flex; flex-wrap: wrap; gap: 0.75rem; margin-top: 1.5rem; min-height: 50px; align-content: flex-start;">
+                            <!-- Les prestations sélectionnées s'ajouteront dynamiquement ici -->
+                        </div>
+
+                        <!-- Input hidden pour stocker les données finales -->
+                        <input type="hidden" id="prestations-data" name="prestations-data" value="{}">
+                    </div>
+                </div>
+            </fieldset>
+
             <h3>Photos actuelles :</h3>
             <div class="photos-grid">
                 <?php if (!empty($photos)): ?>
@@ -532,6 +568,25 @@
             }
         }
 
+        // Fonction pour ouvrir/fermer l'accordéon des prestations
+        function togglePrestations() {
+            const headers = document.querySelectorAll('.accordion-header');
+            let headerEl = null;
+            for (let h of headers) {
+                if (h.querySelector('.accordion-title')?.textContent.includes('Gérer les prestations')) {
+                    headerEl = h;
+                    break;
+                }
+            }
+            if (!headerEl) return;
+            
+            const content = document.getElementById('accordion-content-prestations');
+            const icon = document.getElementById('accordion-icon-prestations');
+            
+            headerEl.classList.toggle('active');
+            content.classList.toggle('active');
+        }
+
         // Valeurs initiales des champs critiques
         const initialValues = {
             designation_bien: document.getElementById('designation_bien').value,
@@ -578,6 +633,164 @@
             }
             
             return true; // Pas de changement critique, continuer normalement
+        }
+
+        // ========== GESTION DES PRESTATIONS (AUTOCOMPLÉTION) ==========
+        const prestationsData = <?php echo json_encode($prestations ?? []); ?>;
+        const selectedPrestations = new Map(); // Map pour stocker {id -> {nom, quantite}}
+        
+        const searchInput = document.getElementById('prestation-search');
+        const autocompleteDiv = document.getElementById('prestation-autocomplete');
+        const selectedDiv = document.getElementById('prestations-selected');
+        const hiddenInput = document.getElementById('prestations-data');
+        
+        // Écouter les changements dans le champ de recherche
+        searchInput.addEventListener('input', function() {
+            const query = this.value.trim().toLowerCase();
+            
+            if (query.length < 1) {
+                autocompleteDiv.style.display = 'none';
+                return;
+            }
+            
+            // Filtrer les prestations qui ne sont pas déjà sélectionnées
+            const filtered = prestationsData.filter(p => 
+                p.lib_prestation.toLowerCase().includes(query) && !selectedPrestations.has(p.id_prestation.toString())
+            );
+            
+            if (filtered.length === 0) {
+                autocompleteDiv.innerHTML = '<div style="padding: 0.875rem; color: #999; text-align: center;">Aucune prestation trouvée</div>';
+                autocompleteDiv.style.display = 'block';
+                return;
+            }
+            
+            let html = '';
+            filtered.forEach(prestation => {
+                html += `
+                    <div onclick="addPrestationToForm(${prestation.id_prestation}, '${prestation.lib_prestation.replace(/'/g, "\\'")}', event)" 
+                         style="padding: 0.875rem; cursor: pointer; border-bottom: 1px solid #f0f0f0; transition: background 0.2s; font-size: 0.95rem;"
+                         onmouseover="this.style.background='#f8f9ff'"
+                         onmouseout="this.style.background='white'">
+                        ${prestation.lib_prestation}
+                    </div>
+                `;
+            });
+            
+            autocompleteDiv.innerHTML = html;
+            autocompleteDiv.style.display = 'block';
+        });
+        
+        // Fermer l'autocomplétion en cliquant ailleurs
+        document.addEventListener('click', function(e) {
+            if (!e.target.closest('#prestation-search') && !e.target.closest('#prestation-autocomplete')) {
+                autocompleteDiv.style.display = 'none';
+            }
+        });
+        
+        // Ajouter une prestation au formulaire
+        function addPrestationToForm(id, nom, event) {
+            event.preventDefault();
+            const idStr = id.toString();
+            
+            // Vérifier si la prestation n'est pas déjà sélectionnée
+            if (!selectedPrestations.has(idStr)) {
+                selectedPrestations.set(idStr, { nom: nom, quantite: 1 });
+                renderSelectedPrestations();
+                searchInput.value = '';
+                autocompleteDiv.style.display = 'none';
+            }
+        }
+        
+        // Augmenter la quantité
+        function increasePrestationQty(id) {
+            const idStr = id.toString();
+            if (selectedPrestations.has(idStr)) {
+                const prestation = selectedPrestations.get(idStr);
+                prestation.quantite += 1;
+                renderSelectedPrestations();
+            }
+        }
+        
+        // Diminuer la quantité
+        function decreasePrestationQty(id) {
+            const idStr = id.toString();
+            if (selectedPrestations.has(idStr)) {
+                const prestation = selectedPrestations.get(idStr);
+                if (prestation.quantite > 1) {
+                    prestation.quantite -= 1;
+                    renderSelectedPrestations();
+                }
+            }
+        }
+        
+        // Supprimer une prestation
+        function removePrestationFromForm(id) {
+            const idStr = id.toString();
+            selectedPrestations.delete(idStr);
+            renderSelectedPrestations();
+        }
+        
+        // Afficher les prestations sélectionnées
+        function renderSelectedPrestations() {
+            selectedDiv.innerHTML = '';
+            
+            if (selectedPrestations.size === 0) {
+                selectedDiv.innerHTML = '<p style="color: #999; font-size: 0.9rem;">Aucune prestation sélectionnée</p>';
+            } else {
+                selectedPrestations.forEach((prestation, id) => {
+                    const badge = document.createElement('div');
+                    badge.style.cssText = `
+                        display: flex;
+                        align-items: center;
+                        gap: 0.5rem;
+                        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                        color: white;
+                        padding: 0.75rem 1rem;
+                        border-radius: 20px;
+                        font-weight: 500;
+                        box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
+                    `;
+                    
+                    badge.innerHTML = `
+                        <span>${prestation.nom}</span>
+                        <div style="display: flex; align-items: center; gap: 0.5rem; background: rgba(255, 255, 255, 0.2); padding: 0.25rem 0.5rem; border-radius: 12px;">
+                            <button type="button" onclick="decreasePrestationQty(${id})" style="background: rgba(255, 255, 255, 0.3); border: none; color: white; width: 24px; height: 24px; border-radius: 50%; cursor: pointer; font-weight: bold; display: flex; align-items: center; justify-content: center; transition: background 0.2s;" onmouseover="this.style.background='rgba(255, 255, 255, 0.5)'" onmouseout="this.style.background='rgba(255, 255, 255, 0.3)'">−</button>
+                            <span style="min-width: 20px; text-align: center; font-weight: bold;">${prestation.quantite}</span>
+                            <button type="button" onclick="increasePrestationQty(${id})" style="background: rgba(255, 255, 255, 0.3); border: none; color: white; width: 24px; height: 24px; border-radius: 50%; cursor: pointer; font-weight: bold; display: flex; align-items: center; justify-content: center; transition: background 0.2s;" onmouseover="this.style.background='rgba(255, 255, 255, 0.5)'" onmouseout="this.style.background='rgba(255, 255, 255, 0.3)'">+</button>
+                        </div>
+                        <button type="button" onclick="removePrestationFromForm(${id})" style="background: rgba(255, 255, 255, 0.2); border: none; color: white; width: 24px; height: 24px; border-radius: 50%; cursor: pointer; font-weight: bold; display: flex; align-items: center; justify-content: center; transition: background 0.2s; margin-left: 0.5rem;" onmouseover="this.style.background='rgba(255, 68, 68, 0.8)'" onmouseout="this.style.background='rgba(255, 255, 255, 0.2)'">×</button>
+                    `;
+                    
+                    selectedDiv.appendChild(badge);
+                });
+            }
+            
+            // Mettre à jour le champ hidden avec les données
+            updateHiddenPrestationsData();
+        }
+        
+        // Mettre à jour le champ hidden avec les données sérialisées
+        function updateHiddenPrestationsData() {
+            const data = {};
+            selectedPrestations.forEach((prestation, id) => {
+                data[id] = prestation.quantite;
+            });
+            hiddenInput.value = JSON.stringify(data);
+        }
+        
+        // Initialiser l'affichage
+        renderSelectedPrestations();
+
+        // Charger les prestations existantes du bien
+        const bienPrestations = <?php echo json_encode($bienPrestations ?? []); ?>;
+        if (Array.isArray(bienPrestations) && bienPrestations.length > 0) {
+            bienPrestations.forEach(bp => {
+                selectedPrestations.set(bp.id_prestation.toString(), { 
+                    nom: bp.lib_prestation, 
+                    quantite: parseInt(bp.quantite_prestation) || 1 
+                });
+            });
+            renderSelectedPrestations();
         }
     </script>
 </body>

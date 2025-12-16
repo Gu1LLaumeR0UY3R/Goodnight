@@ -1,0 +1,219 @@
+/* ========================================
+   PRESTATIONS - Styles améliorés
+   ======================================== */
+
+/* Conteneur des prestations */
+#prestations-selected {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+    gap: 1.5rem;
+    margin-top: 2rem;
+    min-height: 80px;
+    align-content: start;
+}
+
+/* Carte de prestation */
+.prestation-card {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    background: linear-gradient(135deg, var(--accent-primary) 0%, var(--accent-hover) 100%);
+    color: white;
+    padding: 1.75rem;
+    border-radius: 16px;
+    font-weight: 500;
+    box-shadow: 0 8px 24px rgba(255, 90, 95, 0.25);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+}
+
+.prestation-card::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    right: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 1px, transparent 1px);
+    background-size: 20px 20px;
+    pointer-events: none;
+}
+
+.prestation-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 32px rgba(255, 90, 95, 0.35);
+}
+
+.dark-mode .prestation-card {
+    background: linear-gradient(135deg, #66FCF1 0%, #45A29E 100%);
+    box-shadow: 0 8px 24px rgba(102, 252, 241, 0.25);
+}
+
+.dark-mode .prestation-card:hover {
+    box-shadow: 0 12px 32px rgba(102, 252, 241, 0.35);
+}
+
+/* Contenu de la carte */
+.prestation-content {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+/* Titre de la prestation */
+.prestation-title {
+    font-size: 1.1rem;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.prestation-icon {
+    font-size: 1.5rem;
+}
+
+/* Contrôles de quantité */
+.prestation-controls {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    background: rgba(255, 255, 255, 0.15);
+    padding: 0.875rem 1.25rem;
+    border-radius: 12px;
+    backdrop-filter: blur(10px);
+}
+
+.prestation-label {
+    font-size: 0.95rem;
+    opacity: 0.95;
+    flex: 1;
+}
+
+/* Boutons de contrôle */
+.prestation-btn {
+    background: rgba(255, 255, 255, 0.25);
+    border: none;
+    color: white;
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 1.2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    flex-shrink: 0;
+}
+
+.prestation-btn:hover {
+    background: rgba(255, 255, 255, 0.35);
+    transform: scale(1.1);
+}
+
+.prestation-btn:active {
+    transform: scale(0.95);
+}
+
+/* Affichage de la quantité */
+.prestation-qty {
+    min-width: 45px;
+    text-align: center;
+    font-size: 1.3rem;
+    font-weight: 700;
+    background: rgba(255, 255, 255, 0.2);
+    padding: 0.5rem;
+    border-radius: 8px;
+}
+
+/* Bouton supprimer */
+.prestation-remove {
+    position: absolute;
+    top: 0.875rem;
+    right: 0.875rem;
+    background: rgba(255, 255, 255, 0.2);
+    border: none;
+    color: white;
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 1.3rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    z-index: 3;
+}
+
+.prestation-remove:hover {
+    background: rgba(255, 68, 68, 0.7);
+    transform: scale(1.15);
+}
+
+/* État vide */
+.prestation-empty {
+    grid-column: 1 / -1;
+    padding: 3rem 2rem;
+    text-align: center;
+    background: linear-gradient(135deg, rgba(255, 90, 95, 0.05) 0%, rgba(255, 140, 66, 0.05) 100%);
+    border-radius: 16px;
+    border: 2px dashed var(--accent-primary);
+}
+
+.prestation-empty-title {
+    color: var(--text-muted);
+    font-size: 1.1rem;
+    margin: 0;
+    font-weight: 500;
+}
+
+.prestation-empty-subtitle {
+    color: var(--text-muted);
+    font-size: 0.95rem;
+    margin: 0.5rem 0 0 0;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    #prestations-selected {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+    
+    .prestation-card {
+        padding: 1.5rem;
+    }
+    
+    .prestation-title {
+        font-size: 1rem;
+    }
+    
+    .prestation-btn {
+        width: 32px;
+        height: 32px;
+        font-size: 1rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .prestation-card {
+        padding: 1.25rem;
+    }
+    
+    .prestation-controls {
+        flex-direction: column;
+        gap: 0.75rem;
+    }
+    
+    .prestation-label {
+        width: 100%;
+    }
+}

@@ -93,16 +93,15 @@ class ProprietaireController extends BaseController {
                     }
                 }
 
-                // Gérer l'ajout des prestations
-                if (isset($_POST["prestations"]) && is_array($_POST["prestations"])) {
-                    $prestationsToSave = [];
-                    foreach ($_POST["prestations"] as $id_prestation => $quantite) {
-                        if (!empty($quantite) && $quantite > 0) {
-                            $prestationsToSave[$id_prestation] = $quantite;
+                // Gérer l'ajout des prestations (format JSON depuis le nouvel autocomplétion)
+                if (isset($_POST["prestations-data"]) && !empty($_POST["prestations-data"])) {
+                    try {
+                        $prestationsData = json_decode($_POST["prestations-data"], true);
+                        if (is_array($prestationsData) && !empty($prestationsData)) {
+                            $this->prestationModel->updateBienPrestations($bienId, $prestationsData);
                         }
-                    }
-                    if (!empty($prestationsToSave)) {
-                        $this->prestationModel->updateBienPrestations($bienId, $prestationsToSave);
+                    } catch (Exception $e) {
+                        // En cas d'erreur JSON, ne rien faire
                     }
                 }
             }
@@ -190,6 +189,18 @@ class ProprietaireController extends BaseController {
             if (isset($_FILES["photos"]) && !empty($_FILES["photos"]["name"][0])) {
                 $this->handlePhotoUpload($id, $_FILES["photos"]);
             }
+
+            // Gérer la mise à jour des prestations (format JSON depuis le nouvel autocomplétion)
+            if (isset($_POST["prestations-data"]) && !empty($_POST["prestations-data"])) {
+                try {
+                    $prestationsData = json_decode($_POST["prestations-data"], true);
+                    if (is_array($prestationsData) && !empty($prestationsData)) {
+                        $this->prestationModel->updateBienPrestations($id, $prestationsData);
+                    }
+                } catch (Exception $e) {
+                    // En cas d'erreur JSON, ne rien faire
+                }
+            }
             
             $this->redirect("/proprietaire/myBiens");
         }
@@ -199,6 +210,8 @@ class ProprietaireController extends BaseController {
         $photos = $this->photoModel->getPhotosByBien($id);
         $saisons = $this->saisonModel->getAll();
         $tarifs = $this->tarifModel->getTarifsByBien($id);
+        $prestations = $this->prestationModel->getAll();
+        $bienPrestations = $this->prestationModel->getPrestationsByBien($id);
         
         // Mapper les tarifs existants pour un accès facile par id_saison et annee
         $tarifsMapped = [];
@@ -212,7 +225,9 @@ class ProprietaireController extends BaseController {
             "communes" => $communes,
             "photos" => $photos,
             "saisons" => $saisons,
-            "tarifsMapped" => $tarifsMapped
+            "tarifsMapped" => $tarifsMapped,
+            "prestations" => $prestations,
+            "bienPrestations" => $bienPrestations
         ]);
     }
 
