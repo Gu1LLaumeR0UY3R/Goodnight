@@ -6,6 +6,7 @@ require_once __DIR__ . "/../Models/BienModel.php";
 require_once __DIR__ . "/../Models/TypeBienModel.php";
 require_once __DIR__ . "/../Models/CommuneModel.php";
 require_once __DIR__ . "/../Models/ReservationModel.php";
+require_once __DIR__ . "/../Models/NotificationModel.php";
 require_once __DIR__ . "/../Models/PhotoModel.php";
 require_once __DIR__ . "/../Models/SaisonModel.php";
 require_once __DIR__ . "/../Models/TarifModel.php";
@@ -17,6 +18,7 @@ class ProprietaireController extends BaseController {
     private $typeBienModel;
     private $communeModel;
     private $reservationModel;
+    private $notificationModel;
     private $photoModel;
     private $saisonModel;
     private $tarifModel;
@@ -29,6 +31,7 @@ class ProprietaireController extends BaseController {
         $this->typeBienModel = new TypeBienModel();
         $this->communeModel = new CommuneModel();
         $this->reservationModel = new ReservationModel();
+        $this->notificationModel = new NotificationModel();
         $this->photoModel = new PhotoModel();
         $this->saisonModel = new SaisonModel();
         $this->tarifModel = new TarifModel();
@@ -152,6 +155,16 @@ class ProprietaireController extends BaseController {
                     'type' => 'warning',
                     'message' => 'Votre bien a été modifié et est maintenant en attente de validation. Il ne sera plus visible publiquement jusqu\'à validation par un administrateur.'
                 ];
+                // Inform locataires with future reservations that key details changed
+                try {
+                    $bienNow = $this->bienModel->getById($id);
+                    $bienName = $bienNow['designation_bien'] ?? ('Bien #' . $id);
+                    $this->notificationModel->notifyUsersWithFutureReservationsForBien((int)$id,
+                        'Modification du bien',
+                        'Des informations importantes du bien "' . $bienName . '" que vous avez réservé ont été modifiées. Veuillez vérifier les détails.',
+                        '/locataire/myReservations'
+                    );
+                } catch (\Throwable $e) { }
             } else {
                 $_SESSION['flash'] = [
                     'type' => 'success',
@@ -236,6 +249,16 @@ class ProprietaireController extends BaseController {
         
         // Vérifier que le bien appartient au propriétaire connecté
         if ($bien && $bien["id_locataire"] == $_SESSION["user_id"]) {
+            // Notify locataires with future reservations and clean reservations
+            try {
+                $bienName = $bien['designation_bien'] ?? ('Bien #' . $id);
+                $this->notificationModel->notifyUsersWithFutureReservationsForBien((int)$id,
+                    'Bien supprimé',
+                    'Le bien "' . $bienName . '" sur lequel vous aviez une réservation a été supprimé par le propriétaire. Votre réservation peut être affectée.',
+                    '/locataire/myReservations'
+                );
+            } catch (\Throwable $e) { }
+            try { $this->reservationModel->deleteByBien((int)$id); } catch (\Throwable $e) { }
             $this->bienModel->delete($id);
         }
         

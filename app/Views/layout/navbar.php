@@ -46,6 +46,20 @@ $userPfp = $_SESSION['user_pfp'] ?? null;
         <!-- Section Authentification (Dynamique) -->
         <div class="navbar-auth">
             <?php if ($isLoggedIn): ?>
+                <div class="navbar-notifs">
+                    <button id="notif-bell" class="navbar-btn notif-bell" aria-label="Notifications">
+                        <span>🔔</span>
+                        <span id="notif-badge" class="notif-badge">0</span>
+                    </button>
+                    <div id="notif-panel" class="notif-panel">
+                        <div class="notif-header">
+                            <strong>Notifications</strong>
+                            <button id="notif-mark-all" class="notif-mark-all">Tout marquer comme lu</button>
+                        </div>
+                        <div id="notif-list" class="notif-list"></div>
+                        <div id="notif-empty" class="notif-empty">Aucune notification</div>
+                    </div>
+                </div>
                 <span class="navbar-user-info">
                     <?php 
                         $displayName = trim($userFirstName . ' ' . $userName);
@@ -171,3 +185,7 @@ $userPfp = $_SESSION['user_pfp'] ?? null;
 
 <!-- Dark Mode JavaScript -->
 <script src="/js/dark-mode.js"></script>
+<?php if ($isLoggedIn): ?>
+<link rel="stylesheet" href="/css/notifications.css">
+<script src="/js/notifications.js"></script>
+<?php endif; ?>

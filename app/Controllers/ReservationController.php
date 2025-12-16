@@ -6,16 +6,19 @@ require_once __DIR__ . "/AuthMiddleware.php";
 require_once __DIR__ . "/../Models/ReservationModel.php";
 require_once __DIR__ . "/../Models/BienModel.php";
 require_once __DIR__ . "/../Models/TarifModel.php"; // Ajout pour id_tarif
+require_once __DIR__ . "/../Models/NotificationModel.php";
 
 class ReservationController extends BaseController
 {
     private $model;
     private $bienModel;
+    private $notificationModel;
 
     public function __construct()
     {
         $this->model = new ReservationModel();
         $this->bienModel = new BienModel();
+        $this->notificationModel = new NotificationModel();
     }
 
     public function store()
@@ -81,7 +84,25 @@ class ReservationController extends BaseController
                     'date_fin' => $date_fin,
                     'id_tarif' => $id_tarif
                 ];
-                $this->model->createReservation($data);
+                $reservationId = $this->model->createReservation($data);
+                // Notify the proprietaire (owner) of this bien about a new reservation
+                $bienDetails = $this->bienModel->getById($id_biens);
+                if ($bienDetails && !empty($bienDetails['id_locataire'])) {
+                    $locaName = trim(($_SESSION['user_prenom'] ?? '') . ' ' . ($_SESSION['user_nom'] ?? ''));
+                    $title = "Nouvelle réservation";
+                    $dd = date('d/m/Y', strtotime($date_debut));
+                    $df = date('d/m/Y', strtotime($date_fin));
+                    $bienName = $bienDetails['designation_bien'] ?? ("Bien #" . $id_biens);
+                    $message = ($locaName ? $locaName : 'Un locataire') . " a réservé votre bien \"" . $bienName . "\" du " . $dd . " au " . $df . ".";
+                    $link = "/proprietaire/myReservations";
+                    try { $this->notificationModel->create([
+                        'user_id' => (int)$bienDetails['id_locataire'],
+                        'type' => 'reservation_created',
+                        'title' => $title,
+                        'message' => $message,
+                        'link' => $link,
+                    ]); } catch (\Throwable $e) { /* ignore notif errors */ }
+                }
                 $_SESSION['success_message'] = "Votre demande de réservation a été envoyée avec succès.";
                 $this->redirect("/home");
             } catch (\Exception $e) {
@@ -123,6 +144,21 @@ class ReservationController extends BaseController
                 $affectedRows = $this->model->cancelReservation($id_reservation, $id_locataire);
                 if ($affectedRows > 0) {
                     $_SESSION['success_message'] = "La réservation a été annulée avec succès.";
+                    // Notify proprietaire that a reservation was cancelled by the locataire
+                    $bien = $this->bienModel->getById($reservation['id_biens']);
+                    if ($bien && !empty($bien['id_locataire'])) {
+                        $title = "Réservation annulée";
+                        $bienName = $bien['designation_bien'] ?? ("Bien #" . $reservation['id_biens']);
+                        $message = ((trim(($_SESSION['user_prenom'] ?? '') . ' ' . ($_SESSION['user_nom'] ?? ''))) ?: 'Un locataire') . " a annulé sa réservation (#" . $id_reservation . ") sur votre bien \"" . $bienName . "\".";
+                        $link = "/proprietaire/myReservations";
+                        try { $this->notificationModel->create([
+                            'user_id' => (int)$bien['id_locataire'],
+                            'type' => 'reservation_cancelled',
+                            'title' => $title,
+                            'message' => $message,
+                            'link' => $link,
+                        ]); } catch (\Throwable $e) { /* ignore notif errors */ }
+                    }
                 } else {
                     $_SESSION['error_message'] = "Impossible d'annuler la réservation.";
                 }

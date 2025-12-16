@@ -152,6 +152,12 @@ $routes = [
 
     // Routes Easter Eggs (Admin)
     "admin/easter-eggs" => ["controller" => "EasterEggController", "action" => "index"],
+
+    // API Notifications
+    "api/notifications" => ["controller" => "NotificationController", "action" => "list"],
+    "api/notifications/count" => ["controller" => "NotificationController", "action" => "count"],
+    "api/notifications/mark-read/([0-9]+)" => ["controller" => "NotificationController", "action" => "markRead"],
+    "api/notifications/mark-all-read" => ["controller" => "NotificationController", "action" => "markAllRead"],
 ];
 
 $matchedRoute = null;

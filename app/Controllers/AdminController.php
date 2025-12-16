@@ -12,6 +12,7 @@ require_once __DIR__ . "/../Models/AdminModel.php";
 require_once __DIR__ . "/../Models/ReservationModel.php";
 require_once __DIR__ . "/../Models/PhotoModel.php";
 require_once __DIR__ . "/../Models/CommentaireModel.php";
+require_once __DIR__ . "/../Models/NotificationModel.php";
 require_once __DIR__ . "/../../lib/Database.php";
 
 class AdminController extends BaseController {
@@ -26,6 +27,7 @@ class AdminController extends BaseController {
     private $reservationModel;
     private $photoModel;
     private $commentaireModel;
+    private $notificationModel;
 
     public function __construct() {
         AuthMiddleware::requireRole("Administrateur");
@@ -41,6 +43,7 @@ class AdminController extends BaseController {
         $this->reservationModel = new ReservationModel();
         $this->photoModel = new PhotoModel();
         $this->commentaireModel = new CommentaireModel();
+        $this->notificationModel = new NotificationModel();
     }
 
     public function index() {
@@ -383,6 +386,18 @@ class AdminController extends BaseController {
     }
 
     public function deleteBien($id) {
+        // Notify users with future reservations then delete related reservations
+        try {
+            $bien = $this->bienModel->getById($id);
+            $bienName = $bien['designation_bien'] ?? ("Bien #" . $id);
+            $title = 'Bien supprimé';
+            $message = 'Le bien "' . $bienName . '" sur lequel vous aviez une réservation a été supprimé. Votre réservation peut être affectée.';
+            $this->notificationModel->notifyUsersWithFutureReservationsForBien((int)$id, $title, $message, '/locataire/myReservations');
+        } catch (\Throwable $e) { }
+        // Optionally, clean reservations for this bien to avoid orphans
+        try {
+            $this->reservationModel->deleteByBien((int)$id);
+        } catch (\Throwable $e) { }
         $this->bienModel->delete($id);
         $this->redirect("/admin/biens");
     }
@@ -549,6 +564,22 @@ class AdminController extends BaseController {
                 'id_tarif' => $_POST["id_tarif"]
             ];
             $this->reservationModel->createReservation($data);
+            // Notify proprietaire about new reservation
+            $bien = $this->bienModel->getById($data['id_biens']);
+            if ($bien && !empty($bien['id_locataire'])) {
+                $title = "Nouvelle réservation";
+                $dd = date('d/m/Y', strtotime($data['date_debut']));
+                $df = date('d/m/Y', strtotime($data['date_fin']));
+                $bienName = $bien['designation_bien'] ?? ("Bien #" . $data['id_biens']);
+                $message = "Une nouvelle réservation a été créée sur votre bien \"" . $bienName . "\" du " . $dd . " au " . $df . ".";
+                try { $this->notificationModel->create([
+                    'user_id' => (int)$bien['id_locataire'],
+                    'type' => 'reservation_created',
+                    'title' => $title,
+                    'message' => $message,
+                    'link' => '/proprietaire/myReservations',
+                ]); } catch (\Throwable $e) { }
+            }
             $this->redirect("/admin/reservations");
         }
 
@@ -566,6 +597,7 @@ class AdminController extends BaseController {
 
     public function editReservation($id) {
         if ($_SERVER["REQUEST_METHOD"] === "POST") {
+            $before = $this->reservationModel->getById($id);
             $data = [
                 'id_biens' => $_POST["id_biens"],
                 'id_locataire' => $_POST["id_locataire"],
@@ -574,6 +606,32 @@ class AdminController extends BaseController {
                 'id_tarif' => $_POST["id_tarif"]
             ];
             $this->reservationModel->update($id, $data);
+            // Notify changes if dates or bien changed
+            if ($before) {
+                $changed = ($before['date_debut'] !== $data['date_debut']) || ($before['date_fin'] !== $data['date_fin']) || ((int)$before['id_biens'] !== (int)$data['id_biens']);
+                if ($changed) {
+                    // Notify locataire
+                    $bienNow = $this->bienModel->getById($data['id_biens']);
+                    $bienName = $bienNow['designation_bien'] ?? ("Bien #" . $data['id_biens']);
+                    try { $this->notificationModel->create([
+                        'user_id' => (int)$before['id_locataire'],
+                        'type' => 'reservation_updated',
+                        'title' => 'Réservation modifiée',
+                        'message' => 'Votre réservation #' . $id . ' ("' . $bienName . '") a été modifiée par un administrateur.',
+                        'link' => '/locataire/myReservations',
+                    ]); } catch (\Throwable $e) { }
+                    // Notify proprietaire
+                    if ($bienNow && !empty($bienNow['id_locataire'])) {
+                        try { $this->notificationModel->create([
+                            'user_id' => (int)$bienNow['id_locataire'],
+                            'type' => 'reservation_updated',
+                            'title' => 'Réservation modifiée',
+                            'message' => 'Une réservation (#' . $id . ') sur votre bien "' . $bienName . '" a été modifiée.',
+                            'link' => '/proprietaire/myReservations',
+                        ]); } catch (\Throwable $e) { }
+                    }
+                }
+            }
             $this->redirect("/admin/reservations");
         }
         $reservation = $this->reservationModel->getById($id);
@@ -592,7 +650,29 @@ class AdminController extends BaseController {
     }
 
     public function deleteReservation($id) {
+        $before = $this->reservationModel->getById($id);
         $this->reservationModel->delete($id);
+        if ($before) {
+            // Notify locataire and proprietaire about deletion
+            $bien = $this->bienModel->getById($before['id_biens']);
+            $bienName = $bien['designation_bien'] ?? ("Bien #" . $before['id_biens']);
+            try { $this->notificationModel->create([
+                'user_id' => (int)$before['id_locataire'],
+                'type' => 'reservation_deleted',
+                'title' => 'Réservation annulée',
+                'message' => 'Votre réservation #' . $id . ' ("' . $bienName . '") a été annulée par un administrateur.',
+                'link' => '/locataire/myReservations',
+            ]); } catch (\Throwable $e) { }
+            if ($bien && !empty($bien['id_locataire'])) {
+                try { $this->notificationModel->create([
+                    'user_id' => (int)$bien['id_locataire'],
+                    'type' => 'reservation_deleted',
+                    'title' => 'Réservation annulée',
+                    'message' => 'Une réservation (#' . $id . ') sur votre bien "' . $bienName . '" a été annulée.',
+                    'link' => '/proprietaire/myReservations',
+                ]); } catch (\Throwable $e) { }
+            }
+        }
         $this->redirect("/admin/reservations");
     }
 

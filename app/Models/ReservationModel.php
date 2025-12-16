@@ -188,6 +188,12 @@ class ReservationModel extends Model {
         return $stmt->rowCount();
     }
 
+    public function deleteByBien($id_biens) {
+        $stmt = $this->db->prepare("DELETE FROM " . $this->table . " WHERE id_biens = :id_biens");
+        $stmt->execute(['id_biens' => $id_biens]);
+        return $stmt->rowCount();
+    }
+
     /**
      * Récupérer les réservations d'un utilisateur (locataire)
      */
