@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="/css/navbar.css">
     <link rel="stylesheet" href="/css/favoris.css">
     <link rel="stylesheet" href="/css/sunset-background.css">
+    <link rel="stylesheet" href="/css/night-background.css">
 </head>
 <body class="home-sunset">
     <div class="top-banner"></div>

@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="/css/navbar.css">
     <link rel="stylesheet" href="/css/auth.css">
     <link rel="stylesheet" href="/css/sunset-background.css">
+    <link rel="stylesheet" href="/css/night-background.css">
     <link rel="stylesheet" href="/lib/intl-tel-input/intlTelInput.min.css">
     <link rel="stylesheet" href="https://code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
     <script src="https://cdn.jsdelivr.net/npm/heroicons@2.0.18/outline/index.js"></script>
