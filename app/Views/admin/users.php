@@ -12,6 +12,7 @@
     <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
     <link rel="stylesheet" href="https://code.jquery.com/ui/1.14.1/themes/base/jquery-ui.css">
     <script src="https://code.jquery.com/ui/1.14.1/jquery-ui.js"></script>
+    <script src="/js/admin-multi-delete.js"></script>
 </head>
 <body>
 
@@ -88,6 +89,12 @@
                     "sSortDescending": ": activer pour trier la colonne par ordre décroissant"
                 }
                 }
+            });
+            
+            // Initialiser la suppression multiple
+            initMultiDelete({
+                entityType: 'utilisateur',
+                deleteEndpoint: '/admin/deleteMultipleUsers'
             });
         });
         </script>

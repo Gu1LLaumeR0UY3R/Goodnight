@@ -84,16 +84,29 @@ class BienModel extends Model {
 
     // Récupérer les biens d'un propriétaire
     public function getBiensByProprietaire($proprietaireId) {
+        $currentYear = date('Y');
         $sql = "
             SELECT 
                 b.*,
-                (SELECT lien_photo FROM photos WHERE id_biens = b.id_biens ORDER BY id_photo ASC LIMIT 1) as premiere_photo
+                c.ville_nom as commune_nom,
+                (SELECT lien_photo FROM photos WHERE id_biens = b.id_biens ORDER BY id_photo ASC LIMIT 1) as premiere_photo,
+                CONCAT(
+                    COALESCE(
+                        (SELECT MIN(prix_semaine) FROM tarifs WHERE id_biens = b.id_biens AND annee = :currentYear AND prix_semaine > 0),
+                        0
+                    ),
+                    '€/sem'
+                ) as prix
             FROM biens b 
+            LEFT JOIN commune c ON b.id_commune = c.id_commune
             WHERE b.id_locataire = :id_locataire
             ORDER BY b.designation_bien
         ";
         $stmt = $this->db->prepare($sql);
-        $stmt->execute(['id_locataire' => $proprietaireId]);
+        $stmt->execute([
+            'id_locataire' => $proprietaireId,
+            'currentYear' => $currentYear
+        ]);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 

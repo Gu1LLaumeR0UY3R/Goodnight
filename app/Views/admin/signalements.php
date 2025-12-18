@@ -148,9 +148,15 @@
             <?php unset($_SESSION['flash']); ?>
         <?php endif; ?>
         
-        <div class="admin-header">
-            <h1>Signalements</h1>
-            <p>Gérez les signalements des utilisateurs</p>
+        <div class="admin-page-header">
+            <div class="aph-main">
+                <p class="aph-eyebrow">Administration</p>
+                <div class="aph-title-row">
+                    <h1>Signalements</h1>
+                    <span class="aph-chip">En attente : <?php echo count($signalements ?? []); ?></span>
+                </div>
+                <p class="aph-sub">Gérez les signalements des utilisateurs.</p>
+            </div>
         </div>
 
         <?php if (empty($signalements)): ?>

@@ -18,7 +18,7 @@
         <!-- HEADER -->
         <section class="favorites-header">
             <div class="header-content">
-                <h1>Mes Biens Favoris ❤️</h1>
+                <h1>Mes Biens Favoris</h1>
                 <p class="header-subtitle">Découvrez vos biens préférés</p>
             </div>
         </section>
@@ -36,8 +36,8 @@
                     <?php foreach ($favorites as $bien): ?>
                         <div class="bien-card" data-bien-id="<?php echo htmlspecialchars($bien["id_biens"]); ?>">
                             <!-- Bouton Favori -->
-                            <button class="btn-favorite" data-bien-id="<?php echo htmlspecialchars($bien["id_biens"]); ?>" title="Retirer des favoris">
-                                <span class="heart-icon">♡</span>
+                            <button class="btn-fav active" data-bien-id="<?php echo htmlspecialchars($bien["id_biens"]); ?>" title="Retirer des favoris" onclick="event.preventDefault();">
+                                ♥
                             </button>
                             
                             <img src="<?php echo htmlspecialchars($bien["premiere_photo"] ?? '/images/default.jpg'); ?>" alt="Photo de <?php echo htmlspecialchars($bien["designation_bien"]); ?>">

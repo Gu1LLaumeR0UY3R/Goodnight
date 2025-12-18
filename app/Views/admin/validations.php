@@ -137,9 +137,15 @@
             <?php unset($_SESSION['flash']); ?>
         <?php endif; ?>
         
-        <div class="admin-header">
-            <h1>Validation des Biens</h1>
-            <p>Gérez les biens en attente de validation</p>
+        <div class="admin-page-header">
+            <div class="aph-main">
+                <p class="aph-eyebrow">Administration</p>
+                <div class="aph-title-row">
+                    <h1>Validation des biens</h1>
+                    <span class="aph-chip">En attente : <?php echo count($biensEnAttente ?? []); ?></span>
+                </div>
+                <p class="aph-sub">Gérez les biens en attente de validation.</p>
+            </div>
         </div>
 
         <?php if (empty($biensEnAttente)): ?>

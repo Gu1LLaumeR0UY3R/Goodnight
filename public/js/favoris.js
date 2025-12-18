@@ -14,7 +14,7 @@ document.addEventListener('DOMContentLoaded', function() {
  * Attacher les événements aux boutons favoris
  */
 function attachFavoriteListeners() {
-    const favoriteButtons = document.querySelectorAll('.btn-favorite');
+    const favoriteButtons = document.querySelectorAll('.btn-fav');
 
     favoriteButtons.forEach(button => {
         button.addEventListener('click', function(e) {
@@ -83,7 +83,7 @@ function loadFavoritesFromServer() {
     .then(data => {
         if (data.success && Array.isArray(data.favoriteIds)) {
             data.favoriteIds.forEach(bienId => {
-                const button = document.querySelector(`.btn-favorite[data-bien-id="${bienId}"]`);
+                const button = document.querySelector(`.btn-fav[data-bien-id="${bienId}"]`);
                 if (button) {
                     button.classList.add('active');
                 }
@@ -155,4 +155,70 @@ function showNotification(message, type) {
 function isUserLoggedIn() {
     return true; // Assumé vrai puisque le contrôleur vérifie le rôle
 }
+
+/**
+ * Effacer tous les favoris
+ */
+function clearAllFavorites() {
+    if (!confirm('Êtes-vous sûr de vouloir supprimer tous vos favoris ?')) {
+        return;
+    }
+
+    const favoriteButtons = document.querySelectorAll('.btn-fav.active');
+    
+    if (favoriteButtons.length === 0) {
+        showNotification('Aucun favori à supprimer', 'error');
+        return;
+    }
+
+    // Supprimer tous les favoris un par un
+    let removedCount = 0;
+    favoriteButtons.forEach(button => {
+        const bienId = button.dataset.bienId;
+        
+        // Retirer la classe active immédiatement
+        button.classList.remove('active');
+        
+        // Sauvegarder sur le serveur
+        saveToServer('remove', bienId, (success) => {
+            if (success) {
+                removedCount++;
+                
+                // Supprimer la carte du DOM si on est sur la page favoris
+                const card = button.closest('.bien-card');
+                if (card) {
+                    card.style.animation = 'fadeOut 0.3s ease';
+                    setTimeout(() => {
+                        card.remove();
+                        
+                        // Vérifier s'il reste des favoris
+                        const remainingCards = document.querySelectorAll('.bien-card');
+                        if (remainingCards.length === 0) {
+                            // Recharger la page pour afficher l'état vide
+                            window.location.reload();
+                        }
+                    }, 300);
+                }
+            }
+        });
+    });
+
+    showNotification(`${favoriteButtons.length} favori(s) supprimé(s)`, 'success');
+}
+
+// Animation de disparition
+const style = document.createElement('style');
+style.textContent = `
+    @keyframes fadeOut {
+        from {
+            opacity: 1;
+            transform: scale(1);
+        }
+        to {
+            opacity: 0;
+            transform: scale(0.95);
+        }
+    }
+`;
+document.head.appendChild(style);
 

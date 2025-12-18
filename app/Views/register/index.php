@@ -390,7 +390,7 @@
                     lowercase: /[a-z]/.test(password),
                     uppercase: /[A-Z]/.test(password),
                     digit: /\d/.test(password),
-                    special: /[@$!%*?&]/.test(password)
+                    special: /[^A-Za-z\d]/.test(password)
                 };
                 
                 // Calculer le score

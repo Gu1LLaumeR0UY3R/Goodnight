@@ -1,12 +1,12 @@
 /* ========================================
    CSS PAGE D'ACCUEIL - GOODNIGHT
-   Thème Crépuscule (jour) / Nuit étoilée (sombre)
+   Thème Crépuscule (jour)
    Responsive Mobile-First
    ======================================== */
 
-/* ===== VARIABLES CSS - THÈMES ===== */
+/* ===== VARIABLES CSS ===== */
 :root {
-  /* Thème Crépuscule (Jour) - 5 couleurs exactes */
+  /* Couleurs */
   --twilight-amber: #FF8C42;      /* Orange chaleureux */
   --twilight-rose: #FF6B9D;       /* Rose tendre */
   --twilight-cream: #FFF8F0;      /* Crème douce */
@@ -33,29 +33,6 @@
   
   /* Transitions */
   --transition-base: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.dark-mode {
-  /* Thème Nuit étoilée (Sombre) - 5 couleurs exactes */
-  --night-void: #0B0C10;          /* Noir profond */
-  --night-deep: #1F2833;          /* Gris très foncé */
-  --night-stellar: #45A29E;       /* Turquoise stellaire */
-  --night-nebula: #66FCF1;        /* Cyan néon */
-  --night-silver: #C5C6C7;        /* Argent */
-  
-  /* Application thème nuit */
-  --bg-primary: var(--night-void);
-  --bg-secondary: var(--night-deep);
-  --bg-card: var(--night-deep);
-  --text-primary: var(--night-silver);
-  --text-secondary: #A0AEC0;
-  --text-muted: #718096;
-  --accent-primary: var(--night-nebula);
-  --accent-secondary: var(--night-stellar);
-  --accent-tertiary: var(--night-nebula);
-  --border-color: #2D3748;
-  --shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-  --shadow-hover: 0 8px 24px rgba(102, 252, 241, 0.15);
 }
 
 /* ===== RESET ET BASE ===== */
@@ -451,94 +428,144 @@ button {
 
 .biens-grid {
   display: grid;
-  grid-template-columns: 1fr;
-  gap: 2rem;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1.5rem;
+  padding: 0 1rem;
 }
 
-/* ===== CARTES BIEN ===== */
 .bien-card {
-  background: var(--bg-card);
-  border-radius: 16px;
+  display: block;
+  background: #fff;
+  border-radius: 10px;
   overflow: hidden;
-  box-shadow: var(--shadow);
-  border: 1px solid var(--border-color);
-  transition: var(--transition-base);
-  display: flex;
-  flex-direction: column;
-  height: 100%;
+  text-decoration: none;
+  color: inherit;
+  transition: all 0.25s ease;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
 }
 
 .bien-card:hover {
-  transform: translateY(-8px);
-  box-shadow: var(--shadow-hover);
-  border-color: var(--accent-primary);
+  box-shadow: 0 8px 16px rgba(0,0,0,0.12);
+  transform: translateY(-4px);
 }
 
-.bien-card img {
+.bien-image {
+  position: relative;
   width: 100%;
-  height: 250px;
-  object-fit: cover;
-  transition: var(--transition-base);
-}
-
-.bien-card:hover img {
-  transform: scale(1.05);
-}
-
-.bien-card > img {
+  height: 280px;
   overflow: hidden;
+  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
 }
 
-.bien-card h3 {
-  font-size: 1.375rem;
-  margin: 1.25rem 1.5rem 0.75rem;
-  color: var(--text-primary);
-  font-weight: 600;
+.bien-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.bien-card p {
-  margin: 0 1.5rem 0.5rem;
-  color: var(--text-secondary);
-  font-size: 0.9375rem;
-  line-height: 1.5;
+.bien-card:hover .bien-image img {
+  transform: scale(1.08);
 }
 
-.bien-card p:first-of-type {
-  margin-top: 0.5rem;
-}
-
-.bien-card .prix {
+.bien-prix,
+.bien-prix-badge {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  padding: 0.5rem 1rem;
+  border-radius: 12px;
+  font-weight: 800;
   font-size: 1.125rem;
-  font-weight: 700;
-  color: var(--accent-primary);
-  margin-top: 1rem;
-  margin-bottom: 1rem;
+  color: #ff5a5f;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  border: 2px solid rgba(255, 90, 95, 0.3);
+  z-index: 2;
+  transition: all 0.3s ease;
 }
 
-.bien-card .btn-reserver {
-  display: block;
-  margin: 0 1.5rem 1.5rem;
-  padding: 0.875rem;
-  background: var(--accent-primary);
-  color: white;
-  text-align: center;
-  border-radius: 10px;
-  font-weight: 600;
-  font-size: 1rem;
-  transition: var(--transition-base);
-  margin-top: auto;
+.bien-card:hover .bien-prix,
+.bien-card:hover .bien-prix-badge {
+  transform: scale(1.05);
+  box-shadow: 0 6px 20px rgba(0,0,0,0.25);
 }
 
-.bien-card .btn-reserver:hover {
-  background: var(--accent-secondary);
-  transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(255, 90, 95, 0.4);
+.bien-prix small,
+.bien-prix-badge small {
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: #666;
+  margin-left: 2px;
 }
 
-.dark-mode .bien-card .btn-reserver:hover {
-  background: var(--night-stellar);
-  box-shadow: 0 6px 20px rgba(102, 252, 241, 0.4);
+.btn-fav {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  background: rgba(255,255,255,0.9);
+  border: none;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  font-size: 1.2rem;
+  color: #999;
+  cursor: pointer;
+  transition: all 0.2s;
 }
+
+.btn-fav:hover,
+.btn-fav.active {
+  color: #ff5a5f;
+  background: white;
+}
+
+.bien-details {
+  padding: 6px 10px;
+  background: white;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+  gap: 2px;
+  min-height: 0;
+}
+
+.bien-texts { display:flex; flex-direction:column; gap:2px; min-width:0; }
+
+.bien-details h3 {
+  margin: 0;
+  font-size: 16px; /* plus lisible mais compact */
+  font-weight: 800;
+  color: #1f2937; /* gris foncé élégant */
+  line-height: 1.15;
+  letter-spacing: 0.2px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.bien-lieu {
+  margin: 0;
+  font-size: 0.6875rem;
+  color: #666;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 0.2rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* ancien bouton 'Voir' supprimé */
+
+.bien-specs {
+  display: none;
+}
+
+/* (nettoyé) */
 
 /* Message aucun bien */
 .liste-biens p {

@@ -6,6 +6,7 @@
     <title>GlobeNight - Votre plateforme de location</title>
     <link rel="stylesheet" href="/css/style.css">
     <link rel="stylesheet" href="/css/navbar.css">
+    <link rel="stylesheet" href="/css/home.css?v=<?php echo time(); ?>">
     <link rel="stylesheet" href="/css/sunset-background.css">
     <link rel="stylesheet" href="/css/night-background.css">
     <link rel="stylesheet" href="/css/favoris.css">
@@ -209,25 +210,21 @@
             <div class="biens-grid">
                 <?php if (!empty($biens)): ?>
                     <?php foreach ($biens as $bien): ?>
-                        <div class="bien-card" data-bien-id="<?php echo htmlspecialchars($bien["id_biens"]); ?>">
-                            <!-- Bouton Favori -->
-                            <button class="btn-favorite" data-bien-id="<?php echo htmlspecialchars($bien["id_biens"]); ?>" title="Ajouter aux favoris">
-                                <span class="heart-icon">♡</span>
-                            </button>
-                            
-                            <img src="<?php echo htmlspecialchars($bien["premiere_photo"] ?? '/images/default.jpg'); ?>" alt="Photo de <?php echo htmlspecialchars($bien["designation_bien"]); ?>">
-                            <h3><?php echo htmlspecialchars($bien["designation_bien"]); ?></h3>
-                            <p>Type: <?php echo htmlspecialchars($bien["type_bien_nom"]); ?></p>
-                            <p>Commune: <?php echo htmlspecialchars($bien["commune_nom"]); ?></p>
-                            <p>Superficie: <?php echo htmlspecialchars($bien["superficie_biens"]); ?> m²</p>
-                            <p>Couchages: <?php echo htmlspecialchars($bien["nb_couchage"]); ?></p>
-                            <p><?php echo htmlspecialchars(substr($bien["description_biens"], 0, 100)); ?>...</p>
-                            <p class="prix">Prix jour: <?php echo htmlspecialchars(($bien["prix_semaine"] ?? null) ? number_format($bien["prix_semaine"], 2, ',', ' ') . ' €' : 'Non renseigné'); ?></p>
-                            <a href="/bien/<?php echo htmlspecialchars($bien["id_biens"]); ?>" class="btn-reserver">Voir les détails</a>
-                        </div>
+                        <a href="/bien/<?php echo htmlspecialchars($bien["id_biens"]); ?>" class="bien-card">
+                            <div class="bien-image">
+                                <img src="<?php echo htmlspecialchars($bien["premiere_photo"] ?? '/images/default.jpg'); ?>" 
+                                     alt="<?php echo htmlspecialchars($bien["designation_bien"]); ?>">
+                                <span class="bien-prix-badge"><?php echo htmlspecialchars(($bien["prix_semaine"] ?? null) ? number_format($bien["prix_semaine"] / 7, 0) . '€' : 'N/C'); ?><small>/nuit</small></span>
+                                <button class="btn-fav" data-bien-id="<?php echo htmlspecialchars($bien["id_biens"]); ?>" onclick="event.preventDefault();">♥</button>
+                            </div>
+                            <div class="bien-details">
+                                <h3><?php echo htmlspecialchars($bien["designation_bien"]); ?></h3>
+                                <p class="bien-lieu">📍 <?php echo htmlspecialchars($bien["commune_nom"]); ?></p>
+                            </div>
+                        </a>
                     <?php endforeach; ?>
                 <?php else: ?>
-                    <p>Aucun bien trouvé pour votre recherche.</p>
+                    <p style="grid-column: 1/-1; text-align: center; padding: 3rem; color: #999;">Aucun bien disponible</p>
                 <?php endif; ?>
             </div>
         </section>
@@ -424,12 +421,7 @@
             }
         });
 
-        // Ouvrir automatiquement si des filtres sont actifs
-        <?php if (!empty(array_filter($filters ?? []))): ?>
-        document.getElementById('filters-panel').style.display = 'block';
-        document.getElementById('toggle-filters').innerHTML = '<svg style="width: 1.3rem; height: 1.3rem;" fill="none" stroke-width="2" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"></path></svg>';
-        document.getElementById('toggle-filters').title = 'Fermer les filtres';
-        <?php endif; ?>
+        // Ne pas ouvrir automatiquement les filtres après une recherche
 
         // ========== GESTION DES PRESTATIONS (AUTOCOMPLÉTION) ==========
         const prestationsData = <?php echo json_encode($prestations ?? []); ?>;

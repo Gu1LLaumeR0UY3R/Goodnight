@@ -68,7 +68,7 @@ body.admin-page .navbar-sticky {
 .navbar-menu {
   list-style: none;
   display: flex;
-  gap: 1.75rem;
+  gap: 1.25rem;
   margin: 0;
   padding: 0;
   justify-content: flex-start;
@@ -80,9 +80,10 @@ body.admin-page .navbar-sticky {
 .navbar-link {
   color: var(--text-primary);
   font-weight: 500;
-  padding: 0.5rem 1rem;
+  padding: 0.5rem 0.85rem;
   border-radius: 8px;
   transition: all 0.2s;
+  white-space: nowrap; /* évite les retours à la ligne sur les labels longs (propriétaire) */
 }
 
 .navbar-link:hover {
@@ -290,6 +291,6 @@ body.admin-page .navbar-sticky {
 /* ===== RESPONSIVE DESKTOP (1024px+) ===== */
 @media (min-width: 1024px) {
   .navbar-menu {
-    gap: 2rem;
+    gap: 1.5rem;
   }
 }

@@ -257,10 +257,9 @@
 .info-block {
   padding: 2rem;
   border-radius: 18px;
-  background: linear-gradient(135deg, rgba(255,255,255,1) 0%, rgba(255,90,95,0.02) 100%);
-  border: 2px solid rgba(255,90,95,0.15);
-  box-shadow: 0 10px 35px rgba(255,90,95,0.12);
-  border-left: 5px solid #FF5A5F;
+  background: #FFFFFF;
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
 }
 
 .info-block p {
@@ -287,17 +286,15 @@
 }
 
 .dark-mode .info-block {
-  background: rgba(31,40,51,0.95);
+  background: #1F2833;
   border: 1px solid rgba(255,255,255,0.12);
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.45);
 }
 
 .info-block h3 {
   font-size: 1.5rem;
   margin-bottom: 1rem;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+  color: #FF5A5F;
   font-weight: 800;
   letter-spacing: -0.3px;
 }

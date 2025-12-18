@@ -24,6 +24,24 @@ class BlocageModel extends Model {
     }
 
     public function createBlocage($data) {
+        // Vérifier s'il existe des réservations sur ces dates
+        $conflictingSql = "SELECT COUNT(*) as count FROM reservations 
+                          WHERE id_biens = :id_biens 
+                          AND (
+                              (date_debut <= :date_fin AND date_fin >= :date_debut)
+                          )";
+        $conflictStmt = $this->db->prepare($conflictingSql);
+        $conflictStmt->execute([
+            'id_biens' => $data['id_biens'],
+            'date_debut' => $data['date_debut'],
+            'date_fin' => $data['date_fin']
+        ]);
+        $result = $conflictStmt->fetch(PDO::FETCH_ASSOC);
+        
+        if ($result['count'] > 0) {
+            throw new Exception("Impossible de créer un blocage : il existe déjà des réservations sur cette période.");
+        }
+        
         $sql = "INSERT INTO " . $this->table . " (id_biens, date_debut, date_fin, motif, commentaire) VALUES (:id_biens, :date_debut, :date_fin, :motif, :commentaire)";
         $stmt = $this->db->prepare($sql);
         $stmt->execute([

@@ -1,88 +1,101 @@
 /* ========================================
-   CALENDRIER PROPRIÉTAIRE - STYLE MODERNE
+   CALENDRIER PROPRIÉTAIRE
    ======================================== */
+
+/* Hauteur du calendrier */
+#calendar {
+  min-height: 800px !important;
+}
+
+/* Toolbar */
+.fc .fc-toolbar {
+  padding: 0.5rem 0 !important;
+  margin-bottom: 1.5rem !important;
+}
+
+.fc .fc-toolbar-title {
+  font-size: 1.75rem !important;
+  font-weight: 700 !important;
+}
+
+/* Cellules des jours */
+.fc .fc-daygrid-day-frame {
+  min-height: 120px !important;
+}
+
+.fc .fc-daygrid-day-top {
+  justify-content: center !important;
+  padding: 0.5rem !important;
+}
+
+.fc .fc-daygrid-day-number {
+  font-size: 1rem !important;
+  padding: 0.25rem 0.5rem !important;
+}
+
+/* Jour aujourd'hui */
+.fc .fc-day-today {
+  background: rgba(255, 90, 95, 0.08) !important;
+}
+
+.dark-mode .fc .fc-day-today {
+  background: rgba(102, 252, 241, 0.1) !important;
+}
+
+.fc .fc-day-today .fc-daygrid-day-number {
+  background: var(--accent-primary);
+  color: white;
+  border-radius: 50%;
+  width: 36px;
+  height: 36px;
+  display: inline-flex !important;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+}
+
+/* En-têtes des colonnes */
+.fc .fc-col-header-cell {
+  padding: 1rem 0 !important;
+  font-size: 0.95rem !important;
+}
 
 /* Style pour les événements du calendrier */
 .fc-event.reservation-event {
   background: #4caf50 !important;
   border-color: #4caf50 !important;
+  font-size: 0.9rem !important;
 }
 
 .fc-event.blocage-event {
   background: #ff7f50 !important;
   border-color: #ff7f50 !important;
+  font-size: 0.9rem !important;
 }
 
-/* Style pour les jours du calendrier */
-.fc-daygrid-day {
-  transition: background 0.2s;
+.fc-event {
+  padding: 4px 6px !important;
+  margin: 2px 0 !important;
 }
 
-.fc-daygrid-day:hover {
-  background: rgba(255, 90, 95, 0.05);
+/* Boutons */
+.fc .fc-button {
+  font-size: 0.95rem !important;
+  padding: 0.6rem 1.2rem !important;
+  border-radius: 10px !important;
 }
 
-.dark-mode .fc-daygrid-day:hover {
-  background: rgba(102, 252, 241, 0.05);
-}
-
-/* Style pour les en-têtes de colonnes */
-.fc-col-header {
-  background: var(--bg-secondary);
-}
-
-.dark-mode .fc-col-header {
-  background: rgba(255, 255, 255, 0.05);
-}
-
-/* Style pour aujourd'hui */
-.fc-day-today {
-  background: rgba(255, 90, 95, 0.1) !important;
-}
-
-.dark-mode .fc-day-today {
-  background: rgba(102, 252, 241, 0.1) !important;
-}
-
-/* Style pour les boutons de navigation */
-.fc-prev-button,
-.fc-next-button,
-.fc-today-button {
-  transition: all 0.2s !important;
-}
-
-.fc-prev-button:hover,
-.fc-next-button:hover,
-.fc-today-button:hover {
-  transform: translateY(-2px) !important;
-  box-shadow: 0 4px 12px rgba(255, 90, 95, 0.3) !important;
-}
-
-.dark-mode .fc-prev-button:hover,
-.dark-mode .fc-next-button:hover,
-.dark-mode .fc-today-button:hover {
-  box-shadow: 0 4px 12px rgba(102, 252, 241, 0.3) !important;
-}
-
-/* Personnalisation du texte des événements */
-.fc-event-title {
-  font-weight: 600 !important;
-  font-size: 0.875rem !important;
-}
-
-/* Responsive pour mobile */
-@media (max-width: 767px) {
-  .fc-toolbar {
-    flex-direction: column !important;
-    gap: 1rem !important;
+/* Responsive */
+@media (max-width: 768px) {
+  #calendar {
+    min-height: 600px !important;
   }
-
-  .fc-toolbar-chunk {
-    display: flex;
-    justify-content: center;
+  
+  .fc .fc-daygrid-day-frame {
+    min-height: 80px !important;
   }
-
-  .fc-event-title {
-    font-size: 0.75rem !important;
+  
+  .fc .fc-toolbar-title {
+    font-size: 1.25rem !important;
   }
 }
