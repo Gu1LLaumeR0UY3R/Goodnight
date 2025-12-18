@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="/css/photo-upload.css">
     <link rel="stylesheet" href="/css/prestations.css">
     <link rel="stylesheet" href="/css/sunset-background.css">
+    <link rel="stylesheet" href="/css/night-background.css">
     <link rel="stylesheet" href="//code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
     <style>
         main {
