@@ -10,6 +10,7 @@
     <link rel="stylesheet" href="/css/dashboard-proprio.css">
     <link href="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.css" rel="stylesheet" />
     <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 </head>
 <body class="home-sunset">
     <?php include __DIR__ . '/../layout/navbar.php'; ?>
@@ -23,6 +24,37 @@
 
     <div class="dashboard">
         <h1>Tableau de bord Propriétaire</h1>
+
+        <!-- KPI Summary -->
+        <section class="kpi-bar" aria-label="Résumé des indicateurs">
+            <div class="kpi-card">
+                <div class="kpi-icon">🏠</div>
+                <div class="kpi-value" id="kpi-total">0</div>
+                <div class="kpi-label">Biens</div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-icon">✅</div>
+                <div class="kpi-value" id="kpi-valides">0</div>
+                <div class="kpi-label">Validés</div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-icon">⏳</div>
+                <div class="kpi-value" id="kpi-attente">0</div>
+                <div class="kpi-label">En attente</div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-icon">📅</div>
+                <div class="kpi-value" id="kpi-resa-avenir">—</div>
+                <div class="kpi-label">Réservations à venir</div>
+            </div>
+        </section>
+
+        <!-- Actions rapides -->
+        <div class="quick-actions">
+            <a class="qa-btn" href="/proprietaire/addBien">+ Ajouter un bien</a>
+            <button class="qa-btn" type="button" onclick="openBlocageModal()">Créer un blocage</button>
+            <a class="qa-btn" href="/proprietaire/myReservations">Voir mes réservations</a>
+        </div>
 
         <!-- Visual wheel stage: orange background with particles and 3D rotating wheel -->
         <div class="wheel-stage" id="wheelStage">
@@ -71,6 +103,16 @@
                 </div>
                 <?php endif; ?>
 
+                <!-- Filtres par statut -->
+                <div class="filter-by-status">
+                    <h4>Par statut</h4>
+                    <div class="status-filter-buttons">
+                        <button class="btn-status-filter active" data-status-id="all" onclick="filterByStatus('all')">Tous</button>
+                        <button class="btn-status-filter" data-status-id="valide" onclick="filterByStatus('valide')">Validés</button>
+                        <button class="btn-status-filter" data-status-id="en_attente" onclick="filterByStatus('en_attente')">En attente</button>
+                    </div>
+                </div>
+
                 <div class="filter-list">
                     <?php foreach($biens ?? [] as $b): ?>
                         <label class="filter-item">
@@ -105,6 +147,134 @@
 
             <div class="calendar-actions">
                 <button class="btn btn-primary" onclick="openBlocageModal()">+ Créer un blocage</button>
+            </div>
+        </div>
+
+        <!-- Statistiques et graphiques -->
+        <div class="stats-section">
+            <div class="stats-header">
+                <h2>📊 Statistiques et revenus</h2>
+                <button class="btn-toggle-filters" onclick="toggleStatsFilters()">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="4" y1="6" x2="20" y2="6"></line>
+                        <line x1="4" y1="12" x2="20" y2="12"></line>
+                        <line x1="4" y1="18" x2="20" y2="18"></line>
+                        <circle cx="8" cy="6" r="2"></circle>
+                        <circle cx="16" cy="12" r="2"></circle>
+                        <circle cx="12" cy="18" r="2"></circle>
+                    </svg>
+                    Filtres avancés
+                </button>
+            </div>
+            
+            <!-- Panneau de filtres avancés (repliable) -->
+            <div class="stats-filters-panel" id="statsFiltersPanel" style="display:none;">
+                <div class="stats-filters-grid">
+                    <!-- Filtre par bien (multi-sélection) -->
+                    <div class="stats-filter-group stats-filter-biens-full">
+                        <label class="stats-filter-label">🏠 Biens sélectionnés</label>
+                        <div class="stats-biens-badges" id="statsBiensBadges">
+                            <button class="stats-bien-badge active" data-bien-id="all" onclick="toggleBienFilter(this, 'all')">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                                </svg>
+                                Tous les biens
+                            </button>
+                            <?php foreach($biens ?? [] as $b): ?>
+                                <button class="stats-bien-badge" data-bien-id="<?php echo $b['id_biens']; ?>" onclick="toggleBienFilter(this, <?php echo $b['id_biens']; ?>)">
+                                    <?php echo htmlspecialchars($b['designation_bien']); ?>
+                                </button>
+                            <?php endforeach; ?>
+                        </div>
+                    </div>
+                    
+                    <!-- Filtre par type de bien -->
+                    <div class="stats-filter-group">
+                        <label class="stats-filter-label">🏘️ Type de bien</label>
+                        <select id="statsFilterType" class="stats-filter-select" onchange="applyStatsFilters()">
+                            <option value="all">Tous types</option>
+                            <?php foreach($typesBiens ?? [] as $type): ?>
+                                <option value="<?php echo $type['id_typebien']; ?>"><?php echo htmlspecialchars($type['desc_type_bien']); ?></option>
+                            <?php endforeach; ?>
+                        </select>
+                    </div>
+                    
+                    <!-- Période personnalisée -->
+                    <div class="stats-filter-group">
+                        <label class="stats-filter-label">📅 Date début</label>
+                        <input type="date" id="statsFilterDateDebut" class="stats-filter-input" onchange="applyStatsFilters()">
+                    </div>
+                    
+                    <div class="stats-filter-group">
+                        <label class="stats-filter-label">📅 Date fin</label>
+                        <input type="date" id="statsFilterDateFin" class="stats-filter-input" onchange="applyStatsFilters()">
+                    </div>
+                    
+                    <!-- Bouton reset -->
+                    <div class="stats-filter-group stats-filter-actions">
+                        <button class="btn-reset-filters" onclick="resetStatsFilters()">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polyline points="1 4 1 10 7 10"></polyline>
+                                <path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"></path>
+                            </svg>
+                            Réinitialiser
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Sélecteur de période -->
+            <div class="stats-controls">
+                <div class="period-selector">
+                    <button class="btn-period" data-period="hour" onclick="changePeriod('hour')">24H</button>
+                    <button class="btn-period" data-period="day" onclick="changePeriod('day')">7J</button>
+                    <button class="btn-period active" data-period="month" onclick="changePeriod('month')">Mois</button>
+                    <button class="btn-period" data-period="year" onclick="changePeriod('year')">Année</button>
+                </div>
+                
+                <div class="date-selector" id="dateSelector">
+                    <select id="yearSelect" onchange="updateCharts()">
+                        <?php for($y = date('Y'); $y >= date('Y') - 5; $y--): ?>
+                            <option value="<?php echo $y; ?>" <?php echo $y == date('Y') ? 'selected' : ''; ?>><?php echo $y; ?></option>
+                        <?php endfor; ?>
+                    </select>
+                </div>
+            </div>
+            
+            <!-- Indicateurs de comparaison -->
+            <div class="comparison-bar" id="comparisonBar" style="display:none;">
+                <div class="comparison-item">
+                    <span class="comparison-label">📊 Réservations:</span>
+                    <span class="comparison-value" id="compReservations">-</span>
+                </div>
+                <div class="comparison-item">
+                    <span class="comparison-label">💰 Revenus:</span>
+                    <span class="comparison-value" id="compRevenue">-</span>
+                </div>
+            </div>
+            
+            <!-- Graphiques principaux -->
+            <div class="charts-grid">
+                <div class="chart-card">
+                    <h3>📊 Réservations</h3>
+                    <canvas id="reservationsChart"></canvas>
+                </div>
+                <div class="chart-card">
+                    <h3>💰 Revenus (€)</h3>
+                    <canvas id="revenueChart"></canvas>
+                </div>
+            </div>
+            
+            <!-- Graphiques avancés -->
+            <div class="charts-grid">
+                <div class="chart-card">
+                    <h3>📈 Taux d'occupation (%)</h3>
+                    <canvas id="occupancyChart"></canvas>
+                </div>
+                <div class="chart-card">
+                    <h3>🏘️ Revenus par bien (€)</h3>
+                    <canvas id="revenueByBienChart"></canvas>
+                </div>
             </div>
         </div>
     </div>
@@ -287,6 +457,46 @@
         const biens = <?php echo json_encode($biens ?? []); ?>;
         // FullCalendar global instance (accessible depuis les handlers)
         window.fcCalendar = null;
+
+            // KPI computation
+            (function updateKPIs(){
+                try {
+                    const total = Array.isArray(biens) ? biens.length : 0;
+                    const valides = Array.isArray(biens) ? biens.filter(b => (b.statut_validation || '').toLowerCase() === 'valide').length : 0;
+                    const attente = Array.isArray(biens) ? biens.filter(b => (b.statut_validation || '').toLowerCase() === 'en_attente').length : 0;
+                    const elTotal = document.getElementById('kpi-total');
+                    const elValides = document.getElementById('kpi-valides');
+                    const elAttente = document.getElementById('kpi-attente');
+                    if (elTotal) elTotal.textContent = total;
+                    if (elValides) elValides.textContent = valides;
+                    if (elAttente) elAttente.textContent = attente;
+                } catch (e) { /* no-op */ }
+                // Fetch events once to compute upcoming reservations
+                try {
+                    const url = '/proprietaire/calendar/events';
+                    fetch(url)
+                        .then(r => r.json())
+                        .then(events => {
+                            const today = new Date();
+                            today.setHours(0,0,0,0);
+                            const count = (events || []).filter(ev => {
+                                if (!ev || !ev.extendedProps) return false;
+                                if (ev.extendedProps.type !== 'reservation') return false;
+                                const start = new Date(ev.start);
+                                return start >= today;
+                            }).length;
+                            const el = document.getElementById('kpi-resa-avenir');
+                            if (el) el.textContent = String(count);
+                        })
+                        .catch(() => {
+                            const el = document.getElementById('kpi-resa-avenir');
+                            if (el) el.textContent = '0';
+                        });
+                } catch (e) {
+                    const el = document.getElementById('kpi-resa-avenir');
+                    if (el) el.textContent = '0';
+                }
+            })();
 
         /* Wheel 3D removed: protected placeholders are used instead */
 
@@ -571,9 +781,14 @@
                 card.className = 'card';
                 card.dataset.bienId = b.id_biens;
                 card.dataset.typeId = b.id_TypeBien;
+                const status = (b.statut_validation || '').toLowerCase();
+                card.dataset.status = status;
 
                 const imgSrc = b.premiere_photo || '/img/default.jpg';
                 card.innerHTML = `
+                    <div class="badge-status ${status === 'valide' ? 'badge-valid' : (status === 'en_attente' ? 'badge-pending' : 'badge-refused')}">
+                        ${status === 'valide' ? 'Validé' : (status === 'en_attente' ? 'En attente' : (status ? 'Refusé' : '—'))}
+                    </div>
                     <img src="${imgSrc}" alt="${escapeHtml(b.designation_bien)}">
                     <div class="card-body">
                         <div class="card-title">${escapeHtml(b.designation_bien)}</div>
@@ -1039,6 +1254,522 @@
                 if (window.fcCalendar && typeof window.fcCalendar.refetchEvents === 'function') 
                     window.fcCalendar.refetchEvents(); 
             } catch(e){}
+        }
+
+        function filterByStatus(statusId) {
+            // Reset buttons state
+            document.querySelectorAll('.btn-status-filter').forEach(btn => btn.classList.remove('active'));
+            const activeBtn = document.querySelector('.btn-status-filter[data-status-id="' + statusId + '"]');
+            if (activeBtn) activeBtn.classList.add('active');
+
+            const allItems = document.querySelectorAll('.filter-item');
+            const allCards = document.querySelectorAll('.cards-grid .card');
+
+            // Show all filter items (status is not represented as checkbox meta), focus on cards only
+            allItems.forEach(item => { item.style.display = ''; });
+
+            if (statusId === 'all') {
+                // Do not change selection; only affect card visibility to show selected ones normally
+                updateCardsVisuals();
+            } else {
+                allCards.forEach(card => {
+                    if ((card.dataset.status || '') === statusId) {
+                        card.style.display = '';
+                        card.style.opacity = '1';
+                        card.classList.add('selected');
+                        card.classList.remove('dimmed');
+                        card.style.filter = 'none';
+                    } else {
+                        card.style.display = 'none';
+                        card.style.opacity = '0';
+                        card.classList.remove('selected');
+                    }
+                });
+            }
+
+            // Refresh calendar to reflect current card set
+            try {
+                if (window.fcCalendar && typeof window.fcCalendar.refetchEvents === 'function') window.fcCalendar.refetchEvents();
+            } catch(e) {}
+        }
+    </script>
+
+    <!-- Scripts de gestion des graphiques -->
+    <script>
+        // Variables globales pour les graphiques
+        let reservationsChartInstance = null;
+        let revenueChartInstance = null;
+        let occupancyChartInstance = null;
+        let revenueByBienChartInstance = null;
+        let currentPeriod = 'month';
+
+        // Initialiser les graphiques au chargement
+        document.addEventListener('DOMContentLoaded', function() {
+            initCharts();
+            updateCharts();
+            updateAdvancedCharts();
+        });
+
+        function changePeriod(period) {
+            currentPeriod = period;
+            
+            // Mise à jour des boutons actifs
+            document.querySelectorAll('.btn-period').forEach(btn => {
+                btn.classList.remove('active');
+                if (btn.dataset.period === period) {
+                    btn.classList.add('active');
+                }
+            });
+            
+            // Masquer/afficher le sélecteur d'année selon la période
+            const yearSelect = document.getElementById('yearSelect');
+            if (period === 'hour' || period === 'day') {
+                yearSelect.style.display = 'none';
+            } else {
+                yearSelect.style.display = 'inline-block';
+            }
+            
+            updateCharts();
+        }
+
+        function initCharts() {
+            // Configuration commune pour tous les graphiques
+            const commonOptions = {
+                responsive: true,
+                maintainAspectRatio: true,
+                aspectRatio: 2,
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        grid: {
+                            color: 'rgba(0, 0, 0, 0.05)'
+                        }
+                    },
+                    x: {
+                        grid: {
+                            display: false
+                        }
+                    }
+                }
+            };
+
+            // Graphique des réservations
+            const reservationsCtx = document.getElementById('reservationsChart').getContext('2d');
+            reservationsChartInstance = new Chart(reservationsCtx, {
+                type: 'bar',
+                data: {
+                    labels: [],
+                    datasets: [{
+                        label: 'Réservations',
+                        data: [],
+                        backgroundColor: 'rgba(55, 136, 216, 0.8)',
+                        borderColor: 'rgba(55, 136, 216, 1)',
+                        borderWidth: 2,
+                        borderRadius: 8
+                    }]
+                },
+                options: commonOptions
+            });
+
+            // Graphique des revenus (2 courbes superposées)
+            const revenueCtx = document.getElementById('revenueChart').getContext('2d');
+            revenueChartInstance = new Chart(revenueCtx, {
+                type: 'line',
+                data: {
+                    labels: [],
+                    datasets: [
+                        {
+                            label: 'Réservations',
+                            data: [],
+                            backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                            borderColor: 'rgba(59, 130, 246, 1)',
+                            borderWidth: 3,
+                            fill: true,
+                            tension: 0.4,
+                            pointRadius: 4,
+                            pointHoverRadius: 6,
+                            yAxisID: 'y'
+                        },
+                        {
+                            label: 'Revenus (€)',
+                            data: [],
+                            backgroundColor: 'rgba(16, 185, 129, 0.1)',
+                            borderColor: 'rgba(16, 185, 129, 1)',
+                            borderWidth: 3,
+                            fill: true,
+                            tension: 0.4,
+                            pointRadius: 4,
+                            pointHoverRadius: 6,
+                            yAxisID: 'y1'
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: true,
+                    aspectRatio: 2,
+                    plugins: {
+                        legend: {
+                            display: true,
+                            position: 'top'
+                        }
+                    },
+                    scales: {
+                        y: {
+                            type: 'linear',
+                            display: true,
+                            position: 'left',
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: 'Réservations',
+                                color: 'rgba(59, 130, 246, 1)',
+                                font: {
+                                    weight: 'bold'
+                                }
+                            },
+                            ticks: {
+                                color: 'rgba(59, 130, 246, 1)'
+                            },
+                            grid: {
+                                color: 'rgba(59, 130, 246, 0.1)'
+                            }
+                        },
+                        y1: {
+                            type: 'linear',
+                            display: true,
+                            position: 'right',
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: 'Revenus (€)',
+                                color: 'rgba(16, 185, 129, 1)',
+                                font: {
+                                    weight: 'bold'
+                                }
+                            },
+                            ticks: {
+                                color: 'rgba(16, 185, 129, 1)'
+                            },
+                            grid: {
+                                drawOnChartArea: false
+                            }
+                        },
+                        x: {
+                            grid: {
+                                display: false
+                            }
+                        }
+                    }
+                }
+            });
+
+            // Graphique taux d'occupation
+            const occupancyCtx = document.getElementById('occupancyChart').getContext('2d');
+            occupancyChartInstance = new Chart(occupancyCtx, {
+                type: 'bar',
+                data: {
+                    labels: [],
+                    datasets: [{
+                        label: 'Taux d\'occupation (%)',
+                        data: [],
+                        backgroundColor: 'rgba(245, 158, 11, 0.8)',
+                        borderColor: 'rgba(245, 158, 11, 1)',
+                        borderWidth: 2,
+                        borderRadius: 8
+                    }]
+                },
+                options: {
+                    ...commonOptions,
+                    scales: {
+                        ...commonOptions.scales,
+                        y: {
+                            ...commonOptions.scales.y,
+                            max: 100
+                        }
+                    }
+                }
+            });
+
+            // Graphique revenus par bien
+            const revenueByBienCtx = document.getElementById('revenueByBienChart').getContext('2d');
+            revenueByBienChartInstance = new Chart(revenueByBienCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: [],
+                    datasets: [{
+                        label: 'Revenus (€)',
+                        data: [],
+                        backgroundColor: [
+                            'rgba(255, 99, 132, 0.8)',
+                            'rgba(54, 162, 235, 0.8)',
+                            'rgba(255, 206, 86, 0.8)',
+                            'rgba(75, 192, 192, 0.8)',
+                            'rgba(153, 102, 255, 0.8)',
+                            'rgba(255, 159, 64, 0.8)',
+                            'rgba(199, 199, 199, 0.8)'
+                        ],
+                        borderWidth: 2
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: true,
+                    aspectRatio: 2,
+                    plugins: {
+                        legend: {
+                            display: true,
+                            position: 'right'
+                        }
+                    }
+                }
+            });
+        }
+
+        async function updateCharts() {
+            const year = document.getElementById('yearSelect').value;
+            
+            let url = `/proprietaire/stats?period=${currentPeriod}`;
+            if (currentPeriod === 'month' || currentPeriod === 'year') {
+                url += `&year=${year}`;
+            }
+            
+            try {
+                const response = await fetch(url);
+                const data = await response.json();
+                
+                // Mettre à jour le graphique des réservations
+                reservationsChartInstance.data.labels = data.labels;
+                reservationsChartInstance.data.datasets[0].data = data.reservations;
+                reservationsChartInstance.update();
+                
+                // Mettre à jour le graphique des revenus (2 courbes)
+                revenueChartInstance.data.labels = data.labels;
+                revenueChartInstance.data.datasets[0].data = data.reservations; // Courbe bleue (axe gauche)
+                revenueChartInstance.data.datasets[1].data = data.revenue;      // Courbe verte (axe droit)
+                revenueChartInstance.update();
+                
+                // Afficher la comparaison si disponible
+                if (data.comparison) {
+                    displayComparison(data.comparison);
+                } else {
+                    document.getElementById('comparisonBar').style.display = 'none';
+                }
+            } catch (error) {
+                console.error('Erreur lors de la récupération des statistiques:', error);
+            }
+        }
+        
+        function displayComparison(comparison) {
+            const compBar = document.getElementById('comparisonBar');
+            const compRes = document.getElementById('compReservations');
+            const compRev = document.getElementById('compRevenue');
+            
+            // Réservations
+            const resClass = comparison.reservationsDiff >= 0 ? 'positive' : 'negative';
+            const resIcon = comparison.reservationsDiff >= 0 ? '↑' : '↓';
+            compRes.className = 'comparison-value ' + resClass;
+            compRes.innerHTML = `${resIcon} ${Math.abs(comparison.reservationsDiff)} (${comparison.reservationsPercent > 0 ? '+' : ''}${comparison.reservationsPercent}%)`;
+            
+            // Revenus
+            const revClass = comparison.revenueDiff >= 0 ? 'positive' : 'negative';
+            const revIcon = comparison.revenueDiff >= 0 ? '↑' : '↓';
+            compRev.className = 'comparison-value ' + revClass;
+            compRev.innerHTML = `${revIcon} ${Math.abs(comparison.revenueDiff).toFixed(2)}€ (${comparison.revenuePercent > 0 ? '+' : ''}${comparison.revenuePercent}%)`;
+            
+            compBar.style.display = 'flex';
+        }
+
+        async function updateAdvancedCharts() {
+            const year = document.getElementById('yearSelect').value;
+            
+            try {
+                const response = await fetch(`/proprietaire/stats/advanced?year=${year}`);
+                const data = await response.json();
+                
+                // Mettre à jour le graphique du taux d'occupation
+                const occupancyLabels = data.occupancy.map(item => item.bien);
+                const occupancyData = data.occupancy.map(item => item.rate);
+                
+                occupancyChartInstance.data.labels = occupancyLabels;
+                occupancyChartInstance.data.datasets[0].data = occupancyData;
+                occupancyChartInstance.update();
+                
+                // Mettre à jour le graphique des revenus par bien
+                const revenueLabels = data.revenue.map(item => item.bien);
+                const revenueData = data.revenue.map(item => item.revenue);
+                
+                revenueByBienChartInstance.data.labels = revenueLabels;
+                revenueByBienChartInstance.data.datasets[0].data = revenueData;
+                revenueByBienChartInstance.update();
+            } catch (error) {
+                console.error('Erreur lors de la récupération des statistiques avancées:', error);
+            }
+        }
+
+        // Mettre à jour les graphiques avancés quand l'année change
+        document.getElementById('yearSelect').addEventListener('change', function() {
+            updateAdvancedCharts();
+        });
+
+        /* ===== FILTRES AVANCÉS DES STATISTIQUES ===== */
+        function toggleStatsFilters() {
+            const panel = document.getElementById('statsFiltersPanel');
+            if (panel.style.display === 'none') {
+                panel.style.display = 'block';
+            } else {
+                panel.style.display = 'none';
+            }
+        }
+
+        /* ===== TOGGLE BIEN FILTER ===== */
+        function toggleBienFilter(button, bienId) {
+            if (bienId === 'all') {
+                // Si on clique sur "Tous", désactiver tous les autres et activer seulement "Tous"
+                const allBadges = document.querySelectorAll('.stats-bien-badge');
+                allBadges.forEach(badge => badge.classList.remove('active'));
+                button.classList.add('active');
+            } else {
+                // Si on clique sur un bien spécifique
+                const allButton = document.querySelector('.stats-bien-badge[data-bien-id="all"]');
+                allButton.classList.remove('active');
+                button.classList.toggle('active');
+                
+                // Si aucun bien n'est sélectionné, réactiver "Tous"
+                const anyActive = document.querySelector('.stats-bien-badge.active:not([data-bien-id="all"])');
+                if (!anyActive) {
+                    allButton.classList.add('active');
+                }
+            }
+            
+            // Appliquer les filtres
+            applyStatsFilters();
+        }
+
+        async function applyStatsFilters() {
+            // Collecter les biens sélectionnés (badges actifs)
+            const activeBadges = Array.from(document.querySelectorAll('.stats-bien-badge.active'));
+            let selectedBienIds = [];
+            
+            const allActive = activeBadges.find(badge => badge.dataset.bienId === 'all');
+            if (!allActive) {
+                selectedBienIds = activeBadges.map(badge => badge.dataset.bienId);
+            }
+
+            const typeId = document.getElementById('statsFilterType').value;
+            const dateDebut = document.getElementById('statsFilterDateDebut').value;
+            const dateFin = document.getElementById('statsFilterDateFin').value;
+            const year = document.getElementById('yearSelect').value;
+
+            // Construire l'URL avec tous les filtres
+            let url = `/proprietaire/stats?period=${currentPeriod}`;
+            
+            if (currentPeriod === 'month' || currentPeriod === 'year') {
+                url += `&year=${year}`;
+            }
+            
+            if (selectedBienIds.length > 0) {
+                url += `&bien_ids=${selectedBienIds.join(',')}`;
+            }
+            
+            if (typeId !== 'all') {
+                url += `&type_id=${typeId}`;
+            }
+            
+            if (dateDebut) {
+                url += `&date_debut=${dateDebut}`;
+            }
+            
+            if (dateFin) {
+                url += `&date_fin=${dateFin}`;
+            }
+
+            try {
+                const response = await fetch(url);
+                const data = await response.json();
+                
+                // Mettre à jour tous les graphiques avec les données filtrées
+                reservationsChartInstance.data.labels = data.labels;
+                reservationsChartInstance.data.datasets[0].data = data.reservations;
+                reservationsChartInstance.update();
+                
+                revenueChartInstance.data.labels = data.labels;
+                revenueChartInstance.data.datasets[0].data = data.reservations;
+                revenueChartInstance.data.datasets[1].data = data.revenue;
+                revenueChartInstance.update();
+                
+                if (data.comparison) {
+                    displayComparison(data.comparison);
+                } else {
+                    document.getElementById('comparisonBar').style.display = 'none';
+                }
+
+                // Mettre à jour aussi les graphiques avancés avec les filtres
+                updateAdvancedChartsWithFilters(selectedBienIds, typeId);
+            } catch (error) {
+                console.error('Erreur lors de l\'application des filtres:', error);
+            }
+        }
+
+        async function updateAdvancedChartsWithFilters(selectedBienIds, typeId) {
+            const year = document.getElementById('yearSelect').value;
+            
+            let url = `/proprietaire/stats/advanced?year=${year}`;
+            
+            if (Array.isArray(selectedBienIds) && selectedBienIds.length > 0) {
+                url += `&bien_ids=${selectedBienIds.join(',')}`;
+            }
+            
+            if (typeId !== 'all') {
+                url += `&type_id=${typeId}`;
+            }
+
+            try {
+                const response = await fetch(url);
+                const data = await response.json();
+                
+                const occupancyLabels = data.occupancy.map(item => item.bien);
+                const occupancyData = data.occupancy.map(item => item.rate);
+                
+                occupancyChartInstance.data.labels = occupancyLabels;
+                occupancyChartInstance.data.datasets[0].data = occupancyData;
+                occupancyChartInstance.update();
+                
+                const revenueLabels = data.revenue.map(item => item.bien);
+                const revenueData = data.revenue.map(item => item.revenue);
+                
+                revenueByBienChartInstance.data.labels = revenueLabels;
+                revenueByBienChartInstance.data.datasets[0].data = revenueData;
+                revenueByBienChartInstance.update();
+            } catch (error) {
+                console.error('Erreur lors de la mise à jour des graphiques avancés:', error);
+            }
+        }
+
+        function resetStatsFilters() {
+            // Réinitialiser tous les filtres
+            // Biens: activer "Tous" et désactiver les autres
+            const allBadges = document.querySelectorAll('.stats-bien-badge');
+            allBadges.forEach(badge => {
+                if (badge.dataset.bienId === 'all') {
+                    badge.classList.add('active');
+                } else {
+                    badge.classList.remove('active');
+                }
+            });
+            
+            document.getElementById('statsFilterType').value = 'all';
+            document.getElementById('statsFilterDateDebut').value = '';
+            document.getElementById('statsFilterDateFin').value = '';
+            
+            // Recharger les graphiques sans filtres
+            updateCharts();
+            updateAdvancedCharts();
         }
     </script>
 </body>

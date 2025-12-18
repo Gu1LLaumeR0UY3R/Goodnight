@@ -745,6 +745,20 @@ class AdminController extends BaseController {
                 'type' => 'success',
                 'message' => 'Le bien a été validé avec succès et est maintenant visible publiquement.'
             ];
+            // Notify proprietaire that their bien was validated
+            try {
+                $bien = $this->bienModel->getById($id);
+                if ($bien && !empty($bien['id_locataire'])) {
+                    $bienName = $bien['designation_bien'] ?? ("Bien #" . $id);
+                    $this->notificationModel->create([
+                        'user_id' => (int)$bien['id_locataire'],
+                        'type' => 'bien_validated',
+                        'title' => 'Bien validé',
+                        'message' => 'Votre bien "' . $bienName . '" a été validé par un administrateur et est maintenant visible publiquement.',
+                        'link' => '/proprietaire/viewBien/' . $id,
+                    ]);
+                }
+            } catch (\Throwable $e) { }
         } else {
             $_SESSION['flash'] = [
                 'type' => 'error',

@@ -98,4 +98,20 @@
   // poll count every 30s
   fetchCount();
   setInterval(fetchCount, 30000);
+
+  // Subtle idle animation when no notifications
+  function updateIdleAnimation(){
+    if (!lastCount || lastCount === 0) {
+      bell.classList.add('idle');
+    } else {
+      bell.classList.remove('idle');
+    }
+  }
+  
+  const originalFetchCount = fetchCount;
+  fetchCount = async function(){
+    await originalFetchCount();
+    updateIdleAnimation();
+  };
+  updateIdleAnimation();
 })();

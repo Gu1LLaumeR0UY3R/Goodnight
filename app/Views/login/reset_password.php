@@ -6,6 +6,7 @@
     <title>Réinitialiser le mot de passe - GlobeNight</title>
     <link rel="stylesheet" href="/css/style.css">
     <link rel="stylesheet" href="/css/navbar.css">
+    <link rel="stylesheet" href="/css/reset-password.css">
 </head>
 <body>
     <?php include __DIR__ . '/../layout/navbar.php'; ?>

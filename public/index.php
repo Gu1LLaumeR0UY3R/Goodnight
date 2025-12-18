@@ -113,6 +113,8 @@ $routes = [
     "proprietaire/calendar/events" => ["controller" => "ProprietaireController", "action" => "calendarEvents"],
     "proprietaire/calendar/block" => ["controller" => "ProprietaireController", "action" => "calendarBlock"],
     "proprietaire/calendar/unblock" => ["controller" => "ProprietaireController", "action" => "calendarUnblock"],
+    "proprietaire/stats" => ["controller" => "ProprietaireStatsController", "action" => "getStats"],
+    "proprietaire/stats/advanced" => ["controller" => "ProprietaireStatsController", "action" => "getAdvancedStats"],
 
     // Routes Locataire
     "locataire" => ["controller" => "LocataireController", "action" => "index"],
