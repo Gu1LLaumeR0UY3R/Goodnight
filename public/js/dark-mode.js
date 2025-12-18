@@ -36,14 +36,68 @@
         }, 5000);
     }
 
+    // Mettre à jour le footer selon le thème
+    function updateFooter(isDark) {
+        const footer = document.querySelector('footer');
+        if (!footer) return;
+        
+        // Chercher le conteneur existant
+        let container = footer.querySelector('.sunset, .nightsky');
+        
+        if (!container) {
+            // Créer le conteneur s'il n'existe pas
+            container = document.createElement('div');
+            footer.insertBefore(container, footer.firstChild);
+        }
+        
+        if (isDark) {
+            container.className = 'nightsky';
+            container.innerHTML = `
+                <div class="moon"></div>
+                <div class="stars"></div>
+                <div class="stars-layer-2"></div>
+                <div class="horizon"></div>
+            `;
+        } else {
+            container.className = 'sunset';
+            container.innerHTML = `
+                <div class="sun"></div>
+                <div class="horizon"></div>
+            `;
+        }
+    }
+
+    // Mettre à jour la bannière supérieure
+    function updateTopBanner(isDark) {
+        let banner = document.querySelector('.top-banner, .top-banner-night');
+        
+        if (!banner) {
+            // Créer la bannière si elle n'existe pas
+            banner = document.createElement('div');
+            document.body.insertBefore(banner, document.body.firstChild);
+        }
+        
+        banner.className = isDark ? 'top-banner-night' : 'top-banner';
+    }
+
     // Appliquer le mode sombre
     function applyDarkMode(isDark) {
         if (isDark) {
             document.body.classList.add('dark-mode');
+            // Changer le thème de fond vers la nuit
+            document.body.classList.remove('home-sunset');
+            document.body.classList.add('home-night');
             updateToggleIcon(true);
+            updateFooter(true);
+            updateTopBanner(true);
         } else {
             document.body.classList.remove('dark-mode');
+            // Changer le thème de fond vers le coucher de soleil
+            document.body.classList.remove('home-night');
+            document.body.classList.add('home-sunset');
             updateToggleIcon(false);
+            updateFooter(false);
+            updateTopBanner(false);
         }
         localStorage.setItem('darkMode', isDark);
     }

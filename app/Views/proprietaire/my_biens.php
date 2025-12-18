@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="/css/navbar.css">
     <link rel="stylesheet" href="/css/tables.css">
     <link rel="stylesheet" href="/css/sunset-background.css">
+    <link rel="stylesheet" href="/css/night-background.css">
     <style>
         main {
             max-width: 1400px;
@@ -366,6 +367,5 @@
             <div class="horizon"></div>
         </div>
         <p>&copy; <?php echo date("Y"); ?> GlobeNight. Tous droits réservés.</p>
-    </footer>
-</body>
+    </footer>    <script src="/js/theme-switcher.js"></script></body>
 </html>

@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="/css/style.css">
     <link rel="stylesheet" href="/css/navbar.css">
     <link rel="stylesheet" href="/css/sunset-background.css">
+    <link rel="stylesheet" href="/css/night-background.css">
     <link rel="stylesheet" href="/css/admin.css">
     <link rel="stylesheet" href="/css/admin-modal.css">
     <link rel="stylesheet" href="/css/admin-badges.css">

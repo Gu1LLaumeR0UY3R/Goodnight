@@ -1,0 +1,258 @@
+/* ========================================
+   EFFET CIEL NOCTURNE ÉTOILÉ - PAGE D'ACCUEIL
+   ======================================== */
+
+/* 
+   UTILISATION:
+   1. Ajouter la classe "home-night" au body
+   2. Ajouter cette structure dans le footer:
+      <div class="nightsky">
+          <div class="moon"></div>
+          <div class="stars"></div>
+          <div class="stars-layer-2"></div>
+          <div class="horizon"></div>
+      </div>
+*/
+
+/* ===== FOND DÉGRADÉ CIEL NOCTURNE ===== */
+body.home-night {
+  min-height: 100vh;
+  /* Dégradé du ciel nocturne: bleu nuit → bleu foncé → noir */
+  background: linear-gradient(180deg, 
+    #0c1445 0%,     /* Bleu nuit profond en haut */
+    #1a1a3e 30%,    /* Bleu-violet foncé */
+    #0d0d2b 60%,    /* Bleu très foncé */
+    #000000 100%    /* Noir en bas */
+  );
+  background-attachment: fixed;
+  background-repeat: no-repeat;
+  background-size: cover;
+  position: relative;
+  overflow-x: hidden;
+  padding-top: 0;
+  margin-top: 0;
+}
+
+/* Top decorative banner */
+.top-banner-night {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 6px;
+  background: linear-gradient(90deg, 
+    #4a5568 0%, 
+    #2d3748 25%, 
+    #1a202c 50%, 
+    #2d3748 75%, 
+    #4a5568 100%);
+  z-index: 1000;
+  box-shadow: 0 2px 12px rgba(74, 85, 104, 0.4);
+  margin: 0;
+}
+
+.dark-mode .top-banner-night {
+  background: linear-gradient(90deg, 
+    #66fcf1 0%, 
+    #45a29e 25%, 
+    #1f2833 50%, 
+    #45a29e 75%, 
+    #66fcf1 100%);
+  box-shadow: 0 2px 12px rgba(102, 252, 241, 0.4);
+}
+
+/* Admin page: hide top banner */
+body.home-night.admin-page .top-banner-night {
+  display: none;
+}
+
+/* ===== CONTENU PRINCIPAL ===== */
+body.home-night main {
+  position: relative;
+  z-index: 1;
+  padding-bottom: 140px; /* Espace pour la lune au-dessus du footer */
+}
+
+/* ===== FOOTER (contient la lune) ===== */
+body.home-night footer {
+  position: relative;
+  overflow: visible;
+  z-index: 0;
+}
+
+/* ===== CONTENEUR NIGHTSKY ===== */
+body.home-night footer .nightsky {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 100%; /* Positionné juste au-dessus du footer */
+  height: 120px;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ===== LUNE (demi-cercle) ===== */
+body.home-night footer .moon {
+  position: absolute;
+  left: 50%;
+  bottom: -1px; /* Légèrement dans le footer pour éviter les espaces */
+  transform: translateX(-50%);
+  width: 220px;
+  height: 110px; /* Hauteur = rayon (demi-cercle) */
+  
+  /* Dégradé radial pour effet lumineux de lune */
+  background: radial-gradient(
+    circle at 50% 100%, 
+    #f8f8ff 0%,    /* Blanc fantôme au centre */
+    #e6e6fa 40%,   /* Lavande clair */
+    #d3d3e8 70%,   /* Gris-bleu clair */
+    #b0b0d0 100%   /* Gris-bleu aux bords */
+  );
+  
+  /* Arrondir seulement le haut pour faire un demi-cercle */
+  border-top-left-radius: 110px;
+  border-top-right-radius: 110px;
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+  
+  /* Lueur douce argentée autour de la lune */
+  box-shadow: 
+    0 0 40px 15px rgba(248, 248, 255, 0.3),
+    0 0 80px 30px rgba(230, 230, 250, 0.2),
+    inset -10px 0 20px rgba(0, 0, 0, 0.1); /* Ombre interne pour cratères */
+}
+
+/* Cratères de la lune */
+body.home-night footer .moon::before,
+body.home-night footer .moon::after {
+  content: '';
+  position: absolute;
+  background: rgba(0, 0, 0, 0.08);
+  border-radius: 50%;
+}
+
+body.home-night footer .moon::before {
+  width: 25px;
+  height: 25px;
+  top: 20px;
+  left: 50px;
+}
+
+body.home-night footer .moon::after {
+  width: 18px;
+  height: 18px;
+  top: 45px;
+  right: 60px;
+}
+
+/* ===== ÉTOILES - COUCHE 1 (Grandes étoiles) ===== */
+body.home-night .stars {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 0;
+  background-image: 
+    radial-gradient(2px 2px at 20% 30%, white, transparent),
+    radial-gradient(2px 2px at 60% 70%, white, transparent),
+    radial-gradient(1px 1px at 50% 50%, white, transparent),
+    radial-gradient(1px 1px at 80% 10%, white, transparent),
+    radial-gradient(2px 2px at 90% 60%, white, transparent),
+    radial-gradient(1px 1px at 33% 80%, white, transparent),
+    radial-gradient(2px 2px at 15% 90%, white, transparent),
+    radial-gradient(1px 1px at 70% 40%, white, transparent),
+    radial-gradient(2px 2px at 45% 15%, white, transparent),
+    radial-gradient(1px 1px at 25% 60%, white, transparent);
+  background-size: 200% 200%;
+  background-position: 0% 0%;
+  animation: twinkle 8s ease-in-out infinite;
+}
+
+/* ===== ÉTOILES - COUCHE 2 (Petites étoiles) ===== */
+body.home-night .stars-layer-2 {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 0;
+  background-image: 
+    radial-gradient(1px 1px at 10% 20%, rgba(255, 255, 255, 0.8), transparent),
+    radial-gradient(1px 1px at 40% 40%, rgba(255, 255, 255, 0.6), transparent),
+    radial-gradient(1px 1px at 75% 25%, rgba(255, 255, 255, 0.7), transparent),
+    radial-gradient(1px 1px at 85% 80%, rgba(255, 255, 255, 0.8), transparent),
+    radial-gradient(1px 1px at 30% 95%, rgba(255, 255, 255, 0.6), transparent),
+    radial-gradient(1px 1px at 55% 65%, rgba(255, 255, 255, 0.7), transparent),
+    radial-gradient(1px 1px at 95% 45%, rgba(255, 255, 255, 0.8), transparent),
+    radial-gradient(1px 1px at 18% 55%, rgba(255, 255, 255, 0.6), transparent),
+    radial-gradient(1px 1px at 65% 5%, rgba(255, 255, 255, 0.7), transparent),
+    radial-gradient(1px 1px at 42% 88%, rgba(255, 255, 255, 0.8), transparent);
+  background-size: 250% 250%;
+  background-position: 0% 0%;
+  animation: twinkle 12s ease-in-out infinite reverse;
+}
+
+/* Animation de scintillement des étoiles */
+@keyframes twinkle {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+/* ===== HORIZON (transition vers le sol) ===== */
+body.home-night footer .horizon {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0; /* Commence au bord supérieur du footer */
+  height: 80px;
+  
+  /* Dégradé transparent vers le noir */
+  background: linear-gradient(180deg, 
+    transparent 0%, 
+    rgba(0, 0, 0, 0.5) 50%,
+    #000000 100%
+  );
+}
+
+/* ===== AJUSTEMENTS POUR LE CONTENU ===== */
+body.home-night * {
+  position: relative;
+}
+
+/* Exceptions pour les éléments qui doivent garder leur positionnement */
+body.home-night .stars,
+body.home-night .stars-layer-2,
+body.home-night .dark-mode-toggle,
+body.home-night .shooting-star {
+  position: fixed;
+}
+
+body.home-night .btn-favorite {
+  position: absolute;
+}
+
+body.home-night .navbar-sticky,
+body.home-night nav {
+  position: sticky;
+}
+
+body.home-night .navbar-notifs,
+body.home-night .notif-bell {
+  position: relative;
+}
+
+body.home-night .notif-panel,
+body.home-night .notif-badge {
+  position: absolute;
+}
+
+body.home-night .notif-header {
+  position: sticky;
+}
