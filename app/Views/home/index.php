@@ -21,17 +21,22 @@
         <section class="liste-biens">
             <div class="search-section">
                 <h2>Trouvez votre logement idéal</h2>
-                <div style="display: flex; gap: 0.5rem; align-items: center;">
-                    <button id="toggle-filters" type="button" style="width: 48px; height: 48px; padding: 0; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none; border-radius: 50%; font-weight: 500; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: transform 0.2s; box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);" title="Afficher les filtres avancés">
-                        <svg style="width: 1.3rem; height: 1.3rem;" fill="none" stroke-width="1.5" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 3c2.755 0 5.455.232 8.083.678.533.09.917.556.917 1.096v1.044a2.25 2.25 0 0 1-.659 1.591l-5.432 5.432a2.25 2.25 0 0 0-.659 1.591v2.927a2.25 2.25 0 0 1-1.244 2.013L9.75 21v-6.568a2.25 2.25 0 0 0-.659-1.591L3.659 7.409A2.25 2.25 0 0 1 3 5.818V4.774c0-.54.384-1.006.917-1.096A48.32 48.32 0 0 1 12 3Z"></path>
-                        </svg>
-                    </button>
-                    <form action="/home/search" method="GET" class="search-bar" style="flex: 1;">
-                        <input type="text" id="commune_search" name="q" placeholder="Rechercher par région..." value="<?php echo htmlspecialchars($filters['commune'] ?? ''); ?>">
-                        <button type="submit">Rechercher</button>
-                    </form>
-                </div>
+                <form action="/home/search" method="GET" class="search-bar" style="display: flex; gap: 0.6rem; align-items: center; flex-wrap: wrap; background: rgba(255,255,255,0.92); border: 1px solid rgba(255,140,66,0.25); border-radius: 14px; padding: 0.6rem 0.7rem; box-shadow: 0 6px 16px rgba(0,0,0,0.08);">
+                    <div style="display: flex; align-items: center; gap: 0.6rem; flex: 1; min-width: 260px;">
+                        <input type="text" id="commune_search" name="q" placeholder="Rechercher par région..." value="<?php echo htmlspecialchars($filters['commune'] ?? ''); ?>" style="width: 100%; height: 48px; padding: 0 14px; border: 1px solid rgba(0,0,0,0.08); border-radius: 12px; font-size: 1rem; box-shadow: inset 0 1px 2px rgba(0,0,0,0.04);">
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 0.6rem;">
+                        <button type="submit" style="height: 48px; padding: 0 18px; background: linear-gradient(135deg, #ff8c42 0%, #ff5e62 100%); color: white; border: none; border-radius: 12px; font-weight: 600; letter-spacing: 0.01em; cursor: pointer; box-shadow: 0 6px 14px rgba(255, 94, 98, 0.28); transition: transform 0.15s ease, box-shadow 0.2s ease;">
+                            Rechercher
+                        </button>
+                        <button id="toggle-filters" type="button" style="height: 48px; padding: 0 16px; background: linear-gradient(135deg, #ff8c42 0%, #ff5e62 100%); color: white; border: none; border-radius: 12px; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; gap: 0.4rem; transition: transform 0.15s ease, box-shadow 0.2s ease; box-shadow: 0 6px 14px rgba(255, 94, 98, 0.28);" title="Afficher les filtres avancés">
+                            <svg style="width: 1.2rem; height: 1.2rem;" fill="none" stroke-width="1.5" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M12 3c2.755 0 5.455.232 8.083.678.533.09.917.556.917 1.096v1.044a2.25 2.25 0 0 1-.659 1.591l-5.432 5.432a2.25 2.25 0 0 0-.659 1.591v2.927a2.25 2.25 0 0 1-1.244 2.013L9.75 21v-6.568a2.25 2.25 0 0 0-.659-1.591L3.659 7.409A2.25 2.25 0 0 1 3 5.818V4.774c0-.54.384-1.006.917-1.096A48.32 48.32 0 0 1 12 3Z"></path>
+                            </svg>
+                            <span>Filtres</span>
+                        </button>
+                    </div>
+                </form>
 
                 <!-- Filtres avancés (cachés par défaut) -->
                 <div id="filters-panel" class="filters-container" style="display: none; background: rgba(255,255,255,0.95); border-radius: 12px; padding: 1.5rem; margin-top: 1rem; box-shadow: 0 4px 12px rgba(0,0,0,0.1); animation: slideDown 0.3s ease-out;">

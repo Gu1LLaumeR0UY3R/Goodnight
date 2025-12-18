@@ -26,6 +26,7 @@ $userPfp = $_SESSION['user_pfp'] ?? null;
         <nav class="navbar-main">
             <ul class="navbar-menu">
                 <li><a href="/home" class="navbar-link">Accueil</a></li>
+                <li><a href="/home/map" class="navbar-link">Carte</a></li>
                 
                 <?php if ($isLoggedIn && isset($_SESSION['is_admin']) && $_SESSION['is_admin'] === true): ?>
                     <li><a href="/admin" class="navbar-link">Administration</a></li>
@@ -129,9 +130,6 @@ $userPfp = $_SESSION['user_pfp'] ?? null;
 <!-- Global Components CSS -->
 <link rel="stylesheet" href="/css/components.css">
 
-<!-- Dark Mode CSS -->
-<link rel="stylesheet" href="/css/dark-mode.css">
-
 <div class="toast-container" id="toast-container" aria-live="polite" aria-atomic="true"></div>
 
 <script>
@@ -183,8 +181,6 @@ $userPfp = $_SESSION['user_pfp'] ?? null;
     })();
 </script>
 
-<!-- Dark Mode JavaScript -->
-<script src="/js/dark-mode.js"></script>
 <?php if ($isLoggedIn): ?>
 <link rel="stylesheet" href="/css/notifications.css">
 <script src="/js/notifications.js"></script>
