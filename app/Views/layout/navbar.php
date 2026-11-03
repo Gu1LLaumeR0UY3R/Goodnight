@@ -18,7 +18,7 @@ $userPfp = $_SESSION['user_pfp'] ?? null;
         <!-- Section Logo/Titre -->
         <div class="navbar-brand">
             <a href="/home" class="navbar-logo">
-                <h1>GlobeNight</h1>
+                <h1>Goodnight</h1>
             </a>
         </div>
 

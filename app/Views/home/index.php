@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GlobeNight - Votre plateforme de location</title>
+    <title>Goodnight - Votre plateforme de location</title>
     <link rel="stylesheet" href="/css/style.css">
     <link rel="stylesheet" href="/css/navbar.css">
     <link rel="stylesheet" href="/css/home.css?v=<?php echo time(); ?>">
@@ -236,7 +236,7 @@
             <div class="sun"></div>
             <div class="horizon"></div>
         </div>
-        <p>&copy; <?php echo date("Y"); ?> GlobeNight. Tous droits réservés.</p>
+        <p>&copy; <?php echo date("Y"); ?> Goodnight. Tous droits réservés.</p>
     </footer>
 
     <style>

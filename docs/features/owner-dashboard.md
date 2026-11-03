@@ -10,7 +10,7 @@ Améliorer l'expérience utilisateur du tableau de bord propriétaire avec :
 
 ## 🔧 Fichiers modifiés
 
-### 1. [app/Views/proprietaire/index.php](../app/Views/proprietaire/index.php)
+### 1. [app/Views/proprietaire/index.php](../../app/Views/proprietaire/index.php)
 
 #### A. Bandeau KPI
 
@@ -115,7 +115,7 @@ function filterByStatus(status) {
 <?php endif; ?>
 ```
 
-### 2. [public/css/dashboard-proprio.css](../public/css/dashboard-proprio.css)
+### 2. [public/css/dashboard-proprio.css](../../public/css/dashboard-proprio.css)
 
 #### Styles KPI
 
@@ -317,4 +317,4 @@ function filterByStatus(status) {
 5. **Export** : Télécharger la liste des biens en CSV/PDF
 
 ---
-[← Retour au sommaire](./README.md) | [← Documentation principale](../README.md)
+[← Retour au sommaire](../README.md) | [← Documentation principale](../README.md)

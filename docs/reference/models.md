@@ -14,7 +14,7 @@ Ce document contient la documentation détaillée de tous les modèles avec les 
  * Tous les modèles de l'application héritent de cette classe
  * 
  * @package Models
- * @author GlobeNight Team
+ * @author Goodnight Team
  */
 abstract class Model {
     
@@ -100,7 +100,7 @@ abstract class Model {
  * Gère les comptes administrateurs de l'application
  * 
  * @package Models
- * @author GlobeNight Team
+ * @author Goodnight Team
  */
 class AdminModel extends Model {
     
@@ -149,7 +149,7 @@ class AdminModel extends Model {
  * Gestion des rôles via la table de liaison User_role
  * 
  * @package Models
- * @author GlobeNight Team
+ * @author Goodnight Team
  */
 class UserModel extends Model {
     
@@ -275,7 +275,7 @@ class UserModel extends Model {
  * Gère les propriétés/biens immobiliers à louer
  * 
  * @package Models
- * @author GlobeNight Team
+ * @author Goodnight Team
  */
 class BienModel extends Model {
     
@@ -359,7 +359,7 @@ class BienModel extends Model {
  * Gère les photos des biens immobiliers
  * 
  * @package Models
- * @author GlobeNight Team
+ * @author Goodnight Team
  */
 class PhotoModel extends Model {
     
@@ -402,7 +402,7 @@ class PhotoModel extends Model {
  * Gère les réservations de biens par les locataires
  * 
  * @package Models
- * @author GlobeNight Team
+ * @author Goodnight Team
  */
 class ReservationModel extends Model {
     
@@ -473,7 +473,7 @@ class ReservationModel extends Model {
  * Les blocages empêchent les réservations sur les dates spécifiées
  * 
  * @package Models
- * @author GlobeNight Team
+ * @author Goodnight Team
  */
 class BlocageModel extends Model {
     
@@ -545,7 +545,7 @@ class BlocageModel extends Model {
  * Un bien peut avoir plusieurs tarifs (un par saison et par année)
  * 
  * @package Models
- * @author GlobeNight Team
+ * @author Goodnight Team
  */
 class TarifModel extends Model {
     
@@ -604,7 +604,7 @@ class TarifModel extends Model {
  * Gère les saisons tarifaires (Haute saison, Basse saison, etc.)
  * 
  * @package Models
- * @author GlobeNight Team
+ * @author Goodnight Team
  */
 class SaisonModel extends Model {
     
@@ -639,7 +639,7 @@ class SaisonModel extends Model {
  * Gère les types de biens (Appartement, Maison, Villa, etc.)
  * 
  * @package Models
- * @author GlobeNight Team
+ * @author Goodnight Team
  */
 class TypeBienModel extends Model {
     
@@ -681,7 +681,7 @@ class TypeBienModel extends Model {
  * Gère les rôles utilisateurs de l'application
  * 
  * @package Models
- * @author GlobeNight Team
+ * @author Goodnight Team
  */
 class RoleModel extends Model {
     
@@ -719,7 +719,7 @@ class RoleModel extends Model {
  * Gère les villes et codes postaux
  * 
  * @package Models
- * @author GlobeNight Team
+ * @author Goodnight Team
  */
 class CommuneModel extends Model {
     

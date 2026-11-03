@@ -223,7 +223,7 @@
     </div>
 
     <footer>
-        <p>&copy; <?php echo date("Y"); ?> GlobeNight. Tous droits réservés.</p>
+        <p>&copy; <?php echo date("Y"); ?> Goodnight. Tous droits réservés.</p>
     </footer>
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>

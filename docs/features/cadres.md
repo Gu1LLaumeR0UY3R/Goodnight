@@ -2,8 +2,6 @@
 
 ## Vue d'ensemble
 
-Système simplifié de gestion des cadres de profil personnalisés. Les cadres peuvent être uploadés par l'admin, affichés dans le profil utilisateur et supprimés si nécessaire.
-
 ## 📊 Structure de la base de données
 
 ### Table `cadres`
@@ -29,7 +27,7 @@ CREATE TABLE cadres (
 ## 🛠️ Fichiers créés/modifiés
 
 ### 1. **Migration SQL**
-📄 `sql_updates/add_cadres_management_system.sql`
+📄 `database/migrations/09_add_cadres_management_system.sql`
 - Crée la table `cadres`
 - Insère 9 cadres par défaut (dont le cadre par défaut sans image)
 

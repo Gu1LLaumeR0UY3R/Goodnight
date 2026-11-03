@@ -340,7 +340,7 @@
             <div class="sun"></div>
             <div class="horizon"></div>
         </div>
-        <p>&copy; <?= date("Y") ?> GlobeNight. Tous droits réservés.</p>
+        <p>&copy; <?= date("Y") ?> Goodnight. Tous droits réservés.</p>
     </footer>
 </body>
 </html>

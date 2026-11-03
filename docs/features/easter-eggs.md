@@ -9,7 +9,7 @@ Le système Easter Eggs permet de gérer des cadres de profil PNG que les utilis
 ## 📁 Structure des fichiers
 
 ### SQL
-- **`sql_updates/add_easter_eggs_system.sql`** : Script de création de la base de données
+- **`database/migrations/08_add_easter_eggs_system.sql`** : Script de création de la base de données
   - Table `cadres_profil` : Stocke les cadres disponibles
   - Modification de la table `locataire` : Ajoute les colonnes `id_cadre_actif` et `frames_unlocked`
 
@@ -79,7 +79,7 @@ ALTER TABLE locataire
 Exécutez le script SQL :
 
 ```bash
-mysql -u root -p goodnight < sql_updates/add_easter_eggs_system.sql
+mysql -u root -p goodnight < database/migrations/08_add_easter_eggs_system.sql
 ```
 
 Ou via phpMyAdmin : Importez le fichier `add_easter_eggs_system.sql`
@@ -369,7 +369,3 @@ Pour toute question ou problème :
 - Contactez l'équipe de développement
 
 ---
-
-**Dernière mise à jour** : 11 décembre 2025  
-**Version** : 1.0.0  
-**Auteur** : GitHub Copilot

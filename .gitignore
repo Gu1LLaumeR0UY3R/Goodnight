@@ -1,0 +1,14 @@
+# Configuration locale et secrets
+config/config.php
+.env
+
+# Éditeurs / OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# Logs et dépendances
+*.log
+node_modules/
+vendor/

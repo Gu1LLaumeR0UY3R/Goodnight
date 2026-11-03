@@ -790,7 +790,7 @@
             <div class="sun"></div>
             <div class="horizon"></div>
         </div>
-        <p>&copy; <?php echo date("Y"); ?> GlobeNight. Tous droits réservés.</p>
+        <p>&copy; <?php echo date("Y"); ?> Goodnight. Tous droits réservés.</p>
     </footer>
 
     <script>

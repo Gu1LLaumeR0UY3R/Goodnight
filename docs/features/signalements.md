@@ -20,7 +20,6 @@ CREATE TABLE signalements (
     email_signaleur VARCHAR(255) NULL,
     motif ENUM('contenu_inapproprie', 'fausses_informations', 'photos_trompeuses', 'arnaque', 'autre') NOT NULL,
     description TEXT NULL,
-    statut ENUM('en_attente', 'traite', 'rejete') DEFAULT 'en_attente',
     date_signalement DATETIME NOT NULL,
     date_traitement DATETIME NULL,
     id_admin_traitant INT NULL,
@@ -398,7 +397,7 @@ Une erreur est survenue lors du traitement du signalement.
 
 ## Base de données - Script d'installation
 
-Le script SQL se trouve dans : `sql_updates/add_signalement_system.sql`
+Le script SQL se trouve dans : `database/migrations/02_add_signalement_system.sql`
 
 ### Installation
 
@@ -411,13 +410,13 @@ Le script SQL se trouve dans : `sql_updates/add_signalement_system.sql`
 
 **Via ligne de commande MySQL** :
 ```bash
-mysql -u root -p goodnight < sql_updates/add_signalement_system.sql
+mysql -u root -p goodnight < database/migrations/02_add_signalement_system.sql
 ```
 
 **Via PowerShell** :
 ```powershell
-cd c:\wamp64\www\SIO-2\Projet-Location\Goodnight-main
-& "C:\wamp64\bin\mysql\mysql8.1.0\bin\mysql.exe" -u root -p goodnight -e "source sql_updates/add_signalement_system.sql"
+cd Goodnight
+mysql -u root -p goodnight -e "source database/migrations/02_add_signalement_system.sql"
 ```
 
 ---
@@ -600,7 +599,3 @@ Pour toute question ou problème concernant le système de signalement, consulte
 - Le code source dans `app/Models/SignalementModel.php`
 
 ---
-
-**Dernière mise à jour** : 8 décembre 2025  
-**Version** : 1.0  
-**Auteur** : Système GlobeNight

@@ -16,7 +16,7 @@ Goodnight/
 ├── config/                       # Configuration
 ├── lib/                          # Bibliothèques et utilitaires
 ├── public/                       # Point d'entrée et ressources publiques
-├── sql_updates/                  # Scripts SQL de migration
+├── database/migrations/                  # Scripts SQL de migration
 └── Documentation (fichiers .md)  # Documentation technique
 ```
 
@@ -262,7 +262,7 @@ Scripts côté client :
 
 ## 📊 Scripts SQL de migration
 
-Les mises à jour de la base de données sont versionnées dans `sql_updates/` :
+Les mises à jour de la base de données sont versionnées dans `database/migrations/` :
 - `add_validation_system.sql` - Système de validation des biens
 - `add_commentaires_system.sql` - Système de commentaires
 - `add_signalement_system.sql` - Système de signalements
@@ -393,4 +393,3 @@ User recherche → HomeController
 ---
 
 **Date de dernière mise à jour** : 11 décembre 2025
-**Version du projet** : 1.0

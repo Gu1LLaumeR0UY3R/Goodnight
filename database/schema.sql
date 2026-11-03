@@ -43,7 +43,7 @@ CREATE TABLE IF NOT EXISTS `admin` (
 --
 
 INSERT INTO `admin` (`id_admin`, `nom_admin`, `prenom_admin`, `email_admin`, `mot_de_passe_admin`, `is_admin`) VALUES
-(1, 'admin', 'test', 'admin@example.com', '$2y$10$qagrgyFpGbj9Wr1.6fwIfOVwgQvs6v8NcBd6okrMkFN.z1mHkn1Ue', 1); -- password123
+(1, 'admin', 'test', 'admin@example.com', '$2y$10$qagrgyFpGbj9Wr1.6fwIfOVwgQvs6v8NcBd6okrMkFN.z1mHkn1Ue', 1); -- compte de développement local uniquement (mot de passe : password123), à supprimer en production
 
 -- --------------------------------------------------------
 

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Carte des biens - GlobeNight</title>
+    <title>Carte des biens - Goodnight</title>
     <link rel="stylesheet" href="/css/style.css">
     <link rel="stylesheet" href="/css/navbar.css">
     <link href='https://api.mapbox.com/mapbox-gl-js/v3.0.1/mapbox-gl.css' rel='stylesheet' />
@@ -57,8 +57,8 @@
 
     <script src='https://api.mapbox.com/mapbox-gl-js/v3.0.1/mapbox-gl.js'></script>
     <script>
-        // Clé API Mapbox (à remplacer par votre clé)
-        mapboxgl.accessToken = 'pk.eyJ1IjoiYW5kYWthMTkiLCJhIjoiY21peDRxbmhxMDBoaTNlc2QzcWZsZW13dSJ9.jyFBBRN_qNE26YrDrbhPKA';
+        // Jeton Mapbox défini dans config/config.php (MAPBOX_TOKEN)
+        mapboxgl.accessToken = <?php echo json_encode(MAPBOX_TOKEN); ?>;
 
         // Initialiser la carte centrée sur la France
         const map = new mapboxgl.Map({

@@ -1,8 +1,7 @@
-# Modifications du 16/12/2025
+# Changelog
 
-Ce document récapitule les changements effectués aujourd’hui, avec le contexte, le détail par fichier et la façon de les tester.
-
-## Vue d’ensemble
+## 2025-12-16
+### Vue d’ensemble
 - Ajout d’une notification envoyée au propriétaire lors de la validation d’un bien par un administrateur.
 - Améliorations du tableau de bord Propriétaire:
   - Bandeau KPI (Biens, Validés, En attente).
@@ -10,7 +9,7 @@ Ce document récapitule les changements effectués aujourd’hui, avec le contex
   - Actions rapides (Ajouter un bien, Créer un blocage, Voir mes réservations).
   - Badges de statut sur chaque carte de bien + filtres par statut (Tous, Validés, En attente).
 
-## Détails par fichier
+### Détails par fichier
 
 ### Notifications et administration
 
@@ -106,7 +105,7 @@ Ce document récapitule les changements effectués aujourd’hui, avec le contex
   - Responsive design pour tablette et mobile (adaptation des colonnes, orientation, taille des boutons).
   - Thème clair/sombre avec variables CSS cohérentes.
 
-## Comment tester rapidement
+### Comment tester rapidement
 1. Validation d’un bien (notification):
    - Depuis l’interface Admin, validez un bien en attente.
    - Connectez-vous en tant que propriétaire du bien (ou observez via l’icône de notifications) et vérifiez la présence d’une nouvelle notification “Bien validé”.
@@ -128,13 +127,13 @@ Ce document récapitule les changements effectués aujourd’hui, avec le contex
      - **Revenus par bien**: camembert coloré répartissant les revenus.
    - Testez en mode sombre (si disponible) pour vérifier la cohérence visuelle.
 
-## Notes techniques et impacts
+### Notes techniques et impacts
 - Base de données: aucun changement de schéma requis pour ces ajouts.
 - Performances: le calcul KPI est côté client et O(1) par bien; impact négligeable.
 - Robustesse: l’envoi de notification est encapsulé dans `try/catch` pour ne pas bloquer la validation.
 - Thème: tous les nouveaux styles respectent les variables du thème existant.
 
-## Fonctionnalités du système de statistiques
+### Fonctionnalités du système de statistiques
 - **4 périodes d'analyse**: 
   - **24 Heures** : Les dernières 24 heures (0h → 23h)
   - **7 Jours** : Les 7 derniers jours (avec dates dd/mm)
@@ -155,7 +154,7 @@ Ce document récapitule les changements effectués aujourd’hui, avec le contex
 - **UI responsive**: sélecteurs adaptés mobile/tablette, grilles flexibles.
 - **Mises à jour dynamiques**: changement de période ou date met à jour les graphiques instantanément via API.
 
-## Idées d'amélioration futures
+### Idées d'amélioration futures
 - Ajouter un filtre "Refusés" si le statut existe côté back et l'exposer dans l'UI.
 - Ajouter des compteurs sur les boutons de filtre (ex: "En attente (3)").
 - Export des statistiques en PDF ou CSV.

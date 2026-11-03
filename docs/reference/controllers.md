@@ -13,7 +13,7 @@ Ce document contient la documentation détaillée de toutes les méthodes des co
  * Fournit les méthodes communes de rendu de vue et de redirection
  * 
  * @package Controllers
- * @author GlobeNight Team
+ * @author Goodnight Team
  */
 class BaseController {
     
@@ -59,7 +59,7 @@ class BaseController {
  * - Gestion des réservations
  * 
  * @package Controllers
- * @author GlobeNight Team
+ * @author Goodnight Team
  */
 class AdminController extends BaseController {
     
@@ -445,7 +445,7 @@ class AdminController extends BaseController {
  * - Calendrier FullCalendar
  * 
  * @package Controllers
- * @author GlobeNight Team
+ * @author Goodnight Team
  */
 class ProprietaireController extends BaseController {
     
@@ -635,7 +635,7 @@ class ProprietaireController extends BaseController {
  * - Redirections selon les rôles
  * 
  * @package Controllers
- * @author GlobeNight Team
+ * @author Goodnight Team
  */
 class LoginController extends BaseController {
     
@@ -744,7 +744,7 @@ class LoginController extends BaseController {
  * - Attribution des rôles (Propriétaire/Locataire)
  * 
  * @package Controllers
- * @author GlobeNight Team
+ * @author Goodnight Team
  */
 class RegisterController extends BaseController {
     
@@ -808,7 +808,7 @@ class RegisterController extends BaseController {
  * - Autocomplete des communes
  * 
  * @package Controllers
- * @author GlobeNight Team
+ * @author Goodnight Team
  */
 class HomeController extends BaseController {
     
@@ -882,7 +882,7 @@ class HomeController extends BaseController {
  * - Annulation de réservations
  * 
  * @package Controllers
- * @author GlobeNight Team
+ * @author Goodnight Team
  */
 class ReservationController extends BaseController {
     
@@ -941,7 +941,7 @@ class ReservationController extends BaseController {
  * Les fonctionnalités de réservation sont gérées par ReservationController
  * 
  * @package Controllers
- * @author GlobeNight Team
+ * @author Goodnight Team
  */
 class LocataireController extends BaseController {
     
@@ -973,7 +973,7 @@ class LocataireController extends BaseController {
  * - Gestion de la photo de profil
  * 
  * @package Controllers
- * @author GlobeNight Team
+ * @author Goodnight Team
  */
 class ProfileController extends BaseController {
     
@@ -1031,7 +1031,7 @@ class ProfileController extends BaseController {
  * - Protéger les routes
  * 
  * @package Controllers
- * @author GlobeNight Team
+ * @author Goodnight Team
  */
 class AuthMiddleware {
     

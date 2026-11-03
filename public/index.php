@@ -2,6 +2,10 @@
 session_start();
 
 
+if (!file_exists(__DIR__ . "/../config/config.php")) {
+    http_response_code(500);
+    exit("Configuration manquante : copiez config/config.example.php vers config/config.php.");
+}
 require_once __DIR__ . "/../config/config.php";
 
 // Autoload des classes (à améliorer avec un vrai autoloader PSR-4)

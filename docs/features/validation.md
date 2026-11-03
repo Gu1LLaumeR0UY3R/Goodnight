@@ -1,7 +1,6 @@
 # Système de Validation des Biens - Documentation
 
 **Date de mise en place :** 8 décembre 2025  
-**Version :** 1.0
 
 ---
 
@@ -328,7 +327,7 @@ Les photos sont considérées comme champ critique :
 
 ### 1. Exécuter le script SQL
 
-**Fichier :** `sql_updates/add_validation_system.sql`
+**Fichier :** `database/migrations/01_add_validation_system.sql`
 
 #### Option A : Via phpMyAdmin (recommandé)
 
@@ -342,7 +341,7 @@ Les photos sont considérées comme champ critique :
 
 ```powershell
 # Depuis le répertoire du projet
-Get-Content sql_updates/add_validation_system.sql | & "C:\wamp64\bin\mysql\mysql8.0.31\bin\mysql.exe" -u root goodnight
+Get-Content database/migrations/01_add_validation_system.sql | mysql -u root goodnight
 ```
 
 ### 2. Vérifier l'installation
@@ -370,7 +369,7 @@ UPDATE `biens` SET `statut_validation` = 'valide', `date_validation` = NOW();
 ### Fichiers créés
 
 ```
-sql_updates/add_validation_system.sql          - Script de migration SQL
+database/migrations/01_add_validation_system.sql          - Script de migration SQL
 app/Views/admin/validations.php                - Page admin de validation
 DOCUMENTATION_VALIDATION.md                    - Cette documentation
 ```
@@ -598,7 +597,3 @@ Vérifier que le statut est bien `valide` en base.
 - [ ] Filtres avancés (par propriétaire, par date, etc.)
 
 ---
-
-**Développé le :** 8 décembre 2025  
-**Système :** Option C - Validation sélective avec feedback utilisateur  
-**Statut :** ✅ Production ready
