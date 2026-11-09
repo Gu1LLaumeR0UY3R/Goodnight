@@ -564,9 +564,6 @@ class ProprietaireController extends BaseController {
             $prestationsData = $_POST['prestations'] ?? [];
             $prestationsToSave = [];
 
-            // Debug: voir ce qui arrive en POST
-            error_log("POST reçu: " . print_r($_POST, true));
-
             foreach ($prestationsData as $id_prestation => $data) {
                 if (isset($data['active']) && $data['active'] == '1') {
                     $quantite = isset($data['quantite']) && is_numeric($data['quantite']) ? intval($data['quantite']) : 1;
@@ -575,9 +572,6 @@ class ProprietaireController extends BaseController {
                     }
                 }
             }
-
-            // Debug: afficher les données reçues (à supprimer après)
-            error_log("Prestations à sauvegarder: " . print_r($prestationsToSave, true));
 
             // Mettre à jour les prestations
             if ($this->prestationModel->updateBienPrestations($id_biens, $prestationsToSave)) {

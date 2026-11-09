@@ -287,8 +287,6 @@ class ProfileController extends BaseController {
         // Effectuer la mise à jour
         try {
             // Log des données avant mise à jour pour débogage
-            error_log("UserID: " . $userId);
-            error_log("UpdateData: " . print_r($updateData, true));
             
             $updated = $this->userModel->update($userId, $updateData);
 
