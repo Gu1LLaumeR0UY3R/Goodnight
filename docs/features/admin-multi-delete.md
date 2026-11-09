@@ -1,137 +1,34 @@
-# Système de Multi-Suppression Admin - Endpoints à Implémenter
+# Multi-suppression dans l'administration
 
-## Vue d'ensemble
-Le système de multi-suppression a été ajouté à toutes les pages admin concernées. Voici les endpoints qui doivent être créés dans le contrôleur Admin.
+Les pages de gestion de l'administration permettent de cocher plusieurs lignes puis de les supprimer en une seule action.
 
-## Endpoints requis
+## Pages concernées
 
-### 1. Utilisateurs
-**Endpoint**: `POST /admin/deleteMultipleUsers`
-**Payload**: `{"ids": [1, 2, 3, ...]}`
-**Action**: Supprimer les utilisateurs avec les IDs fournis
+| Page | Route AJAX | Règles |
+|---|---|---|
+| Utilisateurs | `POST /admin/deleteMultipleUsers` | Supprime aussi leurs rôles, réservations, avis et favoris (cascade) |
+| Rôles | `POST /admin/deleteMultipleRoles` | Les rôles système 1 (Propriétaire) et 2 (Locataire) sont protégés |
+| Biens | `POST /admin/deleteMultipleBiens` | Prévient les locataires avec une réservation à venir, supprime réservations et tarifs |
+| Types de biens | `POST /admin/deleteMultipleTypesBiens` | Refusé si un bien utilise encore le type |
+| Saisons | `POST /admin/deleteMultipleSaisons` | Supprime aussi les tarifs liés |
+| Réservations | `POST /admin/deleteMultipleReservations` | Notifie le locataire et le propriétaire |
 
-### 2. Rôles
-**Endpoint**: `POST /admin/deleteMultipleRoles`
-**Payload**: `{"ids": [1, 2, 3, ...]}`
-**Action**: Supprimer les rôles avec les IDs fournis
+La page **Communes** n'a volontairement pas de suppression : les communes sont des données de référence (liste officielle) et `CommuneModel::delete()` est désactivé.
 
-### 3. Biens
-**Endpoint**: `POST /admin/deleteMultipleBiens`
-**Payload**: `{"ids": [1, 2, 3, ...]}`
-**Action**: Supprimer les biens avec les IDs fournis
+## Fonctionnement
 
-### 4. Types de Biens
-**Endpoint**: `POST /admin/deleteMultipleTypesBiens`
-**Payload**: `{"ids**: [1, 2, 3, ...]}`
-**Action**: Supprimer les types de biens avec les IDs fournis
+- Côté navigateur : `public/js/admin-multi-delete.js` ajoute une case à cocher par ligne, une case « tout sélectionner » et un bouton « Supprimer la sélection », puis envoie la liste des identifiants.
+- Côté serveur : chaque méthode de `AdminController` délègue à `deleteMultiple()`, qui supprime les éléments un par un. Un élément protégé ou encore utilisé est compté comme « non supprimé » sans bloquer les autres.
 
-### 5. Saisons
-**Endpoint**: `POST /admin/deleteMultipleSaisons`
-**Payload**: `{"ids": [1, 2, 3, ...]}`
-**Action**: Supprimer les saisons avec les IDs fournis
+## Contrat de l'API
 
-### 6. Réservations
-**Endpoint**: `POST /admin/deleteMultipleReservations`
-**Payload**: `{"ids": [1, 2, 3, ...]}`
-**Action**: Supprimer les réservations avec les IDs fournis
+Requête : `POST` en `application/json`, corps `{"ids": [1, 2, 3]}` (500 identifiants maximum).
+Les autres types de contenu sont refusés (HTTP 415), ce qui empêche une requête envoyée depuis un autre site (CSRF).
 
-### 7. Communes
-**Endpoint**: `POST /admin/deleteMultipleCommunes`
-**Payload**: `{"ids": [1, 2, 3, ...]}`
-**Action**: Supprimer les communes avec les IDs fournis
+Réponse :
 
-## Format de réponse attendu
-
-### Succès
 ```json
-{
-  "success": true,
-  "deleted": 5,
-  "message": "5 éléments supprimés avec succès"
-}
+{ "success": true, "deleted": 2, "failed": 1, "message": "2 réservation(s) supprimé(s) avec succès ; 1 non supprimé(s) (protégé ou encore utilisé)" }
 ```
 
-### Erreur
-```json
-{
-  "success": false,
-  "message": "Erreur lors de la suppression: détails de l'erreur"
-}
-```
-
-## Exemple d'implémentation dans AdminController.php
-
-```php
-public function deleteMultipleUsers() {
-    header('Content-Type: application/json');
-    
-    try {
-        $json = file_get_contents('php://input');
-        $data = json_decode($json, true);
-        
-        if (!isset($data['ids']) || !is_array($data['ids'])) {
-            echo json_encode([
-                'success' => false,
-                'message' => 'IDs invalides'
-            ]);
-            return;
-        }
-        
-        $ids = array_filter($data['ids'], 'is_numeric');
-        $deleted = 0;
-        
-        foreach ($ids as $id) {
-            if ($this->model->deleteUser($id)) {
-                $deleted++;
-            }
-        }
-        
-        echo json_encode([
-            'success' => true,
-            'deleted' => $deleted,
-            'message' => "$deleted utilisateur(s) supprimé(s) avec succès"
-        ]);
-        
-    } catch (Exception $e) {
-        echo json_encode([
-            'success' => false,
-            'message' => 'Erreur: ' . $e->getMessage()
-        ]);
-    }
-}
-```
-
-## Fichiers modifiés
-
-### Frontend (déjà fait)
-- ✅ `/public/js/admin-multi-delete.js` - Script générique de multi-suppression
-- ✅ `/public/css/admin-content.css` - Styles pour les checkboxes et bouton
-- ✅ `/app/Views/admin/users.php` - Gestion utilisateurs
-- ✅ `/app/Views/admin/roles.php` - Gestion rôles
-- ✅ `/app/Views/admin/biens.php` - Gestion biens
-- ✅ `/app/Views/admin/types_biens.php` - Gestion types de biens
-- ✅ `/app/Views/admin/saisons.php` - Gestion saisons
-- ✅ `/app/Views/admin/reservations.php` - Gestion réservations
-- ✅ `/app/Views/admin/communes.php` - Gestion communes
-
-### Backend (à implémenter)
-- ⏳ Ajouter les 7 méthodes dans `AdminController.php`
-- ⏳ Ajouter les routes correspondantes dans le routeur
-
-## Fonctionnalités incluses
-
-1. **Sélection multiple**: Checkbox sur chaque ligne + "Tout sélectionner"
-2. **Bouton dynamique**: Apparaît seulement quand des éléments sont sélectionnés
-3. **Compteur**: Affiche le nombre d'éléments sélectionnés
-4. **Confirmation**: Demande de confirmation avant suppression
-5. **Feedback**: Toast de notification après l'action
-6. **Rechargement auto**: La page se recharge après succès
-7. **Gestion d'erreurs**: Messages d'erreur clairs en cas de problème
-8. **Visual feedback**: Les lignes sélectionnées sont highlightées en rouge
-
-## Notes importantes
-
-- Les checkboxes sont ajoutées dynamiquement par JavaScript
-- Le système utilise les toasts existants définis dans `components.css`
-- Compatible avec DataTables (les checkboxes s'ajoutent après l'initialisation)
-- Le bouton utilise un style rouge vif pour attirer l'attention
+`success` vaut `false` si aucun élément n'a pu être supprimé. L'accès est réservé au rôle Administrateur.

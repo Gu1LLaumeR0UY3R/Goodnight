@@ -7,12 +7,12 @@
     <link rel="stylesheet" href="/css/style.css">
     <link rel="stylesheet" href="/css/navbar.css">
     <link rel="stylesheet" href="/css/admin-content.css">
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
-    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
-    <link rel="stylesheet" href="https://code.jquery.com/ui/1.14.1/themes/base/jquery-ui.css">
-    <script src="https://code.jquery.com/ui/1.14.1/jquery-ui.js"></script>
-    <script src="/js/admin-multi-delete.js"></script>
+    <script src="/vendor/jquery/jquery-3.6.0.min.js"></script>
+    <link rel="stylesheet" href="/vendor/datatables/css/jquery.dataTables.min.css">
+    <script src="/vendor/datatables/js/jquery.dataTables.min.js"></script>
+    <link rel="stylesheet" href="/vendor/jquery-ui/themes/base/jquery-ui.min.css">
+    <script src="/vendor/jquery-ui/jquery-ui.min.js"></script>
+    <link rel="stylesheet" href="/css/theme.css">
 </head>
 <body>
 
@@ -65,12 +65,6 @@
                 "sSortDescending": ": activer pour trier la colonne par ordre décroissant"
             }
             }
-          });
-          
-          // Initialiser la suppression multiple
-          initMultiDelete({
-              entityType: 'commune',
-              deleteEndpoint: '/admin/deleteMultipleCommunes'
           });
         });
         </script>

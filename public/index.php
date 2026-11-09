@@ -99,6 +99,12 @@ $routes = [
 
     //Partie Réservations
     "admin/reservations" => ["controller" => "AdminController", "action" => "reservations"],
+    "admin/deleteMultipleUsers" => ["controller" => "AdminController", "action" => "deleteMultipleUsers"],
+    "admin/deleteMultipleRoles" => ["controller" => "AdminController", "action" => "deleteMultipleRoles"],
+    "admin/deleteMultipleBiens" => ["controller" => "AdminController", "action" => "deleteMultipleBiens"],
+    "admin/deleteMultipleTypesBiens" => ["controller" => "AdminController", "action" => "deleteMultipleTypesBiens"],
+    "admin/deleteMultipleSaisons" => ["controller" => "AdminController", "action" => "deleteMultipleSaisons"],
+    "admin/deleteMultipleReservations" => ["controller" => "AdminController", "action" => "deleteMultipleReservations"],
     "admin/addReservation" => ["controller" => "AdminController", "action" => "addReservation"],
     "admin/editReservation/([0-9]+)" => ["controller" => "AdminController", "action" => "editReservation"],
     "admin/deleteReservation/([0-9]+)" => ["controller" => "AdminController", "action" => "deleteReservation"],

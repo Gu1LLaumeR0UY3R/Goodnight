@@ -386,7 +386,15 @@ class AdminController extends BaseController {
     }
 
     public function deleteBien($id) {
-        // Notify users with future reservations then delete related reservations
+        $this->performDeleteBien($id);
+        $this->redirect("/admin/biens");
+    }
+
+    /**
+     * Supprime un bien : prévient les locataires concernés, supprime les réservations
+     * puis le bien (les tarifs sont supprimés par BienModel::delete).
+     */
+    private function performDeleteBien($id) {
         try {
             $bien = $this->bienModel->getById($id);
             $bienName = $bien['designation_bien'] ?? ("Bien #" . $id);
@@ -394,20 +402,11 @@ class AdminController extends BaseController {
             $message = 'Le bien "' . $bienName . '" sur lequel vous aviez une réservation a été supprimé. Votre réservation peut être affectée.';
             $this->notificationModel->notifyUsersWithFutureReservationsForBien((int)$id, $title, $message, '/locataire/myReservations');
         } catch (\Throwable $e) { }
-        // Optionally, clean reservations for this bien to avoid orphans
         try {
             $this->reservationModel->deleteByBien((int)$id);
         } catch (\Throwable $e) { }
-        $this->bienModel->delete($id);
-        $this->redirect("/admin/biens");
+        return $this->bienModel->delete($id);
     }
-
-
-
-
-
-
-    
 
     // --- Gestion des Utilisateurs ---
     public function users() {
@@ -650,6 +649,12 @@ class AdminController extends BaseController {
     }
 
     public function deleteReservation($id) {
+        $this->performDeleteReservation($id);
+        $this->redirect("/admin/reservations");
+    }
+
+    /** Supprime une réservation et prévient le locataire et le propriétaire. */
+    private function performDeleteReservation($id) {
         $before = $this->reservationModel->getById($id);
         $this->reservationModel->delete($id);
         if ($before) {
@@ -673,7 +678,7 @@ class AdminController extends BaseController {
                 ]); } catch (\Throwable $e) { }
             }
         }
-        $this->redirect("/admin/reservations");
+        return $before ? 1 : 0;
     }
 
     // --- Gestion des Photos ---
@@ -942,6 +947,110 @@ class AdminController extends BaseController {
         }
 
         $this->redirect('/admin/commentaires-signales');
+    }
+
+    // --- Suppression multiple (appelée en AJAX par public/js/admin-multi-delete.js) ---
+
+    public function deleteMultipleUsers() {
+        $this->deleteMultiple('utilisateur', function ($id) {
+            return $this->userModel->delete($id);
+        });
+    }
+
+    public function deleteMultipleRoles() {
+        // Les rôles 1 (Propriétaire) et 2 (Locataire) sont utilisés par l'application
+        $this->deleteMultiple('rôle', function ($id) {
+            if ($id <= 2) {
+                throw new RuntimeException("rôle système protégé");
+            }
+            return $this->roleModel->delete($id);
+        });
+    }
+
+    public function deleteMultipleBiens() {
+        $this->deleteMultiple('bien', function ($id) {
+            return $this->performDeleteBien($id);
+        });
+    }
+
+    public function deleteMultipleTypesBiens() {
+        $this->deleteMultiple('type de bien', function ($id) {
+            return $this->typeBienModel->delete($id);
+        });
+    }
+
+    public function deleteMultipleSaisons() {
+        $this->deleteMultiple('saison', function ($id) {
+            return $this->saisonModel->delete($id);
+        });
+    }
+
+    public function deleteMultipleReservations() {
+        $this->deleteMultiple('réservation', function ($id) {
+            return $this->performDeleteReservation($id);
+        });
+    }
+
+    /**
+     * Traitement commun : lit {"ids": [...]}, appelle $deleter pour chaque id
+     * et renvoie {success, deleted, failed, message} en JSON.
+     * Exige une requête POST en application/json (une requête inter-sites
+     * ne peut pas l'envoyer sans autorisation CORS, ce qui évite le CSRF).
+     */
+    private function deleteMultiple($label, callable $deleter) {
+        header('Content-Type: application/json; charset=utf-8');
+
+        $contentType = $_SERVER['CONTENT_TYPE'] ?? '';
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST' || stripos($contentType, 'application/json') !== 0) {
+            http_response_code(415);
+            echo json_encode(['success' => false, 'message' => 'Requête invalide']);
+            return;
+        }
+
+        $data = json_decode(file_get_contents('php://input'), true);
+        if (!is_array($data) || !isset($data['ids']) || !is_array($data['ids'])) {
+            http_response_code(400);
+            echo json_encode(['success' => false, 'message' => 'IDs invalides']);
+            return;
+        }
+
+        $ids = array_values(array_unique(array_map('intval', array_filter($data['ids'], 'is_numeric'))));
+        $ids = array_slice(array_filter($ids, function ($id) { return $id > 0; }), 0, 500);
+        if (empty($ids)) {
+            http_response_code(400);
+            echo json_encode(['success' => false, 'message' => 'Aucun élément sélectionné']);
+            return;
+        }
+
+        $deleted = 0;
+        $failed = 0;
+        foreach ($ids as $id) {
+            try {
+                if ($deleter($id)) {
+                    $deleted++;
+                } else {
+                    $failed++;
+                }
+            } catch (\Throwable $e) {
+                $failed++;
+            }
+        }
+
+        if ($deleted === 0) {
+            echo json_encode([
+                'success' => false,
+                'deleted' => 0,
+                'failed' => $failed,
+                'message' => "Aucun $label supprimé (élément protégé ou encore utilisé ailleurs)"
+            ]);
+            return;
+        }
+
+        $message = "$deleted $label(s) supprimé(s) avec succès";
+        if ($failed > 0) {
+            $message .= " ; $failed non supprimé(s) (protégé ou encore utilisé)";
+        }
+        echo json_encode(['success' => true, 'deleted' => $deleted, 'failed' => $failed, 'message' => $message]);
     }
 }
 
