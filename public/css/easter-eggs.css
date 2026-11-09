@@ -7,7 +7,7 @@
    ======================================== */
 
 .admin-page {
-    background: radial-gradient(circle at 20% 20%, rgba(255, 94, 98, 0.12), transparent 35%),
+    background: radial-gradient(circle at 20% 20%, rgba(36, 38, 34, 0.12), transparent 35%),
                 radial-gradient(circle at 80% 0%, rgba(255, 153, 102, 0.18), transparent 30%),
                 #0b1021;
     padding: 24px;
@@ -77,13 +77,13 @@
 }
 
 .tab-btn:hover { 
-    color: #ff9a7a;
+    color: #55604A;
     transform: translateY(-1px);
 }
 
 .tab-btn.active { 
-    color: #ff9a7a; 
-    border-bottom-color: #ff9a7a;
+    color: #55604A; 
+    border-bottom-color: #55604A;
 }
 
 .tab-content { 
@@ -121,7 +121,7 @@
 }
 
 .text-muted { 
-    color: #aab7d3;
+    color: #DED7CA;
     font-size: 0.95rem;
 }
 
@@ -148,19 +148,19 @@
 }
 
 .btn-primary {
-    background: linear-gradient(135deg, #ff5e62 0%, #ff9966 100%);
+    background: linear-gradient(#242622, #242622);
     color: #fff;
-    box-shadow: 0 10px 24px rgba(255, 94, 98, 0.35);
+    box-shadow: 0 10px 24px rgba(36, 38, 34, 0.35);
 }
 
 .btn-primary:hover { 
     transform: translateY(-2px); 
-    box-shadow: 0 12px 28px rgba(255, 94, 98, 0.45);
+    box-shadow: 0 12px 28px rgba(36, 38, 34, 0.45);
 }
 
 .btn-ghost {
     background: rgba(255, 255, 255, 0.04);
-    color: #ff9a7a;
+    color: #55604A;
     border: 1px solid rgba(255, 154, 122, 0.4);
 }
 
@@ -170,13 +170,13 @@
 }
 
 .btn-danger { 
-    color: #ffb3a1;
-    border-color: rgba(255, 94, 98, 0.4);
+    color: #55604A;
+    border-color: rgba(36, 38, 34, 0.4);
 }
 
 .btn-danger:hover {
-    background: rgba(255, 94, 98, 0.15);
-    border-color: rgba(255, 94, 98, 0.6);
+    background: rgba(36, 38, 34, 0.15);
+    border-color: rgba(36, 38, 34, 0.6);
     color: #ff8a7a;
 }
 
@@ -228,7 +228,7 @@
     content: '';
     position: absolute;
     inset: 0;
-    background: linear-gradient(135deg, rgba(255, 94, 98, 0.05), rgba(255, 153, 102, 0.05));
+    background: linear-gradient(135deg, rgba(36, 38, 34, 0.05), rgba(255, 153, 102, 0.05));
     opacity: 0;
     transition: opacity 0.3s ease;
 }
@@ -249,7 +249,7 @@
 }
 
 .placeholder { 
-    color: #aab7d3; 
+    color: #DED7CA; 
     font-size: 0.95rem;
     font-style: italic;
 }
@@ -288,7 +288,7 @@
 .empty-state {
     text-align: center;
     padding: 40px 20px;
-    color: #aab7d3;
+    color: #DED7CA;
     grid-column: 1 / -1;
     background: rgba(255, 255, 255, 0.02);
     border-radius: 10px;
@@ -347,11 +347,11 @@
     display: inline-block;
     margin-top: 8px;
     padding: 6px 10px;
-    background: rgba(255, 94, 98, 0.15);
-    color: #ffb3a1;
+    background: rgba(36, 38, 34, 0.15);
+    color: #55604A;
     border-radius: 6px;
     font-size: 0.85rem;
-    border: 1px solid rgba(255, 94, 98, 0.35);
+    border: 1px solid rgba(36, 38, 34, 0.35);
     font-family: 'Courier New', monospace;
 }
 
@@ -397,7 +397,7 @@
 .form-group input[type="text"]:focus,
 .form-group textarea:focus {
     outline: none;
-    border-color: #ff9a7a;
+    border-color: #55604A;
     background: rgba(255, 255, 255, 0.08);
     box-shadow: 0 0 0 3px rgba(255, 154, 122, 0.15);
 }
@@ -411,7 +411,7 @@
 .form-group .help-text {
     display: block;
     margin-top: 6px;
-    color: #aab7d3;
+    color: #DED7CA;
     font-size: 0.85rem;
 }
 
@@ -448,7 +448,7 @@
 }
 
 .file-preview-name {
-    color: #aab7d3;
+    color: #DED7CA;
     font-size: 0.9rem;
     margin-bottom: 8px;
 }
@@ -521,21 +521,9 @@
 
     .tab-btn.active {
         border-bottom-color: transparent;
-        border-left-color: #ff9a7a;
+        border-left-color: #55604A;
     }
-}
-
-/* ========================================
-   DARK MODE (déjà dans un thème sombre)
-   ======================================== */
-
-.dark-mode .admin-page {
-    background: radial-gradient(circle at 20% 20%, rgba(255, 94, 98, 0.08), transparent 35%),
-                radial-gradient(circle at 80% 0%, rgba(255, 153, 102, 0.12), transparent 30%),
-                #050911;
-}
-
-/* ========================================
+}/* ========================================
    ANIMATIONS
    ======================================== */
 

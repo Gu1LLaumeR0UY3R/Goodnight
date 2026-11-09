@@ -39,35 +39,7 @@
   border-radius: 8px;
   margin-bottom: 1rem;
   border-left: 4px solid #F59E0B;
-}
-
-.dark-mode .error,
-.dark-mode .error-message {
-  background: rgba(239, 68, 68, 0.2);
-  color: #FCA5A5;
-  border-color: #EF4444;
-}
-
-.dark-mode .success,
-.dark-mode .success-message {
-  background: rgba(16, 185, 129, 0.2);
-  color: #6EE7B7;
-  border-color: #10B981;
-}
-
-.dark-mode .info {
-  background: rgba(59, 130, 246, 0.2);
-  color: #93C5FD;
-  border-color: #3B82F6;
-}
-
-.dark-mode .warning {
-  background: rgba(245, 158, 11, 0.2);
-  color: #FCD34D;
-  border-color: #F59E0B;
-}
-
-/* ===== BOUTONS GÉNÉRIQUES ===== */
+}/* ===== BOUTONS GÉNÉRIQUES ===== */
 button,
 .button {
   font-family: var(--font-main);
@@ -88,14 +60,8 @@ button[type="submit"]:not(.action-btn):not(.btn-submit):not(.auth-form button) {
 button[type="submit"]:hover {
   background: var(--accent-hover);
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(255, 90, 95, 0.3);
-}
-
-.dark-mode button[type="submit"]:hover {
-  box-shadow: 0 4px 12px rgba(102, 252, 241, 0.3);
-}
-
-/* ===== LIENS ===== */
+  box-shadow: 0 4px 12px rgba(36, 38, 34, 0.3);
+}/* ===== LIENS ===== */
 .reset-link,
 .link-secondary {
   text-align: center;

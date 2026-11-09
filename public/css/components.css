@@ -15,8 +15,8 @@
   min-width: 280px;
   max-width: 360px;
   background: #ffffff;
-  border: 1px solid #e5e7eb;
-  border-left: 4px solid #ff5e62;
+  border: 1px solid #DED7CA;
+  border-left: 4px solid #55604A;
   border-radius: 12px;
   box-shadow: 0 14px 40px rgba(0,0,0,0.12);
   padding: 12px 14px 12px 16px;
@@ -67,29 +67,7 @@
   color: #e11d48;
   transform: translateY(-1px);
   box-shadow: 0 6px 14px rgba(0,0,0,0.08);
-}
-
-/* Dark mode */
-.dark-mode .toast {
-  background: #1f2937;
-  border-color: rgba(255,255,255,0.08);
-  box-shadow: 0 14px 40px rgba(0,0,0,0.45);
-}
-
-.dark-mode .toast-message { color: #e5e7eb; }
-.dark-mode .toast-close {
-  background: #111827;
-  border-color: rgba(255,255,255,0.08);
-  color: #e5e7eb;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.4);
-}
-.dark-mode .toast-close:hover {
-  background: rgba(255,255,255,0.06);
-  border-color: rgba(255,255,255,0.18);
-  color: #fca5a5;
-}
-
-@media (max-width: 640px) {
+}@media (max-width: 640px) {
   .toast-container {
     top: 12px;
     right: 12px;

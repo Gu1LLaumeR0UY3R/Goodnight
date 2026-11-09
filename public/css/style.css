@@ -4,62 +4,34 @@
    ======================================== */
 
 /* ===== POLICES ===== */
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@400;500;600;700&display=swap');
 
 /* ===== VARIABLES THÈME JOUR (CRÉPUSCULE) ===== */
 :root {
   /* Palette Crépuscule */
-  --twilight-amber: #FF8C42;
-  --twilight-rose: #FF6B9D;
-  --twilight-cream: #FFF8F0;
-  --twilight-coral: #FF5A5F;
-  --twilight-deep: #2C3E50;
+  --twilight-amber: #55604A;
+  --twilight-rose: #55604A;
+  --twilight-cream: #F5F1E9;
+  --twilight-coral: #55604A;
+  --twilight-deep: #242622;
   
   /* Application */
   --bg-primary: #FFFFFF;
-  --bg-secondary: #FFF8F0;
+  --bg-secondary: #F5F1E9;
   --bg-card: #FFFFFF;
   
-  --text-primary: #2C3E50;
-  --text-secondary: #5A6C7D;
-  --text-muted: #8492A6;
+  --text-primary: #242622;
+  --text-secondary: #50554B;
+  --text-muted: #6a6f62;
   
-  --accent-primary: #FF5A5F;
-  --accent-hover: #FF8C42;
+  --accent-primary: #55604A;
+  --accent-hover: #55604A;
   
   --border-color: #E8E8E8;
   --shadow: 0 2px 8px rgba(44, 62, 80, 0.1);
   
-  --font-main: 'Inter', -apple-system, sans-serif;
-  --font-heading: 'Poppins', sans-serif;
-}
-
-/* ===== VARIABLES THÈME NUIT (NUIT ÉTOILÉE) ===== */
-.dark-mode {
-  /* Palette Nuit étoilée */
-  --night-void: #0B0C10;
-  --night-deep: #1F2833;
-  --night-stellar: #45A29E;
-  --night-nebula: #66FCF1;
-  --night-silver: #C5C6C7;
-  
-  /* Application */
-  --bg-primary: #0B0C10;
-  --bg-secondary: #1F2833;
-  --bg-card: #161B22;
-  
-  --text-primary: #C5C6C7;
-  --text-secondary: #8B949E;
-  --text-muted: #6E7681;
-  
-  --accent-primary: #66FCF1;
-  --accent-hover: #45A29E;
-  
-  --border-color: #30363D;
-  --shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
-}
-
-/* ===== RESET ===== */
+  --font-main: 'DM Sans', -apple-system, sans-serif;
+  --font-heading: 'DM Sans', sans-serif;
+}/* ===== RESET ===== */
 *, *::before, *::after {
   box-sizing: border-box;
   margin: 0;
@@ -137,19 +109,7 @@ a:hover {
 @keyframes float {
   0%, 100% { transform: translateY(0); }
   50% { transform: translateY(-20px); }
-}
-
-.dark-mode .hero {
-  background: linear-gradient(135deg, var(--night-deep), var(--night-stellar));
-}
-
-.dark-mode .hero::before {
-  background: 
-    radial-gradient(circle at 30% 40%, rgba(102, 252, 241, 0.1) 0%, transparent 50%),
-    radial-gradient(circle at 70% 70%, rgba(69, 162, 158, 0.1) 0%, transparent 50%);
-}
-
-.hero h2 {
+}.hero h2 {
   font-size: 3rem;
   color: white;
   margin-bottom: 2rem;
@@ -189,29 +149,13 @@ a:hover {
   text-align: center;
   margin-bottom: 1rem;
   color: var(--text-primary);
-}
-
-.dark-mode .search-section {
-  background: rgba(31, 40, 51, 0.65);
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  box-shadow: 0 18px 55px rgba(0, 0, 0, 0.45), 0 6px 18px rgba(0, 0, 0, 0.35);
-}
-
-.search-section .search-bar {
+}.search-section .search-bar {
   background: rgba(255, 255, 255, 0.9);
   border: 1px solid rgba(255, 255, 255, 0.55);
   -webkit-backdrop-filter: blur(10px);
   backdrop-filter: blur(10px);
   box-shadow: 0 12px 38px rgba(0, 0, 0, 0.16);
-}
-
-.dark-mode .search-section .search-bar {
-  background: rgba(31, 40, 51, 0.75);
-  border: 1px solid rgba(255, 255, 255, 0.14);
-  box-shadow: 0 12px 38px rgba(0, 0, 0, 0.45);
-}
-
-.search-bar {
+}.search-bar {
   display: flex;
   gap: 0.5rem;
   max-width: 700px;
@@ -234,14 +178,7 @@ a:hover {
     opacity: 1;
     transform: translateY(0);
   }
-}
-
-.dark-mode .search-bar {
-  background: var(--night-deep);
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
-}
-
-.search-bar input {
+}.search-bar input {
   flex: 1;
   padding: 0.875rem 1.5rem;
   border: none;
@@ -251,13 +188,7 @@ a:hover {
   background: transparent;
   color: var(--text-primary);
   transition: all 0.2s;
-}
-
-.dark-mode .search-bar input {
-  color: var(--night-silver);
-}
-
-.search-bar input::placeholder {
+}.search-bar input::placeholder {
   color: var(--text-muted);
   transition: opacity 0.2s;
 }
@@ -287,18 +218,12 @@ a:hover {
 .search-bar button:hover {
   background: var(--accent-hover);
   transform: scale(1.05);
-  box-shadow: 0 6px 20px rgba(255, 90, 95, 0.4);
+  box-shadow: 0 6px 20px rgba(36, 38, 34, 0.4);
 }
 
 .search-bar button:active {
   transform: scale(0.98);
-}
-
-.dark-mode .search-bar button:hover {
-  box-shadow: 0 6px 20px rgba(102, 252, 241, 0.4);
-}
-
-/* ===== SECTION LISTE BIENS ===== */
+}/* ===== SECTION LISTE BIENS ===== */
 .liste-biens {
   max-width: 1400px;
   margin: 0 auto;
@@ -341,13 +266,7 @@ a:hover {
   transition: opacity 0.3s;
   pointer-events: none;
   z-index: 0;
-}
-
-.dark-mode .bien-card::before {
-  background: linear-gradient(135deg, var(--night-stellar), var(--night-nebula));
-}
-
-.bien-card:hover {
+}.bien-card:hover {
   transform: translateY(-8px);
   box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
   border-color: var(--accent-primary);
@@ -355,13 +274,7 @@ a:hover {
 
 .bien-card:hover::before {
   opacity: 0.03;
-}
-
-.dark-mode .bien-card:hover {
-  box-shadow: 0 20px 40px rgba(102, 252, 241, 0.15);
-}
-
-.bien-card > * {
+}.bien-card > * {
   position: relative;
   z-index: 1;
 }
@@ -420,14 +333,8 @@ a:hover {
 .btn-reserver:hover {
   background: var(--accent-hover);
   transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(255, 90, 95, 0.4);
-}
-
-.dark-mode .btn-reserver:hover {
-  box-shadow: 0 6px 20px rgba(102, 252, 241, 0.4);
-}
-
-/* ===== FOOTER ===== */
+  box-shadow: 0 6px 20px rgba(36, 38, 34, 0.4);
+}/* ===== FOOTER ===== */
 footer {
   background: var(--bg-secondary);
   padding: 2rem;
@@ -439,37 +346,7 @@ footer {
 footer p {
   color: var(--text-secondary);
   margin: 0;
-}
-
-/* ===== BOUTON DARK MODE ===== */
-.dark-mode-toggle {
-  position: fixed;
-  bottom: 2rem;
-  right: 2rem;
-  width: 60px;
-  height: 60px;
-  background: var(--bg-card);
-  border: 2px solid var(--border-color);
-  border-radius: 50%;
-  font-size: 1.5rem;
-  cursor: pointer;
-  box-shadow: var(--shadow);
-  transition: all 0.3s;
-  z-index: 1000;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.dark-mode-toggle:hover {
-  transform: scale(1.1) rotate(20deg);
-}
-
-.dark-mode .dark-mode-toggle {
-  box-shadow: 0 4px 12px rgba(102, 252, 241, 0.2);
-}
-
-/* ===== ÉTOILES FILANTES (Mode sombre) ===== */
+}/* ===== ÉTOILES FILANTES (Mode sombre) ===== */
 .shooting-star {
   position: fixed;
   width: 2px;
