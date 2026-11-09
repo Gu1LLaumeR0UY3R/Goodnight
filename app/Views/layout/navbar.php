@@ -41,6 +41,9 @@ $userPfp = $_SESSION['user_pfp'] ?? null;
                     <li><a href="/favoris" class="navbar-link">Mes Favoris</a></li>
 
                 <?php endif; ?>
+                <?php if ($isLoggedIn): ?>
+                <li class="navbar-mobile-only"><a href="/logout" class="navbar-link">Déconnexion</a></li>
+                <?php endif; ?>
             </ul>
         </nav>
 
@@ -88,7 +91,7 @@ $userPfp = $_SESSION['user_pfp'] ?? null;
         </div>
 
         <!-- Bouton Menu Mobile (Hamburger) -->
-        <button class="navbar-toggle" id="navbar-toggle">
+        <button class="navbar-toggle" id="navbar-toggle" type="button" aria-label="Ouvrir le menu" aria-controls="navbar-main">
             <span class="navbar-toggle-icon"></span>
             <span class="navbar-toggle-icon"></span>
             <span class="navbar-toggle-icon"></span>

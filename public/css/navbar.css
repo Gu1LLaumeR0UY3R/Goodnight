@@ -24,14 +24,7 @@ body.admin-page .navbar-sticky {
   right: 0;
   margin-top: 0;
   border-radius: 0;
-}
-
-.dark-mode .navbar-sticky {
-  background: rgba(31, 40, 51, 0.85);
-  border-bottom-color: rgba(255, 255, 255, 0.1);
-}
-
-.navbar-container {
+}.navbar-container {
   max-width: 1600px;
   margin: 0 auto;
   padding: 1rem 3rem;
@@ -173,7 +166,7 @@ body.admin-page .navbar-sticky {
 .navbar-btn-logout:hover {
   background: var(--accent-hover) !important;
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(255, 90, 95, 0.3);
+  box-shadow: 0 4px 12px rgba(36, 38, 34, 0.3);
 }
 
 .navbar-auth a {
@@ -201,14 +194,8 @@ body.admin-page .navbar-sticky {
 .navbar-auth a:last-child:hover {
   background: var(--accent-hover);
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(255, 90, 95, 0.3);
-}
-
-.dark-mode .navbar-auth a:last-child:hover {
-  box-shadow: 0 4px 12px rgba(102, 252, 241, 0.3);
-}
-
-/* ===== BOUTON MENU MOBILE ===== */
+  box-shadow: 0 4px 12px rgba(36, 38, 34, 0.3);
+}/* ===== BOUTON MENU MOBILE ===== */
 .navbar-toggle {
   display: flex;
   flex-direction: column;
@@ -263,7 +250,7 @@ body.admin-page .navbar-sticky {
   }
   
   /* Menu mobile déroulant */
-  .navbar-main.mobile-open {
+  .navbar-sticky.navbar-mobile-open .navbar-main {
     display: block;
     position: absolute;
     top: 100%;
@@ -274,13 +261,13 @@ body.admin-page .navbar-sticky {
     box-shadow: var(--shadow);
   }
   
-  .navbar-main.mobile-open .navbar-menu {
+  .navbar-sticky.navbar-mobile-open .navbar-menu {
     flex-direction: column;
     padding: 1rem;
     gap: 0;
   }
   
-  .navbar-main.mobile-open .navbar-link {
+  .navbar-sticky.navbar-mobile-open .navbar-link {
     display: block;
     padding: 1rem;
     border-radius: 0;
@@ -294,3 +281,5 @@ body.admin-page .navbar-sticky {
     gap: 1.5rem;
   }
 }
+
+.navbar-mobile-only { display: none; }
