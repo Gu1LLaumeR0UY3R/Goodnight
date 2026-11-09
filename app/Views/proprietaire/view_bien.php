@@ -7,8 +7,6 @@
     <link rel="stylesheet" href="/css/style.css">
     <link rel="stylesheet" href="/css/navbar.css">
     <link rel="stylesheet" href="/css/bien-details.css">
-    <link rel="stylesheet" href="/css/sunset-background.css">
-    <link rel="stylesheet" href="/css/night-background.css">
     <style>
         main {
             max-width: 1200px;
@@ -39,7 +37,7 @@
             gap: 0.5rem;
             padding: 0.625rem 1.25rem;
             background: white;
-            border: 2px solid var(--border-color, #e0e0e0);
+            border: 2px solid var(--border-color, #DED7CA);
             border-radius: 8px;
             color: var(--text-primary);
             text-decoration: none;
@@ -47,34 +45,22 @@
             font-size: 0.9375rem;
             transition: all 0.2s;
             margin-bottom: 1.5rem;
-        }
-
-        .dark-mode .back-button {
-            background: var(--bg-card);
-        }
-
-        .back-button:hover {
-            background: var(--accent-primary, #ff5a5f);
+        }.back-button:hover {
+            background: var(--accent-primary, #242622);
             color: white;
-            border-color: var(--accent-primary, #ff5a5f);
+            border-color: var(--accent-primary, #55604A);
             transform: translateX(-4px);
         }
 
         /* En-tête du bien */
         .bien-header {
-            background: linear-gradient(135deg, var(--accent-primary, #ff5a5f), var(--accent-hover, #ff7f83));
+            background: linear-gradient(#242622, #242622);
             color: white;
             padding: 2rem;
             border-radius: 16px;
             margin-bottom: 2rem;
-            box-shadow: 0 4px 16px rgba(255, 90, 95, 0.3);
-        }
-
-        .dark-mode .bien-header {
-            background: linear-gradient(135deg, var(--night-stellar), var(--night-nebula));
-        }
-
-        .bien-title {
+            box-shadow: 0 4px 16px rgba(36, 38, 34, 0.3);
+        }.bien-title {
             font-size: 2.25rem;
             font-weight: 700;
             margin: 0 0 0.75rem 0;
@@ -101,21 +87,12 @@
         .description-card,
         .prestations-card {
             background: white;
-            border: 2px solid var(--border-color, #e0e0e0);
+            border: 2px solid var(--border-color, #DED7CA);
             border-radius: 12px;
             padding: 1.75rem;
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
             transition: all 0.2s;
-        }
-
-        .dark-mode .details-card,
-        .dark-mode .description-card,
-        .dark-mode .prestations-card {
-            background: var(--bg-card);
-            border-color: var(--border-color);
-        }
-
-        .details-card:hover,
+        }.details-card:hover,
         .description-card:hover,
         .prestations-card:hover {
             box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
@@ -128,7 +105,7 @@
             color: var(--text-primary);
             margin: 0 0 1.5rem 0;
             padding-bottom: 0.75rem;
-            border-bottom: 3px solid var(--accent-primary, #ff5a5f);
+            border-bottom: 3px solid var(--accent-primary, #55604A);
         }
 
         /* Lignes de détails */
@@ -137,7 +114,7 @@
             justify-content: space-between;
             align-items: center;
             padding: 1rem 0;
-            border-bottom: 1px solid var(--border-color, #e0e0e0);
+            border-bottom: 1px solid var(--border-color, #DED7CA);
         }
 
         .detail-row:last-child {
@@ -171,19 +148,7 @@
             padding: 0.375rem 0.875rem;
             border-radius: 20px;
             font-weight: 700;
-        }
-
-        .dark-mode .badge-yes {
-            background: rgba(46, 125, 50, 0.2);
-            color: #66bb6a;
-        }
-
-        .dark-mode .badge-no {
-            background: rgba(198, 40, 40, 0.2);
-            color: #ef5350;
-        }
-
-        /* Description */
+        }/* Description */
         .description-card {
             margin-bottom: 1.5rem;
         }
@@ -210,31 +175,24 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            background: linear-gradient(135deg, #f5f5f5, #eeeeee);
-            border: 2px solid var(--border-color, #e0e0e0);
+            background: linear-gradient(135deg, #F5F1E9, #eeeeee);
+            border: 2px solid var(--border-color, #DED7CA);
             border-radius: 10px;
             padding: 0.875rem 1rem;
             font-weight: 500;
             color: var(--text-primary);
             transition: all 0.2s;
-        }
-
-        .dark-mode .prestation-badge {
-            background: linear-gradient(135deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.02));
-            border-color: var(--border-color);
-        }
-
-        .prestation-badge:hover {
-            background: linear-gradient(135deg, var(--accent-primary, #ff5a5f), var(--accent-hover, #ff7f83));
+        }.prestation-badge:hover {
+            background: linear-gradient(#242622, #242622);
             color: white;
-            border-color: var(--accent-primary, #ff5a5f);
+            border-color: var(--accent-primary, #55604A);
             transform: translateY(-2px) scale(1.02);
-            box-shadow: 0 4px 12px rgba(255, 90, 95, 0.3);
+            box-shadow: 0 4px 12px rgba(36, 38, 34, 0.3);
         }
 
         .prestation-qty {
             background: white;
-            color: var(--accent-primary, #ff5a5f);
+            color: var(--accent-primary, #55604A);
             padding: 0.25rem 0.625rem;
             border-radius: 12px;
             font-weight: 700;
@@ -252,30 +210,17 @@
             font-style: italic;
             background: rgba(0, 0, 0, 0.02);
             border-radius: 8px;
-            border: 2px dashed var(--border-color, #e0e0e0);
-        }
-
-        .dark-mode .no-prestations {
-            background: rgba(255, 255, 255, 0.02);
-        }
-
-        /* Accordéon des tarifs */
+            border: 2px dashed var(--border-color, #DED7CA);
+        }/* Accordéon des tarifs */
         .tarifs-card {
             background: white;
-            border: 2px solid var(--border-color, #e0e0e0);
+            border: 2px solid var(--border-color, #DED7CA);
             border-radius: 12px;
             padding: 1.75rem;
             margin-bottom: 1.5rem;
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
             transition: all 0.2s;
-        }
-
-        .dark-mode .tarifs-card {
-            background: var(--bg-card);
-            border-color: var(--border-color);
-        }
-
-        .tarifs-card:hover {
+        }.tarifs-card:hover {
             box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
             transform: translateY(-2px);
         }
@@ -289,27 +234,20 @@
             justify-content: space-between;
             align-items: center;
             padding: 1.25rem 1.5rem;
-            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
-            border: 2px solid var(--border-color, #e0e0e0);
+            background: linear-gradient(135deg, #F5F1E9, #DED7CA);
+            border: 2px solid var(--border-color, #DED7CA);
             border-radius: 10px;
             cursor: pointer;
             transition: all 0.3s ease;
             font-weight: 600;
             font-size: 1.0625rem;
             color: var(--text-primary);
-        }
-
-        .dark-mode .accordion-header {
-            background: linear-gradient(135deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.04));
-            border-color: var(--border-color);
-        }
-
-        .accordion-header:hover {
-            background: linear-gradient(135deg, var(--accent-primary, #ff5a5f), var(--accent-hover, #ff7f83));
+        }.accordion-header:hover {
+            background: linear-gradient(#242622, #242622);
             color: white;
-            border-color: var(--accent-primary, #ff5a5f);
+            border-color: var(--accent-primary, #55604A);
             transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(255, 90, 95, 0.3);
+            box-shadow: 0 4px 12px rgba(36, 38, 34, 0.3);
         }
 
         .accordion-icon {
@@ -342,22 +280,15 @@
 
         .tarif-item {
             background: white;
-            border: 2px solid var(--border-color, #e0e0e0);
+            border: 2px solid var(--border-color, #DED7CA);
             border-radius: 10px;
             padding: 1.5rem;
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
             transition: all 0.2s;
-        }
-
-        .dark-mode .tarif-item {
-            background: var(--bg-card);
-            border-color: var(--border-color);
-        }
-
-        .tarif-item:hover {
+        }.tarif-item:hover {
             transform: translateY(-3px);
             box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
-            border-color: var(--accent-primary, #ff5a5f);
+            border-color: var(--accent-primary, #55604A);
         }
 
         .tarif-header {
@@ -366,18 +297,18 @@
             gap: 0.75rem;
             margin-bottom: 1rem;
             padding-bottom: 0.75rem;
-            border-bottom: 2px solid var(--border-color, #e0e0e0);
+            border-bottom: 2px solid var(--border-color, #DED7CA);
         }
 
         .tarif-saison {
             font-size: 1.125rem;
             font-weight: 700;
-            color: var(--accent-primary, #ff5a5f);
+            color: var(--accent-primary, #55604A);
             flex: 1;
         }
 
         .tarif-annee {
-            background: var(--accent-primary, #ff5a5f);
+            background: var(--accent-primary, #242622);
             color: white;
             padding: 0.25rem 0.75rem;
             border-radius: 20px;
@@ -406,14 +337,8 @@
             font-style: italic;
             background: rgba(0, 0, 0, 0.02);
             border-radius: 8px;
-            border: 2px dashed var(--border-color, #e0e0e0);
-        }
-
-        .dark-mode .no-tarifs {
-            background: rgba(255, 255, 255, 0.02);
-        }
-
-        /* Actions footer */
+            border: 2px dashed var(--border-color, #DED7CA);
+        }/* Actions footer */
         .actions-footer {
             display: flex;
             gap: 1rem;
@@ -439,33 +364,27 @@
         }
 
         .btn-edit-full {
-            background: var(--accent-primary, #ff5a5f);
+            background: var(--accent-primary, #242622);
             color: white;
-            border-color: var(--accent-primary, #ff5a5f);
+            border-color: var(--accent-primary, #55604A);
         }
 
         .btn-edit-full:hover {
-            background: var(--accent-hover, #ff7f83);
-            border-color: var(--accent-hover, #ff7f83);
+            background: var(--accent-hover, #55604A);
+            border-color: var(--accent-hover, #55604A);
             transform: translateY(-3px);
-            box-shadow: 0 6px 20px rgba(255, 90, 95, 0.4);
+            box-shadow: 0 6px 20px rgba(36, 38, 34, 0.4);
         }
 
         .btn-manage-prestations {
             background: white;
-            color: var(--accent-primary, #ff5a5f);
-            border-color: var(--accent-primary, #ff5a5f);
-        }
-
-        .dark-mode .btn-manage-prestations {
-            background: var(--bg-card);
-        }
-
-        .btn-manage-prestations:hover {
-            background: var(--accent-primary, #ff5a5f);
+            color: var(--accent-primary, #55604A);
+            border-color: var(--accent-primary, #55604A);
+        }.btn-manage-prestations:hover {
+            background: var(--accent-primary, #242622);
             color: white;
             transform: translateY(-3px);
-            box-shadow: 0 6px 20px rgba(255, 90, 95, 0.4);
+            box-shadow: 0 6px 20px rgba(36, 38, 34, 0.4);
         }
 
         footer {
@@ -480,19 +399,12 @@
         /* Galerie de photos */
         .photos-gallery {
             background: white;
-            border: 2px solid var(--border-color, #e0e0e0);
+            border: 2px solid var(--border-color, #DED7CA);
             border-radius: 12px;
             padding: 1.75rem;
             margin-bottom: 1.5rem;
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-        }
-
-        .dark-mode .photos-gallery {
-            background: var(--bg-card);
-            border-color: var(--border-color);
-        }
-
-        .gallery-grid {
+        }.gallery-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
             gap: 1rem;
@@ -505,14 +417,14 @@
             border-radius: 10px;
             overflow: hidden;
             cursor: pointer;
-            border: 2px solid var(--border-color, #e0e0e0);
+            border: 2px solid var(--border-color, #DED7CA);
             transition: all 0.3s ease;
         }
 
         .gallery-item:hover {
             transform: translateY(-4px) scale(1.02);
             box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
-            border-color: var(--accent-primary, #ff5a5f);
+            border-color: var(--accent-primary, #55604A);
         }
 
         .gallery-item img {
@@ -521,15 +433,9 @@
             object-fit: cover;
             display: block;
             transition: transform 0.3s ease;
-            background: #f0f0f0;
+            background: #F5F1E9;
             min-height: 200px;
-        }
-
-        .dark-mode .gallery-item img {
-            background: #2a2a2a;
-        }
-
-        .gallery-item:hover img {
+        }.gallery-item:hover img {
             transform: scale(1.1);
         }
 
@@ -605,8 +511,9 @@
             }
         }
     </style>
+    <link rel="stylesheet" href="/css/theme.css">
 </head>
-<body class="home-sunset">
+<body>
     <?php include __DIR__ . '/../layout/navbar.php'; ?>
 
     <main>
@@ -786,10 +693,6 @@
     </div>
 
     <footer>
-        <div class="sunset">
-            <div class="sun"></div>
-            <div class="horizon"></div>
-        </div>
         <p>&copy; <?php echo date("Y"); ?> Goodnight. Tous droits réservés.</p>
     </footer>
 

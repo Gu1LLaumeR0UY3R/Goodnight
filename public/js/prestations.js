@@ -42,7 +42,7 @@
                 html += `
                     <div onclick="window.addPrestationToForm(${prestation.id_prestation}, '${prestation.lib_prestation.replace(/'/g, "\\'")}', event)"
                          style="padding: 1rem; cursor: pointer; border-bottom: 1px solid var(--border-color); transition: background 0.2s; font-size: 0.95rem; display: flex; align-items: center; gap: 0.75rem;"
-                         onmouseover="this.style.background='rgba(255, 90, 95, 0.08)'"
+                         onmouseover="this.style.background='rgba(36, 38, 34, 0.08)'"
                          onmouseout="this.style.background='transparent'">
                         <span style="font-size: 1.3rem;">✨</span>
                         <span style="flex: 1;">${prestation.lib_prestation}</span>

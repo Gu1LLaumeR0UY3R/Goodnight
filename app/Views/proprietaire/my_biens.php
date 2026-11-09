@@ -7,8 +7,6 @@
     <link rel="stylesheet" href="/css/style.css">
     <link rel="stylesheet" href="/css/navbar.css">
     <link rel="stylesheet" href="/css/tables.css">
-    <link rel="stylesheet" href="/css/sunset-background.css">
-    <link rel="stylesheet" href="/css/night-background.css">
     <style>
         main {
             max-width: 1400px;
@@ -42,24 +40,11 @@
             border-radius: 12px;
             overflow: hidden;
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-            border: 2px solid var(--border-color, #e0e0e0);
-        }
-
-        .dark-mode table {
-            background: var(--bg-card);
-            border-color: var(--border-color);
-        }
-
-        table thead {
-            background: linear-gradient(135deg, var(--accent-primary, #ff5a5f), var(--accent-hover, #ff7f83));
+            border: 2px solid var(--border-color, #DED7CA);
+        }table thead {
+            background: linear-gradient(#242622, #242622);
             color: white;
-        }
-
-        .dark-mode table thead {
-            background: linear-gradient(135deg, var(--night-stellar), var(--night-nebula));
-        }
-
-        table th {
+        }table th {
             padding: 1.25rem 1rem;
             text-align: left;
             font-weight: 600;
@@ -72,8 +57,8 @@
 
         table td {
             padding: 1rem;
-            border-bottom: 1px solid var(--border-color, #e0e0e0);
-            border-right: 1px solid var(--border-color, #e0e0e0);
+            border-bottom: 1px solid var(--border-color, #DED7CA);
+            border-right: 1px solid var(--border-color, #DED7CA);
             color: var(--text-primary);
             vertical-align: middle;
         }
@@ -87,15 +72,9 @@
         }
 
         table tbody tr:hover {
-            background: rgba(255, 90, 95, 0.05);
+            background: rgba(36, 38, 34, 0.05);
             transform: scale(1.005);
-        }
-
-        .dark-mode table tbody tr:hover {
-            background: rgba(102, 252, 241, 0.05);
-        }
-
-        table tbody tr:last-child td {
+        }table tbody tr:last-child td {
             border-bottom: none;
         }
 
@@ -119,18 +98,18 @@
         }
 
         .btn-primary {
-            background: var(--accent-primary, #ff5a5f);
+            background: var(--accent-primary, #242622);
             color: white;
         }
 
         .btn-primary:hover {
-            background: var(--accent-hover, #ff7f83);
+            background: var(--accent-hover, #55604A);
             transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(255, 90, 95, 0.3);
+            box-shadow: 0 4px 12px rgba(36, 38, 34, 0.3);
         }
 
         .btn-secondary {
-            background: #6c757d;
+            background: #50554B;
             color: white;
         }
 
@@ -228,14 +207,8 @@
             background: white;
             border-radius: 12px;
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-            border: 2px dashed var(--border-color, #e0e0e0);
-        }
-
-        .dark-mode .empty-state {
-            background: var(--bg-card);
-        }
-
-        .empty-state p {
+            border: 2px dashed var(--border-color, #DED7CA);
+        }.empty-state p {
             font-size: 1.125rem;
             color: var(--text-secondary);
             margin-bottom: 1.5rem;
@@ -287,8 +260,9 @@
             }
         }
     </style>
+    <link rel="stylesheet" href="/css/theme.css">
 </head>
-<body class="home-sunset">
+<body>
     <?php include __DIR__ . '/../layout/navbar.php'; ?>
 
     <main>
@@ -362,10 +336,6 @@
     </main>
 
     <footer>
-        <div class="sunset">
-            <div class="sun"></div>
-            <div class="horizon"></div>
-        </div>
         <p>&copy; <?php echo date("Y"); ?> Goodnight. Tous droits réservés.</p>
-    </footer>    <script src="/js/theme-switcher.js"></script></body>
+    </footer></body>
 </html>

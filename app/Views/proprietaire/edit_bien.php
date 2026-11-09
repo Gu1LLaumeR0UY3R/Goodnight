@@ -8,8 +8,6 @@
     <link rel="stylesheet" href="/css/navbar.css">
     <link rel="stylesheet" href="/css/photo-upload.css">
     <link rel="stylesheet" href="/css/prestations.css">
-    <link rel="stylesheet" href="/css/sunset-background.css">
-    <link rel="stylesheet" href="/css/night-background.css">
     <link rel="stylesheet" href="//code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
     <style>
         main {
@@ -57,18 +55,11 @@
         /* Formulaire */
         form {
             background: white;
-            border: 2px solid var(--border-color, #e0e0e0);
+            border: 2px solid var(--border-color, #DED7CA);
             border-radius: 16px;
             padding: 2rem;
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-        }
-
-        .dark-mode form {
-            background: var(--bg-card);
-            border-color: var(--border-color);
-        }
-
-        label {
+        }label {
             display: block;
             font-weight: 600;
             color: var(--text-primary);
@@ -84,30 +75,19 @@
         textarea {
             width: 100%;
             padding: 0.875rem;
-            border: 2px solid var(--border-color, #e0e0e0);
+            border: 2px solid var(--border-color, #DED7CA);
             border-radius: 8px;
             font-size: 1rem;
             font-family: inherit;
             background: white;
             color: var(--text-primary);
             transition: all 0.2s;
-        }
-
-        .dark-mode input[type="text"],
-        .dark-mode input[type="number"],
-        .dark-mode input[type="email"],
-        .dark-mode select,
-        .dark-mode textarea {
-            background: var(--bg-primary);
-            border-color: var(--border-color);
-        }
-
-        input:focus,
+        }input:focus,
         select:focus,
         textarea:focus {
             outline: none;
-            border-color: var(--accent-primary, #ff5a5f);
-            box-shadow: 0 0 0 3px rgba(255, 90, 95, 0.1);
+            border-color: var(--accent-primary, #55604A);
+            box-shadow: 0 0 0 3px rgba(36, 38, 34, 0.1);
         }
 
         textarea {
@@ -119,24 +99,17 @@
             width: 20px;
             height: 20px;
             cursor: pointer;
-            accent-color: var(--accent-primary, #ff5a5f);
+            accent-color: var(--accent-primary, #55604A);
         }
 
         /* Section tarification */
         .form-section {
-            border: 2px solid var(--border-color, #e0e0e0);
+            border: 2px solid var(--border-color, #DED7CA);
             border-radius: 12px;
             padding: 1.5rem;
             margin: 2rem 0;
             background: rgba(0, 0, 0, 0.02);
-        }
-
-        .dark-mode .form-section {
-            background: rgba(255, 255, 255, 0.02);
-            border-color: var(--border-color);
-        }
-
-        .form-section legend {
+        }.form-section legend {
             font-size: 1.25rem;
             font-weight: 700;
             color: var(--text-primary);
@@ -146,36 +119,23 @@
         /* Accordéon pour les tarifs */
         .accordion-container {
             margin: 1.5rem 0;
-            border: 2px solid var(--border-color, #e0e0e0);
+            border: 2px solid var(--border-color, #DED7CA);
             border-radius: 12px;
             overflow: hidden;
             background: white;
-        }
-
-        .dark-mode .accordion-container {
-            background: var(--bg-card);
-            border-color: var(--border-color);
-        }
-
-        .accordion-header {
+        }.accordion-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
             padding: 1.25rem 1.5rem;
             cursor: pointer;
-            background: linear-gradient(135deg, var(--accent-primary, #ff5a5f), var(--accent-hover, #ff7f83));
+            background: linear-gradient(#242622, #242622);
             color: white;
             transition: all 0.2s;
-        }
-
-        .dark-mode .accordion-header {
-            background: linear-gradient(135deg, var(--night-stellar), var(--night-nebula));
-        }
-
-        .accordion-header:hover {
-            background: linear-gradient(135deg, var(--accent-hover, #ff7f83), #ff9999);
+        }.accordion-header:hover {
+            background: linear-gradient(#242622, #242622);
             transform: translateY(-1px);
-            box-shadow: 0 4px 12px rgba(255, 90, 95, 0.3);
+            box-shadow: 0 4px 12px rgba(36, 38, 34, 0.3);
         }
 
         .accordion-title {
@@ -214,26 +174,19 @@
 
         .tarif-item {
             background: rgba(0, 0, 0, 0.02);
-            border: 2px solid var(--border-color, #e0e0e0);
+            border: 2px solid var(--border-color, #DED7CA);
             border-radius: 10px;
             padding: 1.25rem;
             transition: all 0.2s;
-        }
-
-        .dark-mode .tarif-item {
-            background: rgba(255, 255, 255, 0.02);
-            border-color: var(--border-color);
-        }
-
-        .tarif-item:hover {
+        }.tarif-item:hover {
             transform: translateY(-2px);
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-            border-color: var(--accent-primary, #ff5a5f);
+            border-color: var(--accent-primary, #55604A);
         }
 
         .tarif-item h4 {
             margin: 0 0 1rem 0;
-            color: var(--accent-primary, #ff5a5f);
+            color: var(--accent-primary, #55604A);
             font-size: 1.125rem;
             display: flex;
             align-items: center;
@@ -266,7 +219,7 @@
             color: var(--text-primary);
             margin: 2rem 0 1rem 0;
             padding-bottom: 0.5rem;
-            border-bottom: 3px solid var(--accent-primary, #ff5a5f);
+            border-bottom: 3px solid var(--accent-primary, #55604A);
         }
 
         .photos-grid {
@@ -278,20 +231,13 @@
 
         .photo-item {
             position: relative;
-            border: 2px solid var(--border-color, #e0e0e0);
+            border: 2px solid var(--border-color, #DED7CA);
             border-radius: 10px;
             padding: 0.5rem;
             text-align: center;
             background: white;
             transition: all 0.2s;
-        }
-
-        .dark-mode .photo-item {
-            background: var(--bg-card);
-            border-color: var(--border-color);
-        }
-
-        .photo-item:hover {
+        }.photo-item:hover {
             transform: translateY(-4px);
             box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
         }
@@ -325,7 +271,7 @@
         button[type="submit"] {
             width: 100%;
             padding: 1rem 2rem;
-            background: var(--accent-primary, #ff5a5f);
+            background: var(--accent-primary, #242622);
             color: white;
             border: none;
             border-radius: 10px;
@@ -339,9 +285,9 @@
         }
 
         button[type="submit"]:hover {
-            background: var(--accent-hover, #ff7f83);
+            background: var(--accent-hover, #55604A);
             transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(255, 90, 95, 0.4);
+            box-shadow: 0 6px 20px rgba(36, 38, 34, 0.4);
         }
 
         footer {
@@ -372,8 +318,9 @@
             }
         }
     </style>
+    <link rel="stylesheet" href="/css/theme.css">
 </head>
-<body class="home-sunset">
+<body>
     <?php include __DIR__ . '/../layout/navbar.php'; ?>
 
     <main>
@@ -491,9 +438,9 @@
                                        id="prestation-search" 
                                        placeholder="Tapez le nom d'une prestation (ex: piscine, wifi...)" 
                                        autocomplete="off"
-                                       style="width: 100%; padding: 0.875rem; border: 2px solid var(--border-color, #e0e0e0); border-radius: 8px; font-size: 1rem; font-family: inherit; background: white; color: var(--text-primary); transition: all 0.2s;">
+                                       style="width: 100%; padding: 0.875rem; border: 2px solid var(--border-color, #DED7CA); border-radius: 8px; font-size: 1rem; font-family: inherit; background: white; color: var(--text-primary); transition: all 0.2s;">
                                 <div id="prestation-autocomplete" 
-                                     style="position: absolute; top: 100%; left: 0; right: 0; background: white; border: 2px solid var(--border-color, #e0e0e0); border-top: none; border-radius: 0 0 8px 8px; max-height: 250px; overflow-y: auto; display: none; z-index: 1000; box-shadow: 0 4px 6px rgba(0,0,0,0.1); margin-top: -2px;">
+                                     style="position: absolute; top: 100%; left: 0; right: 0; background: white; border: 2px solid var(--border-color, #DED7CA); border-top: none; border-radius: 0 0 8px 8px; max-height: 250px; overflow-y: auto; display: none; z-index: 1000; box-shadow: 0 4px 6px rgba(0,0,0,0.1); margin-top: -2px;">
                                 </div>
                             </div>
                         </div>
@@ -537,15 +484,11 @@
     </main>
 
     <footer>
-        <div class="sunset">
-            <div class="sun"></div>
-            <div class="horizon"></div>
-        </div>
         <p>&copy; <?php echo date("Y"); ?> Goodnight. Tous droits réservés.</p>
     </footer>
  
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js"></script>
+    <script src="/vendor/jquery/jquery-3.6.0.min.js"></script>
+    <script src="/vendor/jquery-ui/jquery-ui.min.js"></script>
     <script src="/js/autocomplete.js"></script>
     <script src="/js/register.js"></script>
     <script src="/js/photo-upload.js"></script>

@@ -35,14 +35,8 @@
 
 /* Jour aujourd'hui */
 .fc .fc-day-today {
-  background: rgba(255, 90, 95, 0.08) !important;
-}
-
-.dark-mode .fc .fc-day-today {
-  background: rgba(102, 252, 241, 0.1) !important;
-}
-
-.fc .fc-day-today .fc-daygrid-day-number {
+  background: rgba(36, 38, 34, 0.08) !important;
+}.fc .fc-day-today .fc-daygrid-day-number {
   background: var(--accent-primary);
   color: white;
   border-radius: 50%;
@@ -68,8 +62,8 @@
 }
 
 .fc-event.blocage-event {
-  background: #ff7f50 !important;
-  border-color: #ff7f50 !important;
+  background: #55604A !important;
+  border-color: #55604A !important;
   font-size: 0.9rem !important;
 }
 

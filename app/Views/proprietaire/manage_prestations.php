@@ -6,8 +6,6 @@
     <title>Gérer les Prestations - <?php echo htmlspecialchars($bien["designation_bien"]); ?></title>
     <link rel="stylesheet" href="/css/style.css">
     <link rel="stylesheet" href="/css/navbar.css">
-    <link rel="stylesheet" href="/css/sunset-background.css">
-    <link rel="stylesheet" href="/css/night-background.css">
     <style>
         main {
             max-width: 1200px;
@@ -33,20 +31,14 @@
 
         /* En-tête de page */
         .page-header {
-            background: linear-gradient(135deg, var(--accent-primary, #ff5a5f), var(--accent-hover, #ff7f83));
+            background: linear-gradient(#242622, #242622);
             color: white;
             padding: 2rem;
             border-radius: 16px;
             margin-bottom: 2rem;
-            box-shadow: 0 4px 16px rgba(255, 90, 95, 0.3);
+            box-shadow: 0 4px 16px rgba(36, 38, 34, 0.3);
             text-align: center;
-        }
-
-        .dark-mode .page-header {
-            background: linear-gradient(135deg, var(--night-stellar), var(--night-nebula));
-        }
-
-        .page-header h2 {
+        }.page-header h2 {
             margin: 0;
             font-size: 2.25rem;
             font-weight: 700;
@@ -55,23 +47,16 @@
         /* Info du bien */
         .bien-info {
             background: white;
-            border: 2px solid var(--border-color, #e0e0e0);
+            border: 2px solid var(--border-color, #DED7CA);
             border-radius: 12px;
             padding: 1.75rem;
             margin-bottom: 2rem;
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-        }
-
-        .dark-mode .bien-info {
-            background: var(--bg-card);
-            border-color: var(--border-color);
-        }
-
-        .bien-info h3 {
+        }.bien-info h3 {
             margin: 0 0 0.75rem 0;
             font-size: 1.5rem;
             font-weight: 700;
-            color: var(--accent-primary, #ff5a5f);
+            color: var(--accent-primary, #55604A);
         }
 
         .bien-info p {
@@ -96,25 +81,18 @@
         /* Prestations actuelles */
         .prestations-actuelles {
             background: white;
-            border: 2px solid var(--border-color, #e0e0e0);
+            border: 2px solid var(--border-color, #DED7CA);
             border-radius: 12px;
             padding: 1.75rem;
             margin-bottom: 2rem;
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-        }
-
-        .dark-mode .prestations-actuelles {
-            background: var(--bg-card);
-            border-color: var(--border-color);
-        }
-
-        .prestations-actuelles h3 {
+        }.prestations-actuelles h3 {
             margin: 0 0 1.5rem 0;
             font-size: 1.5rem;
             font-weight: 700;
             color: var(--text-primary);
             padding-bottom: 0.75rem;
-            border-bottom: 3px solid var(--accent-primary, #ff5a5f);
+            border-bottom: 3px solid var(--accent-primary, #55604A);
         }
 
         .prestations-list {
@@ -128,24 +106,17 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            background: linear-gradient(135deg, #f5f5f5, #eeeeee);
-            border: 2px solid var(--border-color, #e0e0e0);
+            background: linear-gradient(135deg, #F5F1E9, #eeeeee);
+            border: 2px solid var(--border-color, #DED7CA);
             border-radius: 10px;
             padding: 1rem 1.25rem;
             transition: all 0.2s;
-        }
-
-        .dark-mode .prestation-badge {
-            background: linear-gradient(135deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.02));
-            border-color: var(--border-color);
-        }
-
-        .prestation-badge:hover {
-            background: linear-gradient(135deg, var(--accent-primary, #ff5a5f), var(--accent-hover, #ff7f83));
+        }.prestation-badge:hover {
+            background: linear-gradient(#242622, #242622);
             color: white;
-            border-color: var(--accent-primary, #ff5a5f);
+            border-color: var(--accent-primary, #55604A);
             transform: translateY(-2px) scale(1.02);
-            box-shadow: 0 4px 12px rgba(255, 90, 95, 0.3);
+            box-shadow: 0 4px 12px rgba(36, 38, 34, 0.3);
         }
 
         .prestation-badge-name {
@@ -155,7 +126,7 @@
 
         .prestation-badge-qty {
             background: white;
-            color: var(--accent-primary, #ff5a5f);
+            color: var(--accent-primary, #55604A);
             padding: 0.25rem 0.75rem;
             border-radius: 20px;
             font-weight: 700;
@@ -173,21 +144,15 @@
             font-style: italic;
             background: rgba(0, 0, 0, 0.02);
             border-radius: 8px;
-            border: 2px dashed var(--border-color, #e0e0e0);
+            border: 2px dashed var(--border-color, #DED7CA);
             margin-bottom: 1.5rem;
-        }
-
-        .dark-mode .empty-prestations {
-            background: rgba(255, 255, 255, 0.02);
-        }
-
-        /* Boutons */
+        }/* Boutons */
         .btn-editer-prestations {
             display: inline-flex;
             align-items: center;
             gap: 0.5rem;
             padding: 0.875rem 1.5rem;
-            background: linear-gradient(135deg, var(--accent-primary, #ff5a5f), var(--accent-hover, #ff7f83));
+            background: linear-gradient(#242622, #242622);
             color: white;
             border: none;
             border-radius: 10px;
@@ -195,37 +160,30 @@
             font-size: 1rem;
             cursor: pointer;
             transition: all 0.2s;
-            box-shadow: 0 2px 8px rgba(255, 90, 95, 0.3);
+            box-shadow: 0 2px 8px rgba(36, 38, 34, 0.3);
         }
 
         .btn-editer-prestations:hover {
-            background: linear-gradient(135deg, var(--accent-hover, #ff7f83), #ff9999);
+            background: linear-gradient(#242622, #242622);
             transform: translateY(-2px);
-            box-shadow: 0 4px 16px rgba(255, 90, 95, 0.4);
+            box-shadow: 0 4px 16px rgba(36, 38, 34, 0.4);
         }
 
         /* Recherche */
         .search-container {
             background: white;
-            border: 2px solid var(--border-color, #e0e0e0);
+            border: 2px solid var(--border-color, #DED7CA);
             border-radius: 12px;
             padding: 1.75rem;
             margin-bottom: 2rem;
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-        }
-
-        .dark-mode .search-container {
-            background: var(--bg-card);
-            border-color: var(--border-color);
-        }
-
-        .search-container h3 {
+        }.search-container h3 {
             margin: 0 0 1.5rem 0;
             font-size: 1.5rem;
             font-weight: 700;
             color: var(--text-primary);
             padding-bottom: 0.75rem;
-            border-bottom: 3px solid var(--accent-primary, #ff5a5f);
+            border-bottom: 3px solid var(--accent-primary, #55604A);
         }
 
         .search-box {
@@ -236,24 +194,17 @@
         .search-input {
             width: 100%;
             padding: 1rem 1.25rem;
-            border: 2px solid var(--border-color, #e0e0e0);
+            border: 2px solid var(--border-color, #DED7CA);
             border-radius: 10px;
             font-size: 1rem;
             font-family: inherit;
             background: white;
             color: var(--text-primary);
             transition: all 0.2s;
-        }
-
-        .dark-mode .search-input {
-            background: var(--bg-primary);
-            border-color: var(--border-color);
-        }
-
-        .search-input:focus {
+        }.search-input:focus {
             outline: none;
-            border-color: var(--accent-primary, #ff5a5f);
-            box-shadow: 0 0 0 3px rgba(255, 90, 95, 0.1);
+            border-color: var(--accent-primary, #55604A);
+            box-shadow: 0 0 0 3px rgba(36, 38, 34, 0.1);
         }
 
         .autocomplete-results {
@@ -262,7 +213,7 @@
             left: 0;
             right: 0;
             background: white;
-            border: 2px solid var(--border-color, #e0e0e0);
+            border: 2px solid var(--border-color, #DED7CA);
             border-radius: 10px;
             margin-top: 0.5rem;
             max-height: 400px;
@@ -270,14 +221,7 @@
             box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
             z-index: 100;
             display: none;
-        }
-
-        .dark-mode .autocomplete-results {
-            background: var(--bg-card);
-            border-color: var(--border-color);
-        }
-
-        .autocomplete-results.show {
+        }.autocomplete-results.show {
             display: block;
         }
 
@@ -286,7 +230,7 @@
             justify-content: space-between;
             align-items: center;
             padding: 1rem 1.25rem;
-            border-bottom: 1px solid var(--border-color, #e0e0e0);
+            border-bottom: 1px solid var(--border-color, #DED7CA);
             transition: background 0.2s;
         }
 
@@ -295,7 +239,7 @@
         }
 
         .autocomplete-item:hover {
-            background: rgba(255, 90, 95, 0.05);
+            background: rgba(36, 38, 34, 0.05);
         }
 
         .autocomplete-item-name {
@@ -312,7 +256,7 @@
 
         .autocomplete-item-add {
             padding: 0.5rem 1rem;
-            background: linear-gradient(135deg, var(--accent-primary, #ff5a5f), var(--accent-hover, #ff7f83));
+            background: linear-gradient(#242622, #242622);
             color: white;
             border: none;
             border-radius: 8px;
@@ -323,7 +267,7 @@
         }
 
         .autocomplete-item-add:hover {
-            background: linear-gradient(135deg, var(--accent-hover, #ff7f83), #ff9999);
+            background: linear-gradient(#242622, #242622);
             transform: scale(1.05);
         }
 
@@ -422,7 +366,7 @@
             padding: 0.875rem 1.5rem;
             background: white;
             color: var(--text-primary);
-            border: 2px solid var(--border-color, #e0e0e0);
+            border: 2px solid var(--border-color, #DED7CA);
             border-radius: 8px;
             font-weight: 600;
             font-size: 1rem;
@@ -431,9 +375,9 @@
         }
 
         .btn-cancel-add:hover {
-            background: #f5f5f5;
-            border-color: var(--accent-primary, #ff5a5f);
-            color: var(--accent-primary, #ff5a5f);
+            background: #F5F1E9;
+            border-color: var(--accent-primary, #55604A);
+            color: var(--accent-primary, #55604A);
         }
 
         /* Footer */
@@ -513,8 +457,8 @@
             display: flex;
             align-items: center;
             gap: 0.5rem;
-            background: #f5f5f5;
-            border: 2px solid var(--border-color, #e0e0e0);
+            background: #F5F1E9;
+            border: 2px solid var(--border-color, #DED7CA);
             border-radius: 8px;
             padding: 0.25rem;
         }
@@ -526,7 +470,7 @@
             align-items: center;
             justify-content: center;
             background: white;
-            border: 1px solid var(--border-color, #e0e0e0);
+            border: 1px solid var(--border-color, #DED7CA);
             border-radius: 6px;
             font-weight: 700;
             font-size: 1.125rem;
@@ -536,9 +480,9 @@
         }
 
         .quantity-btn:hover {
-            background: var(--accent-primary, #ff5a5f);
+            background: var(--accent-primary, #242622);
             color: white;
-            border-color: var(--accent-primary, #ff5a5f);
+            border-color: var(--accent-primary, #55604A);
         }
 
         .quantity-value {
@@ -551,7 +495,7 @@
 
         .btn-delete-prestation {
             padding: 0.5rem 1rem;
-            background: linear-gradient(135deg, #f44336, #e57373);
+            background: linear-gradient(#242622, #242622);
             color: white;
             border: none;
             border-radius: 8px;
@@ -623,8 +567,9 @@
             }
         }
     </style>
+    <link rel="stylesheet" href="/css/theme.css">
 </head>
-<body class="home-sunset">
+<body>
     <?php include __DIR__ . '/../layout/navbar.php'; ?>
 
     <main>
@@ -648,7 +593,6 @@
                 <h3>Prestations actuelles du bien</h3>
                 <?php 
                 // Debug
-                // echo "<pre>DEBUG: "; print_r($prestations); echo "</pre>";
                 $prestationsActives = array_filter($prestations, function($p) {
                     return isset($p["selected"]) && $p["selected"];
                 });
@@ -748,10 +692,6 @@
     </main>
 
     <footer>
-        <div class="sunset">
-            <div class="sun"></div>
-            <div class="horizon"></div>
-        </div>
         <p>&copy; <?php echo date("Y"); ?> Goodnight. Tous droits réservés.</p>
     </footer>
 

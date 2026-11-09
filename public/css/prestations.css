@@ -22,7 +22,7 @@
     padding: 1.75rem;
     border-radius: 16px;
     font-weight: 500;
-    box-shadow: 0 8px 24px rgba(255, 90, 95, 0.25);
+    box-shadow: 0 8px 24px rgba(36, 38, 34, 0.25);
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     position: relative;
     overflow: hidden;
@@ -42,19 +42,8 @@
 
 .prestation-card:hover {
     transform: translateY(-4px);
-    box-shadow: 0 12px 32px rgba(255, 90, 95, 0.35);
-}
-
-.dark-mode .prestation-card {
-    background: linear-gradient(135deg, #66FCF1 0%, #45A29E 100%);
-    box-shadow: 0 8px 24px rgba(102, 252, 241, 0.25);
-}
-
-.dark-mode .prestation-card:hover {
-    box-shadow: 0 12px 32px rgba(102, 252, 241, 0.35);
-}
-
-/* Contenu de la carte */
+    box-shadow: 0 12px 32px rgba(36, 38, 34, 0.35);
+}/* Contenu de la carte */
 .prestation-content {
     position: relative;
     z-index: 2;
@@ -163,7 +152,7 @@
     grid-column: 1 / -1;
     padding: 3rem 2rem;
     text-align: center;
-    background: linear-gradient(135deg, rgba(255, 90, 95, 0.05) 0%, rgba(255, 140, 66, 0.05) 100%);
+    background: linear-gradient(#242622, #242622);
     border-radius: 16px;
     border: 2px dashed var(--accent-primary);
 }

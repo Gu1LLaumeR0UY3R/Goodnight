@@ -6,8 +6,6 @@
     <title>Liste des Prestations Disponibles</title>
     <link rel="stylesheet" href="/css/style.css">
     <link rel="stylesheet" href="/css/navbar.css">
-    <link rel="stylesheet" href="/css/sunset-background.css">
-    <link rel="stylesheet" href="/css/night-background.css">
     <style>
         main {
             max-width: 1200px;
@@ -33,20 +31,14 @@
 
         /* En-tête de page */
         .page-header {
-            background: linear-gradient(135deg, var(--accent-primary, #ff5a5f), var(--accent-hover, #ff7f83));
+            background: linear-gradient(#242622, #242622);
             color: white;
             padding: 2rem;
             border-radius: 16px;
             margin-bottom: 2rem;
-            box-shadow: 0 4px 16px rgba(255, 90, 95, 0.3);
+            box-shadow: 0 4px 16px rgba(36, 38, 34, 0.3);
             text-align: center;
-        }
-
-        .dark-mode .page-header {
-            background: linear-gradient(135deg, var(--night-stellar), var(--night-nebula));
-        }
-
-        .page-header h2 {
+        }.page-header h2 {
             margin: 0;
             font-size: 2.25rem;
             font-weight: 700;
@@ -55,19 +47,12 @@
         /* Intro */
         .page-intro {
             background: white;
-            border: 2px solid var(--border-color, #e0e0e0);
+            border: 2px solid var(--border-color, #DED7CA);
             border-radius: 12px;
             padding: 1.75rem;
             margin-bottom: 2rem;
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-        }
-
-        .dark-mode .page-intro {
-            background: var(--bg-card);
-            border-color: var(--border-color);
-        }
-
-        .page-intro p {
+        }.page-intro p {
             margin: 0 0 0.75rem 0;
             color: var(--text-primary);
             line-height: 1.6;
@@ -78,7 +63,7 @@
         }
 
         .page-intro strong {
-            color: var(--accent-primary, #ff5a5f);
+            color: var(--accent-primary, #55604A);
         }
 
         /* Bouton retour */
@@ -87,7 +72,7 @@
             align-items: center;
             gap: 0.5rem;
             padding: 0.875rem 1.5rem;
-            background: linear-gradient(135deg, var(--accent-primary, #ff5a5f), var(--accent-hover, #ff7f83));
+            background: linear-gradient(#242622, #242622);
             color: white;
             border: none;
             border-radius: 10px;
@@ -95,13 +80,13 @@
             font-size: 1rem;
             cursor: pointer;
             transition: all 0.2s;
-            box-shadow: 0 2px 8px rgba(255, 90, 95, 0.3);
+            box-shadow: 0 2px 8px rgba(36, 38, 34, 0.3);
         }
 
         .btn-editer-prestations:hover {
-            background: linear-gradient(135deg, var(--accent-hover, #ff7f83), #ff9999);
+            background: linear-gradient(#242622, #242622);
             transform: translateY(-2px);
-            box-shadow: 0 4px 16px rgba(255, 90, 95, 0.4);
+            box-shadow: 0 4px 16px rgba(36, 38, 34, 0.4);
         }
 
         /* Compteur */
@@ -135,7 +120,7 @@
         .search-input {
             width: 100%;
             padding: 1rem 1.25rem;
-            border: 2px solid var(--border-color, #e0e0e0);
+            border: 2px solid var(--border-color, #DED7CA);
             border-radius: 10px;
             font-size: 1rem;
             font-family: inherit;
@@ -143,17 +128,10 @@
             color: var(--text-primary);
             transition: all 0.2s;
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-        }
-
-        .dark-mode .search-input {
-            background: var(--bg-card);
-            border-color: var(--border-color);
-        }
-
-        .search-input:focus {
+        }.search-input:focus {
             outline: none;
-            border-color: var(--accent-primary, #ff5a5f);
-            box-shadow: 0 0 0 3px rgba(255, 90, 95, 0.1), 0 2px 8px rgba(0, 0, 0, 0.08);
+            border-color: var(--accent-primary, #55604A);
+            box-shadow: 0 0 0 3px rgba(36, 38, 34, 0.1), 0 2px 8px rgba(0, 0, 0, 0.08);
         }
 
         /* Grille de prestations */
@@ -168,24 +146,17 @@
             align-items: center;
             gap: 1rem;
             background: white;
-            border: 2px solid var(--border-color, #e0e0e0);
+            border: 2px solid var(--border-color, #DED7CA);
             border-radius: 12px;
             padding: 1.25rem 1.5rem;
             transition: all 0.2s;
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-        }
-
-        .dark-mode .prestation-card {
-            background: var(--bg-card);
-            border-color: var(--border-color);
-        }
-
-        .prestation-card:hover {
-            background: linear-gradient(135deg, var(--accent-primary, #ff5a5f), var(--accent-hover, #ff7f83));
+        }.prestation-card:hover {
+            background: linear-gradient(#242622, #242622);
             color: white;
-            border-color: var(--accent-primary, #ff5a5f);
+            border-color: var(--accent-primary, #55604A);
             transform: translateY(-3px) scale(1.02);
-            box-shadow: 0 6px 20px rgba(255, 90, 95, 0.3);
+            box-shadow: 0 6px 20px rgba(36, 38, 34, 0.3);
         }
 
         .prestation-icon {
@@ -212,16 +183,10 @@
             font-style: italic;
             font-size: 1.125rem;
             background: white;
-            border: 2px dashed var(--border-color, #e0e0e0);
+            border: 2px dashed var(--border-color, #DED7CA);
             border-radius: 12px;
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-        }
-
-        .dark-mode .no-results {
-            background: var(--bg-card);
-        }
-
-        /* Footer */
+        }/* Footer */
         footer {
             text-align: center;
             padding: 2rem;
@@ -250,8 +215,9 @@
             }
         }
     </style>
+    <link rel="stylesheet" href="/css/theme.css">
 </head>
-<body class="home-sunset">
+<body>
     <?php include __DIR__ . '/../layout/navbar.php'; ?>
 
     <main>
@@ -306,10 +272,6 @@
     </main>
 
     <footer>
-        <div class="sunset">
-            <div class="sun"></div>
-            <div class="horizon"></div>
-        </div>
         <p>&copy; <?php echo date("Y"); ?> Goodnight. Tous droits réservés.</p>
     </footer>
 

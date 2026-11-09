@@ -8,11 +8,12 @@
     <link rel="stylesheet" href="/css/navbar.css">
     <link rel="stylesheet" href="/css/calendar_proprio.css">
     <link rel="stylesheet" href="/css/dashboard-proprio.css">
-    <link href="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.css" rel="stylesheet" />
-    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <link href="/vendor/fullcalendar5/main.min.css" rel="stylesheet" />
+    <script src="/vendor/fullcalendar5/main.min.js"></script>
+    <script src="/vendor/chartjs/chart.umd.js"></script>
+    <link rel="stylesheet" href="/css/theme.css">
 </head>
-<body class="home-sunset">
+<body>
     <?php include __DIR__ . '/../layout/navbar.php'; ?>
     <!-- Alert container for notifications (inserted dynamically) -->
     <div id="alertContainer"></div>
@@ -443,10 +444,6 @@
     </div>
 
     <footer>
-        <div class="sunset">
-            <div class="sun"></div>
-            <div class="horizon"></div>
-        </div>
         <p>&copy; 2025 Goodnight. Tous droits réservés.</p>
     </footer>
 
