@@ -104,36 +104,38 @@ class TarifModel extends Model {
      * @return int|null L'ID du tarif trouvé ou null.
      */
     public function getTarifIdByDates($bienId, $date_debut) {
-        // 1. Déterminer l'ID de la saison basée sur la date de début
-        require_once __DIR__ . "/SaisonModel.php";
-        $saisonModel = new SaisonModel();
-        $saisonId = $saisonModel->getSaisonIdByDate($date_debut);
-
-        if (!$saisonId) {
-            return null;
-        }
-
-        // 2. Trouver le tarif correspondant pour le bien, l'année et la saison
+        // Parmi les tarifs du bien pour l'année de départ, on retient la saison la plus précise
+        // (la plus courte) qui contient la date. Une saison de vacances l'emporte ainsi sur
+        // la saison générale, et l'on retombe sur la saison générale si aucun tarif de
+        // vacances n'est défini. Les saisons sont comparées sans l'année (jour et mois).
         $annee = date('Y', strtotime($date_debut));
-        
+        $md = date('m-d', strtotime($date_debut));
+
         $stmt = $this->db->prepare("
-            SELECT id_tarif 
-            FROM " . $this->table . " 
-            WHERE 
-                id_biens = :id_biens AND 
-                id_saison = :id_saison AND 
-                annee = :annee
-            LIMIT 1
+            SELECT t.id_tarif, s.date_debut, s.date_fin
+            FROM " . $this->table . " t
+            JOIN saison s ON s.id_saison = t.id_saison
+            WHERE t.id_biens = :id_biens AND t.annee = :annee
         ");
+        $stmt->execute(['id_biens' => $bienId, 'annee' => $annee]);
 
-        $stmt->execute([
-            'id_biens' => $bienId,
-            'id_saison' => $saisonId,
-            'annee' => $annee
-        ]);
-
-        $result = $stmt->fetch(PDO::FETCH_ASSOC);
-        return $result ? $result['id_tarif'] : null;
+        $dayOfYear = function ($d) { return (int)date('z', strtotime('2001-' . date('m-d', strtotime($d)))); };
+        $bestId = null;
+        $bestLength = PHP_INT_MAX;
+        foreach ($stmt->fetchAll() as $row) {
+            $start = date('m-d', strtotime($row['date_debut']));
+            $end = date('m-d', strtotime($row['date_fin']));
+            $contains = ($start <= $end) ? ($md >= $start && $md <= $end) : ($md >= $start || $md <= $end);
+            if (!$contains) {
+                continue;
+            }
+            $length = (($dayOfYear($row['date_fin']) - $dayOfYear($row['date_debut']) + 365) % 365) + 1;
+            if ($length < $bestLength || ($length === $bestLength && $row['id_tarif'] < $bestId)) {
+                $bestLength = $length;
+                $bestId = (int)$row['id_tarif'];
+            }
+        }
+        return $bestId;
     }
 }
 
