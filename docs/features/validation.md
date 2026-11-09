@@ -327,7 +327,7 @@ Les photos sont considérées comme champ critique :
 
 ### 1. Exécuter le script SQL
 
-**Fichier :** `database/migrations/01_add_validation_system.sql`
+**Fichier :** `database/goodnight.sql`
 
 #### Option A : Via phpMyAdmin (recommandé)
 
@@ -341,7 +341,7 @@ Les photos sont considérées comme champ critique :
 
 ```powershell
 # Depuis le répertoire du projet
-Get-Content database/migrations/01_add_validation_system.sql | mysql -u root goodnight
+Get-Content database/goodnight.sql | mysql -u root goodnight
 ```
 
 ### 2. Vérifier l'installation
@@ -369,7 +369,7 @@ UPDATE `biens` SET `statut_validation` = 'valide', `date_validation` = NOW();
 ### Fichiers créés
 
 ```
-database/migrations/01_add_validation_system.sql          - Script de migration SQL
+database/goodnight.sql          - Script de migration SQL
 app/Views/admin/validations.php                - Page admin de validation
 DOCUMENTATION_VALIDATION.md                    - Cette documentation
 ```

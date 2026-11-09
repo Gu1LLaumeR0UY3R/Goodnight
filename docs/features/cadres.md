@@ -27,7 +27,7 @@ CREATE TABLE cadres (
 ## 🛠️ Fichiers créés/modifiés
 
 ### 1. **Migration SQL**
-📄 `database/migrations/09_add_cadres_management_system.sql`
+📄 `database/goodnight.sql` (table `cadres`)
 - Crée la table `cadres`
 - Insère 9 cadres par défaut (dont le cadre par défaut sans image)
 

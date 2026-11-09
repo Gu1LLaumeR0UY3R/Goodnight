@@ -20,7 +20,7 @@ Table SQL: `notifications`
 - `is_read` (tinyint, 0/1) — statut de lecture
 - `created_at` (datetime, défaut NOW)
 
-Migration: `database/migrations/06_add_notifications_system.sql`
+Migration: `database/goodnight.sql`
 
 ## Couches applicatives
 
@@ -98,7 +98,7 @@ Aucun framework JS requis; du JS vanilla suffit.
 
 ```
 -- Sur votre base de données cible
-SOURCE database/migrations/06_add_notifications_system.sql;
+SOURCE database/goodnight.sql;
 ```
 
 2. Déployer le code PHP/JS mis à jour (les fichiers listés ci-dessous).
@@ -108,7 +108,7 @@ SOURCE database/migrations/06_add_notifications_system.sql;
 ## Fichiers ajoutés/modifiés
 
 - Ajout:
-  - `database/migrations/06_add_notifications_system.sql`
+  - `database/goodnight.sql`
   - `app/Models/NotificationModel.php`
   - `app/Controllers/NotificationController.php`
   - `public/js/notifications.js`

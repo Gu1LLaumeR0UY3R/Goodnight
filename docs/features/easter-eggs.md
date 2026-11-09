@@ -9,9 +9,7 @@ Le système Easter Eggs permet de gérer des cadres de profil PNG que les utilis
 ## 📁 Structure des fichiers
 
 ### SQL
-- **`database/migrations/08_add_easter_eggs_system.sql`** : Script de création de la base de données
-  - Table `cadres_profil` : Stocke les cadres disponibles
-  - Modification de la table `locataire` : Ajoute les colonnes `id_cadre_actif` et `frames_unlocked`
+- **`database/goodnight.sql`** : crée la table `cadres` (cadres disponibles) et les colonnes `frames_unlocked` et `cadre_profil` de la table `locataire`
 
 ### Contrôleurs
 - **`app/Controllers/EasterEggController.php`** : Gestion des Easter Eggs
@@ -40,35 +38,23 @@ Le système Easter Eggs permet de gérer des cadres de profil PNG que les utilis
 
 ## 🗄️ Structure de la base de données
 
-### Table `cadres_profil`
+### Table `cadres`
 
 ```sql
-CREATE TABLE cadres_profil (
-  id INT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
-  nom VARCHAR(100) NOT NULL,
+CREATE TABLE cadres (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  nom VARCHAR(100) NOT NULL UNIQUE,
+  chemin_fichier VARCHAR(255) NULL UNIQUE,   -- NULL = « Par défaut » (sans cadre)
   description TEXT,
-  chemin_fichier VARCHAR(255),
-  date_creation DATETIME DEFAULT CURRENT_TIMESTAMP
+  date_creation TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  date_modification TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 ```
 
-### Table `locataire` (modifications)
+### Table `locataire` (colonnes liées)
 
-```sql
-ALTER TABLE locataire 
-  ADD COLUMN id_cadre_actif INT UNSIGNED DEFAULT NULL,
-  ADD COLUMN frames_unlocked BOOLEAN DEFAULT 0;
-
-ALTER TABLE locataire 
-  ADD CONSTRAINT fk_locataire_cadre 
-  FOREIGN KEY (id_cadre_actif) 
-  REFERENCES cadres_profil(id) 
-  ON DELETE SET NULL;
-```
-
-**Colonnes ajoutées :**
-- `id_cadre_actif` : ID du cadre actuellement équipé par l'utilisateur
-- `frames_unlocked` : Booléen indiquant si l'utilisateur a découvert l'Easter Egg
+- `frames_unlocked` : indique si l'utilisateur a découvert l'Easter Egg
+- `cadre_profil` : chemin du cadre PNG actuellement équipé (NULL si aucun)
 
 ---
 
@@ -79,10 +65,10 @@ ALTER TABLE locataire
 Exécutez le script SQL :
 
 ```bash
-mysql -u root -p goodnight < database/migrations/08_add_easter_eggs_system.sql
+mysql -u root -p < database/goodnight.sql
 ```
 
-Ou via phpMyAdmin : Importez le fichier `add_easter_eggs_system.sql`
+Le fichier `database/goodnight.sql` contient déjà tout ce qui est nécessaire aux cadres.
 
 ### 2. Permissions des dossiers
 
@@ -239,8 +225,8 @@ $cadreId = $_POST['cadre_id'];
 // Vérifier que l'utilisateur a débloqué les cadres
 $user = $userModel->getById($userId);
 if ($user['frames_unlocked']) {
-    $stmt = $db->prepare("UPDATE locataire SET id_cadre_actif = ? WHERE id_locataire = ?");
-    $stmt->execute([$cadreId, $userId]);
+    $stmt = $db->prepare("UPDATE locataire SET cadre_profil = ? WHERE id_locataire = ?");
+    $stmt->execute([$cadrePath, $userId]);
 }
 ```
 
@@ -250,11 +236,7 @@ if ($user['frames_unlocked']) {
 <?php
 $user = $userModel->getById($userId);
 $avatar = $user['photo_profil'] ?? '/pfp/default.png';
-$cadre = null;
-
-if ($user['id_cadre_actif']) {
-    $cadre = $cadreModel->getById($user['id_cadre_actif']);
-}
+$cadre = $user['cadre_profil'] ?? null; // chemin du PNG ou null
 ?>
 
 <div class="avatar-container">
@@ -303,8 +285,8 @@ chmod -R 755 public/cadre/frames/
 
 ### Les cadres n'apparaissent pas
 
-**Problème** : Table `cadres_profil` introuvable  
-**Solution** : Exécutez le script SQL d'installation
+**Problème** : Table `cadres` introuvable  
+**Solution** : Importez `database/goodnight.sql`
 
 ### Erreur 404 sur les routes
 

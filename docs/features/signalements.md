@@ -397,7 +397,7 @@ Une erreur est survenue lors du traitement du signalement.
 
 ## Base de données - Script d'installation
 
-Le script SQL se trouve dans : `database/migrations/02_add_signalement_system.sql`
+Le script SQL se trouve dans : `database/goodnight.sql`
 
 ### Installation
 
@@ -410,13 +410,13 @@ Le script SQL se trouve dans : `database/migrations/02_add_signalement_system.sq
 
 **Via ligne de commande MySQL** :
 ```bash
-mysql -u root -p goodnight < database/migrations/02_add_signalement_system.sql
+mysql -u root -p goodnight < database/goodnight.sql
 ```
 
 **Via PowerShell** :
 ```powershell
 cd Goodnight
-mysql -u root -p goodnight -e "source database/migrations/02_add_signalement_system.sql"
+mysql -u root -p goodnight -e "source database/goodnight.sql"
 ```
 
 ---

@@ -77,7 +77,7 @@ ALTER TABLE `locataire`
 ADD COLUMN `pfp_loca` VARCHAR(255) NULL DEFAULT NULL AFTER `id_commune`;
 ```
 
-Fichier de migration: `migrations/add_pfp_loca.sql`
+Fichier de migration: `database/goodnight.sql` (colonne `pfp_loca`)
 
 ## Affichage de la photo
 
