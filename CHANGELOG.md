@@ -1,5 +1,43 @@
 # Changelog
 
+## 2026-11-06
+
+### Refonte graphique (en cours)
+- Nouvelle identité : crème, sable, charbon, olive ; Playfair Display (titres) et DM Sans (texte), polices auto-hébergées dans `public/fonts`.
+- Nouvelle couche de thème `public/css/theme.css` (variables, base, navigation, boutons, formulaires, badges), chargée en dernier sur toutes les pages.
+- Conversion de toutes les couleurs codées en dur du CSS et des styles en ligne vers la palette ; suppression des thèmes « coucher de soleil » et « nuit » et de 318 règles `.dark-mode` mortes.
+- Page d'accueil réécrite : hero éditorial, barre de recherche, filtres et cartes en CSS propre (`home.css`), sans styles en ligne.
+- Fiche d'un bien, avis, tableaux de bord et pages d'administration harmonisés.
+- Ajout de `public/images/default.jpg` (image affichée quand un bien n'a pas de photo) ; retrait de références à des fichiers inexistants (`animations-bien.css`, `theme-switcher.js`).
+- Les noms de communes s'affichent avec leurs accents (`ville_nom_reel`).
+- Bibliothèques tierces hébergées dans `public/vendor` (jQuery, jQuery UI, DataTables, FullCalendar 5 et 6, Chart.js) : plus de CDN, sauf Mapbox.
+- Menu mobile réparé : le JS ajoutait `navbar-mobile-open` alors que le CSS attendait `mobile-open`, le menu ne s'ouvrait jamais. Barre compacte sur téléphone, « Déconnexion » dans le menu.
+- Calendrier de la fiche d'un bien : jour courant discret, plus de débordement.
+- Champs de formulaire à plat ; tableaux défilant horizontalement sur mobile.
+- `.gitignore` : `vendor/` devient `/vendor/` pour ne pas masquer `public/vendor`.
+
+## 2026-11-05
+
+### Fonctionnalités
+- Multi-suppression admin terminée : 6 routes `POST /admin/deleteMultiple…` (utilisateurs, rôles, biens, types de biens, saisons, réservations) avec protections (rôles système, éléments encore utilisés) et exigence du type `application/json`. Les communes, données de référence, n'ont volontairement pas de suppression.
+- Tarification : la saison retenue pour une réservation est désormais la plus précise ayant un tarif pour le bien. Les saisons de vacances (ids 10 à 19) n'étaient jamais appliquées auparavant ; on retombe sur la saison générale si aucun tarif de vacances n'existe.
+
+### Nettoyage
+- Suppression de `AdminController_users_section.php` (fichier de travail oublié) et de la copie locale de DataTables, non servie et remplacée par le CDN comme dans les autres vues.
+- `bien/details.php` : suppression du bloc de debug qui écrivait la session dans le HTML, des scripts `node_modules` qui renvoyaient des 404 et d'un `console.log`.
+- Retrait des `error_log(print_r(...))` de debug et de l'affichage des rôles sur la page « Accès refusé ».
+
+## 2026-11-03
+
+### Base de données
+- Fusion de `schema.sql` et des 9 migrations en un seul fichier : `database/goodnight.sql`.
+- Ajout de `database/seed_demo.sql` (jeu de données de démonstration).
+- Correction : migration 08 en échec (colonne `frames_unlocked` créée deux fois) et migration 09 en échec (valeur NULL dans une colonne NOT NULL).
+- Correction : colonne `locataire.cadre_profil`, utilisée par le code mais absente des migrations.
+- Correction : table `blocages` sans clé primaire ni auto-incrément.
+- Retrait de la table `cadres_profil` et de `id_cadre_actif`, jamais utilisées par le code.
+- Noms de tables en minuscules et code aligné (`Roles`, `User_role`, `Type_Bien`, `Photos`, `Saison`) : compatible Linux.
+
 ## 2025-12-16
 ### Vue d’ensemble
 - Ajout d’une notification envoyée au propriétaire lors de la validation d’un bien par un administrateur.
