@@ -29,7 +29,7 @@ Point d'entrée de la documentation. Pour une vue d'ensemble du projet, voir le 
 
 ## Base de données
 
-Le schéma est dans [`database/schema.sql`](../database/schema.sql) et les évolutions dans [`database/migrations/`](../database/migrations/), à appliquer dans l'ordre numérique.
+Le schéma complet est dans [`database/goodnight.sql`](../database/goodnight.sql) et un jeu de données de démonstration dans [`database/seed_demo.sql`](../database/seed_demo.sql).
 
 ## Historique
 

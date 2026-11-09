@@ -16,7 +16,7 @@ Goodnight/
 ├── config/                       # Configuration
 ├── lib/                          # Bibliothèques et utilitaires
 ├── public/                       # Point d'entrée et ressources publiques
-├── database/migrations/                  # Scripts SQL de migration
+├── database/                             # goodnight.sql (schéma complet) + seed_demo.sql
 └── Documentation (fichiers .md)  # Documentation technique
 ```
 
@@ -38,7 +38,6 @@ Gestion de la logique métier et des interactions utilisateur :
 - `LocataireController.php` - Dashboard et actions des locataires
 - `ProprietaireController.php` - Dashboard et actions des propriétaires
 - `AdminController.php` - Administration générale
-- `AdminController_users_section.php` - Gestion des utilisateurs (admin)
 
 #### **Gestion des biens**
 - `HomeController.php` - Page d'accueil et recherche
@@ -262,17 +261,7 @@ Scripts côté client :
 
 ## 📊 Scripts SQL de migration
 
-Les mises à jour de la base de données sont versionnées dans `database/migrations/` :
-- `add_validation_system.sql` - Système de validation des biens
-- `add_commentaires_system.sql` - Système de commentaires
-- `add_signalement_system.sql` - Système de signalements
-- `add_favoris_system.sql` - Système de favoris
-- `add_likes_commentaires.sql` - Likes sur commentaires
-- `add_profile_frames_system.sql` - Cadres de profil
-- `add_cadres_management_system.sql` - Gestion des cadres
-- `add_easter_eggs_system.sql` - Easter eggs
-
----
+Le schéma complet de la base est dans `database/goodnight.sql` (tables, index, clés étrangères et données de référence). Les données de démonstration sont dans `database/seed_demo.sql`.
 
 ## 📚 Documentation technique
 

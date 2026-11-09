@@ -8,29 +8,32 @@
 
 ## 1. Base de données
 
-Le schéma ne crée pas la base : créez-la d'abord.
+Un seul fichier crée la base `goodnight` et toutes les tables (structure, index, clés étrangères, données de référence) :
 
 ```bash
-mysql -u root -p -e "CREATE DATABASE goodnight CHARACTER SET utf8mb4;"
-mysql -u root -p goodnight < database/schema.sql
+mysql -u root -p < database/goodnight.sql
 ```
 
-Appliquez ensuite les migrations **dans l'ordre numérique** :
+Il est ré-exécutable sans risque : les tables existantes ne sont pas supprimées.
 
-| # | Fichier | Contenu |
-|---|---|---|
-| 01 | `01_add_validation_system.sql` | Validation des biens par l'admin |
-| 02 | `02_add_signalement_system.sql` | Signalements de biens |
-| 03 | `03_add_commentaires_system.sql` | Avis et notes |
-| 04 | `04_add_likes_commentaires.sql` | Likes sur les avis |
-| 05 | `05_add_favoris_system.sql` | Favoris |
-| 06 | `06_add_notifications_system.sql` | Notifications |
-| 07 | `07_add_profile_frames_system.sql` | Cadres de profil |
-| 08 | `08_add_easter_eggs_system.sql` | Easter eggs |
-| 09 | `09_add_cadres_management_system.sql` | Gestion des cadres par l'admin |
+**Communes :** la table `commune` est créée vide. Pour la recherche par ville et la carte, importez la liste des communes de France (jeu « villes de France ») dans cette table.
+
+**Données de démonstration (facultatif, base vide uniquement) :**
 
 ```bash
-for f in database/migrations/*.sql; do mysql -u root -p goodnight < "$f"; done
+mysql -u root -p goodnight < database/seed_demo.sql
+```
+
+Elles ajoutent 10 utilisateurs, 9 biens (dont un en attente et un refusé), des tarifs, réservations, avis, likes, favoris, signalements et notifications. Mot de passe de tous les comptes : `Demo!2026` (`admin@example.com`, `claire.marchand@example.com`, `thomas.girard@example.com`, etc.).
+
+**Sans les données de démo**, créez un administrateur à la main :
+
+```bash
+php -r "echo password_hash('VotreMotDePasse', PASSWORD_DEFAULT);"
+```
+```sql
+INSERT INTO admin (nom_admin, prenom_admin, email_admin, mot_de_passe_admin)
+VALUES ('Nom', 'Prénom', 'vous@exemple.fr', '<hash obtenu ci-dessus>');
 ```
 
 ## 2. Configuration
@@ -55,7 +58,7 @@ chmod 755 public/uploads public/pfp public/cadre/frames
 php -S localhost:8000 -t public
 ```
 
-Puis ouvrez <http://localhost:8000>. Le compte administrateur de `database/schema.sql` est réservé au développement local ; changez son mot de passe ou supprimez-le avant toute mise en ligne.
+Puis ouvrez <http://localhost:8000>. Ne mettez jamais les données de démo en production.
 
 ## Déploiement sur un serveur
 

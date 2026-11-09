@@ -2,7 +2,7 @@
 
 Plateforme de location de logements entre particuliers : recherche, fiches détaillées, réservation, espace propriétaire et modération. Projet en **PHP (architecture MVC maison)** et **MySQL**.
 
-> **État du projet** : application fonctionnelle en local, en cours de refonte (nouvelle interface, front Vue 3 sur Cloudflare Pages et API sur Cloudflare Workers). Voir la [feuille de route](#feuille-de-route).
+> **État du projet** : application PHP/MySQL fonctionnelle, interface en cours de refonte. Voir la [feuille de route](#feuille-de-route).
 
 ## Fonctionnalités
 
@@ -19,7 +19,7 @@ Plateforme de location de logements entre particuliers : recherche, fiches déta
 | Backend | PHP 7.4+, PDO, routeur et MVC écrits à la main |
 | Base de données | MySQL 5.7+ |
 | Frontend | HTML, CSS (variables), JavaScript |
-| Bibliothèques | FullCalendar, Chart.js, DataTables, intl-tel-input, Mapbox GL JS |
+| Bibliothèques | jQuery, jQuery UI, FullCalendar, Chart.js, DataTables, intl-tel-input (hébergées dans `public/vendor`), Mapbox GL JS |
 
 ## Installation rapide
 
@@ -29,10 +29,9 @@ Prérequis : PHP 7.4+ (extensions `pdo_mysql`, `gd`), MySQL 5.7+.
 git clone https://github.com/Gu1LLaumeR0UY3R/Goodnight.git
 cd Goodnight
 
-# 1. Base de données
-mysql -u root -p -e "CREATE DATABASE goodnight CHARACTER SET utf8mb4;"
-mysql -u root -p goodnight < database/schema.sql
-for f in database/migrations/*.sql; do mysql -u root -p goodnight < "$f"; done
+# 1. Base de données (schéma complet, puis données de démonstration facultatives)
+mysql -u root -p < database/goodnight.sql
+mysql -u root -p goodnight < database/seed_demo.sql
 
 # 2. Configuration (fichier ignoré par Git)
 cp config/config.example.php config/config.php   # puis renseigner DB_* et MAPBOX_TOKEN
@@ -41,14 +40,14 @@ cp config/config.example.php config/config.php   # puis renseigner DB_* et MAPBO
 php -S localhost:8000 -t public
 ```
 
-Le détail (permissions, dépannage, déploiement) est dans le [guide d'installation](docs/guides/installation.md).
+Avec le jeu de démo, connectez-vous avec `admin@example.com`, `claire.marchand@example.com` (propriétaire) ou `thomas.girard@example.com` (locataire), mot de passe `Demo!2026`. Le détail (permissions, dépannage, déploiement) est dans le [guide d'installation](docs/guides/installation.md).
 
 ## Structure
 
 ```
 app/            Controllers, Models, Views (MVC)
 config/         config.example.php (copier vers config.php)
-database/       schema.sql + migrations ordonnées
+database/       goodnight.sql (schéma) + seed_demo.sql (démo)
 docs/           documentation technique et fonctionnelle
 lib/            connexion PDO
 public/         point d'entrée (index.php), css, js, images
@@ -64,14 +63,15 @@ Tout est indexé dans [`docs/README.md`](docs/README.md) : [architecture](docs/a
 - Requêtes préparées PDO pour les données utilisateur ; les requêtes restantes construites par concaténation sont à auditer.
 - Aucune protection CSRF pour l'instant (voir feuille de route).
 - Secrets hors dépôt : `config/config.php` est ignoré, le jeton Mapbox se configure via `MAPBOX_TOKEN`.
-- Le compte administrateur de `database/schema.sql` est réservé au développement local.
+- Les comptes de `database/seed_demo.sql` (mot de passe commun `Demo!2026`) sont réservés à la démonstration : ne l'importez jamais en production.
 
 ## Feuille de route
 
-- [ ] Nouvelle interface (palette crème / sable / charbon / olive, Playfair Display + DM Sans)
-- [ ] Front Vue 3 (Cloudflare Pages) + API Workers et base D1, avec une démo interactive
+- [x] Nouvelle interface : accueil, fiche d'un bien, tableaux de bord, administration (palette crème / sable / charbon / olive, Playfair Display + DM Sans)
+- [ ] Reprendre à la main les pages encore seulement recolorées (carte, statistiques, formulaires d'édition)
 - [ ] Protection CSRF et audit des requêtes SQL
-- [ ] Finalisation du multi-suppression côté admin
+- [x] Multi-suppression côté admin
+- [ ] Passer le calendrier propriétaire de FullCalendar 5 à 6 (la fiche d'un bien utilise déjà la v6)
 - [ ] Tests automatisés (PHPUnit)
 
 Historique des changements : [CHANGELOG.md](CHANGELOG.md).
