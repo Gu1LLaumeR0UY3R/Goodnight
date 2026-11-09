@@ -7,6 +7,7 @@
     <title>Réserver - <?php echo htmlspecialchars($bien['designation_bien']); ?></title>
     <link rel="stylesheet" href="/css/style.css">
     <link rel="stylesheet" href="/css/navbar.css">
+    <link rel="stylesheet" href="/css/theme.css">
 </head>
 <body>
     <?php include __DIR__ . '/../layout/navbar.php'; ?>

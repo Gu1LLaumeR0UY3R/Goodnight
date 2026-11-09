@@ -7,10 +7,9 @@
     <link rel="stylesheet" href="/css/style.css">
     <link rel="stylesheet" href="/css/navbar.css">
     <link rel="stylesheet" href="/css/auth.css">
-    <link rel="stylesheet" href="/css/sunset-background.css">
-    <link rel="stylesheet" href="/css/night-background.css">
+    <link rel="stylesheet" href="/css/theme.css">
 </head>
-<body class="home-sunset">
+<body>
     <?php include __DIR__ . '/../layout/navbar.php'; ?>
 
     <main class="auth-wrapper">

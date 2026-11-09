@@ -44,14 +44,7 @@
   flex-direction: column;
   align-items: center;
   gap: 1.5rem;
-}
-
-.dark-mode .profile-picture-section {
-  background: var(--bg-card);
-  border-color: var(--border-color);
-}
-
-.pfp-container {
+}.pfp-container {
   position: relative;
   width: 150px;
   height: 150px;
@@ -106,7 +99,7 @@
 .btn-upload:hover {
   background: var(--accent-hover);
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(255, 90, 95, 0.3);
+  box-shadow: 0 4px 12px rgba(36, 38, 34, 0.3);
 }
 
 .btn-delete {
@@ -156,7 +149,7 @@
 .btn-edit:hover {
   background: var(--accent-hover);
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(255, 90, 95, 0.3);
+  box-shadow: 0 4px 12px rgba(36, 38, 34, 0.3);
 }
 
 .btn-save {
@@ -193,27 +186,14 @@
   padding: 2rem;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   border: 1px solid rgba(0, 0, 0, 0.08);
-}
-
-.dark-mode .info-card {
-  background: var(--bg-card);
-  border-color: var(--border-color);
-}
-
-.info-card h3 {
+}.info-card h3 {
   font-size: 1.25rem;
   font-weight: 700;
   color: var(--accent-primary);
   margin: 0 0 1.5rem 0;
   padding-bottom: 0.75rem;
   border-bottom: 2px solid rgba(0, 0, 0, 0.08);
-}
-
-.dark-mode .info-card h3 {
-  border-color: var(--border-color);
-}
-
-.info-row {
+}.info-row {
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
@@ -221,13 +201,7 @@
   padding: 0.75rem;
   background: var(--bg-secondary);
   border-radius: 8px;
-}
-
-.dark-mode .info-row {
-  background: rgba(255, 255, 255, 0.05);
-}
-
-.info-row:last-child {
+}.info-row:last-child {
   margin-bottom: 0;
 }
 
@@ -255,24 +229,11 @@
   background: white;
   color: var(--text-primary);
   transition: all 0.2s;
-}
-
-.dark-mode .info-input {
-  background: var(--bg-primary);
-  border-color: var(--border-color);
-}
-
-.info-input:focus {
+}.info-input:focus {
   outline: none;
   border-color: var(--accent-primary);
-  box-shadow: 0 0 0 3px rgba(255, 90, 95, 0.1);
-}
-
-.dark-mode .info-input:focus {
-  box-shadow: 0 0 0 3px rgba(102, 252, 241, 0.1);
-}
-
-/* ===== ALERTES ===== */
+  box-shadow: 0 0 0 3px rgba(36, 38, 34, 0.1);
+}/* ===== ALERTES ===== */
 #alertContainer {
   margin-bottom: 1.5rem;
 }

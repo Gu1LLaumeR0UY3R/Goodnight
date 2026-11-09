@@ -7,14 +7,12 @@
     <link rel="stylesheet" href="/css/style.css">
     <link rel="stylesheet" href="/css/navbar.css">
     <link rel="stylesheet" href="/css/auth.css">
-    <link rel="stylesheet" href="/css/sunset-background.css">
-    <link rel="stylesheet" href="/css/night-background.css">
     <link rel="stylesheet" href="/lib/intl-tel-input/intlTelInput.min.css">
-    <link rel="stylesheet" href="https://code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
-    <script src="https://cdn.jsdelivr.net/npm/heroicons@2.0.18/outline/index.js"></script>
+    <link rel="stylesheet" href="/vendor/jquery-ui/themes/base/jquery-ui.min.css">
 
+    <link rel="stylesheet" href="/css/theme.css">
 </head>
-<body class="home-sunset">
+<body>
     <?php include __DIR__ . '/../layout/navbar.php'; ?>
 
     <main class="auth-wrapper">
@@ -152,8 +150,8 @@
         <p>&copy; <?php echo date("Y"); ?> Goodnight. Tous droits réservés.</p>
     </footer>
 
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js"></script>
+    <script src="/vendor/jquery/jquery-3.6.0.min.js"></script>
+    <script src="/vendor/jquery-ui/jquery-ui.min.js"></script>
     <script src="/js/autocomplete.js"></script>
     <script src="/lib/intl-tel-input/intlTelInput.min.js"></script>
     <script>

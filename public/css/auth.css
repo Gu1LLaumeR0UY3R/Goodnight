@@ -73,15 +73,7 @@ main.auth-wrapper .auth-card:has(.register-form) {
   text-align: center;
   color: var(--text-secondary);
   margin-bottom: 2rem;
-}
-
-.dark-mode .auth-card {
-  background: rgba(31, 40, 51, 0.72);
-  border: 2px solid rgba(255, 255, 255, 0.25);
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.45), 0 8px 24px rgba(0, 0, 0, 0.32);
-}
-
-/* ===== FORMULAIRE ===== */
+}/* ===== FORMULAIRE ===== */
 .auth-form {
   display: flex;
   flex-direction: column;
@@ -133,32 +125,8 @@ main.auth-wrapper .auth-card:has(.register-form) {
 #form-morale-siret input:focus {
   outline: none;
   border-color: var(--accent-primary);
-  box-shadow: 0 0 0 3px rgba(255, 90, 95, 0.1);
-}
-
-.dark-mode .auth-card .form-section {
-  background: rgba(31, 40, 51, 0.68);
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.38);
-}
-
-.dark-mode #form-morale-siret {
-  background: rgba(31, 40, 51, 0.68);
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.38);
-}
-
-.dark-mode #form-morale-siret input {
-  background: rgba(31, 40, 51, 0.85);
-  border: 1px solid rgba(255, 255, 255, 0.16);
-  color: var(--night-silver);
-}
-
-.dark-mode #form-morale-siret input:focus {
-  box-shadow: 0 0 0 3px rgba(102, 252, 241, 0.1);
-}
-
-.auth-form .form-group {
+  box-shadow: 0 0 0 3px rgba(36, 38, 34, 0.1);
+}.auth-form .form-group {
   margin-bottom: 1.5rem;
 }
 
@@ -189,22 +157,8 @@ main.auth-wrapper .auth-card:has(.register-form) {
 .auth-form select:focus {
   outline: none;
   border-color: var(--accent-primary);
-  box-shadow: 0 0 0 3px rgba(255, 90, 95, 0.1);
-}
-
-.dark-mode .auth-form input:focus,
-.dark-mode .auth-form select:focus {
-  box-shadow: 0 0 0 3px rgba(102, 252, 241, 0.1);
-}
-
-.dark-mode .auth-form input,
-.dark-mode .auth-form select {
-  background: rgba(31, 40, 51, 0.85);
-  border: 1px solid rgba(255, 255, 255, 0.16);
-  color: var(--night-silver);
-}
-
-.auth-form input::placeholder {
+  box-shadow: 0 0 0 3px rgba(36, 38, 34, 0.1);
+}.auth-form input::placeholder {
   color: var(--text-muted);
 }
 
@@ -217,14 +171,7 @@ main.auth-wrapper .auth-card:has(.register-form) {
   border-radius: 12px;
   padding-right: 0.35rem;
   box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
-}
-
-.dark-mode .password-wrapper {
-  background: rgba(31, 40, 51, 0.9);
-  border: 1px solid rgba(255, 255, 255, 0.14);
-}
-
-.password-wrapper input {
+}.password-wrapper input {
   border: none;
   background: transparent;
   box-shadow: none;
@@ -254,22 +201,7 @@ main.auth-wrapper .auth-card:has(.register-form) {
 
 .toggle-password:hover {
   background: rgba(0, 0, 0, 0.08);
-}
-
-.dark-mode .toggle-password {
-  background: rgba(255, 255, 255, 0.06);
-  color: var(--night-silver);
-}
-
-.dark-mode .toggle-password:hover {
-  background: rgba(255, 255, 255, 0.1);
-}
-
-.dark-mode .toggle-password:hover {
-  background: rgba(255, 255, 255, 0.12);
-}
-
-/* ===== BOUTONS ===== */
+}/* ===== BOUTONS ===== */
 .auth-form button[type="submit"] {
   width: 100%;
   padding: 1rem;
@@ -287,14 +219,8 @@ main.auth-wrapper .auth-card:has(.register-form) {
 .auth-form button[type="submit"]:hover {
   background: var(--accent-hover);
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(255, 90, 95, 0.3);
-}
-
-.dark-mode .auth-form button[type="submit"]:hover {
-  box-shadow: 0 4px 12px rgba(102, 252, 241, 0.3);
-}
-
-/* ===== LIENS SUPPLÉMENTAIRES ===== */
+  box-shadow: 0 4px 12px rgba(36, 38, 34, 0.3);
+}/* ===== LIENS SUPPLÉMENTAIRES ===== */
 .auth-links {
   text-align: center;
   margin-top: 1.5rem;
@@ -319,21 +245,14 @@ main.auth-wrapper .auth-card:has(.register-form) {
   align-items: center;
   gap: 0.5rem;
   padding: 0.75rem 1.5rem;
-  background: linear-gradient(135deg, var(--accent-primary), rgba(255, 90, 95, 0.85));
+  background: linear-gradient(#242622, #242622);
   border: 2px solid rgba(255, 255, 255, 0.2);
   border-radius: 12px;
   transition: all 0.3s ease;
   position: relative;
   overflow: hidden;
-  box-shadow: 0 4px 12px rgba(255, 90, 95, 0.25);
-}
-
-.dark-mode .auth-links a {
-  background: linear-gradient(135deg, var(--accent-primary), rgba(102, 252, 241, 0.85));
-  box-shadow: 0 4px 12px rgba(102, 252, 241, 0.25);
-}
-
-.auth-links a::before {
+  box-shadow: 0 4px 12px rgba(36, 38, 34, 0.25);
+}.auth-links a::before {
   content: '🔑';
   font-size: 1.1rem;
   filter: brightness(1.2);
@@ -341,26 +260,14 @@ main.auth-wrapper .auth-card:has(.register-form) {
 
 .auth-links a:hover {
   transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(255, 90, 95, 0.4);
+  box-shadow: 0 6px 20px rgba(36, 38, 34, 0.4);
   text-decoration: none;
   border-color: rgba(255, 255, 255, 0.4);
-}
-
-.dark-mode .auth-links a:hover {
-  box-shadow: 0 6px 20px rgba(102, 252, 241, 0.4);
-}
-
-.auth-footer {
+}.auth-footer {
   text-align: center;
   padding: 2rem 1rem 3rem;
   color: rgba(255, 255, 255, 0.85);
-}
-
-.dark-mode .auth-footer {
-  color: var(--text-secondary);
-}
-
-/* ===== DISPOSITION EN COLONNES (PC) / STACK (MOBILE) ===== */
+}/* ===== DISPOSITION EN COLONNES (PC) / STACK (MOBILE) ===== */
 .register-form .form-columns {
   display: grid;
   grid-template-columns: 1fr;
@@ -433,22 +340,8 @@ main.auth-wrapper .auth-card:has(.register-form) {
   background: var(--accent-primary);
   color: #fff;
   border-color: transparent;
-  box-shadow: 0 10px 28px rgba(255, 90, 95, 0.28);
-}
-
-.dark-mode .auth-card .btn-radio {
-  background: rgba(31, 40, 51, 0.7);
-  border: 1px solid rgba(255, 255, 255, 0.14);
-  color: var(--night-silver);
-}
-
-.dark-mode .auth-card input[type="radio"]:checked + .btn-radio {
-  background: var(--night-nebula);
-  color: #0B0C10;
-  box-shadow: 0 10px 28px rgba(102, 252, 241, 0.24);
-}
-
-/* ===== MESSAGES D'ERREUR ===== */
+  box-shadow: 0 10px 28px rgba(36, 38, 34, 0.28);
+}/* ===== MESSAGES D'ERREUR ===== */
 .error-message {
   background: #FEE2E2;
   color: #991B1B;
@@ -456,28 +349,14 @@ main.auth-wrapper .auth-card:has(.register-form) {
   border-radius: 8px;
   margin-bottom: 1.5rem;
   border: 1px solid #EF4444;
-}
-
-.dark-mode .error-message {
-  background: rgba(239, 68, 68, 0.2);
-  color: #FCA5A5;
-}
-
-.success-message {
+}.success-message {
   background: #D1FAE5;
   color: #065F46;
   padding: 1rem;
   border-radius: 8px;
   margin-bottom: 1.5rem;
   border: 1px solid #10B981;
-}
-
-.dark-mode .success-message {
-  background: rgba(16, 185, 129, 0.2);
-  color: #6EE7B7;
-}
-
-/* ===== SÉPARATEUR OU ===== */
+}/* ===== SÉPARATEUR OU ===== */
 .auth-separator {
   text-align: center;
   margin: 1.5rem 0;
@@ -645,27 +524,8 @@ main.auth-wrapper .auth-card:has(.register-form) {
   background: var(--accent-primary);
   color: #fff;
   border-color: transparent;
-  box-shadow: 0 10px 28px rgba(255, 90, 95, 0.28);
-}
-
-.dark-mode .radio-buttons-group .btn-radio {
-  background: rgba(31, 40, 51, 0.7);
-  border: 1.5px solid rgba(255, 255, 255, 0.14);
-  color: var(--night-silver);
-}
-
-.dark-mode .radio-buttons-group input[type="radio"]:checked + .btn-radio {
-  background: var(--night-nebula);
-  color: #0B0C10;
-  box-shadow: 0 10px 28px rgba(102, 252, 241, 0.24);
-}
-
-.dark-mode .toggle-switch {
-  background: rgba(31, 40, 51, 0.7);
-  border: 1.5px solid rgba(255, 255, 255, 0.14);
-}
-
-/* Responsive mobile */
+  box-shadow: 0 10px 28px rgba(36, 38, 34, 0.28);
+}/* Responsive mobile */
 @media (max-width: 767px) {
   .choices-container {
     grid-template-columns: 1fr;
@@ -678,13 +538,7 @@ main.auth-wrapper .auth-card:has(.register-form) {
   color: rgba(255, 255, 255, 0.7);
   margin-top: 0.5rem;
   line-height: 1.4;
-}
-
-.dark-mode .password-requirements {
-  color: rgba(255, 255, 255, 0.6);
-}
-
-.password-feedback {
+}.password-feedback {
   display: block;
   font-size: 0.85rem;
   font-weight: 600;
@@ -712,13 +566,7 @@ main.auth-wrapper .auth-card:has(.register-form) {
   border-radius: 4px;
   overflow: hidden;
   margin-bottom: 0.3rem;
-}
-
-.dark-mode .strength-bar {
-  background: rgba(255, 255, 255, 0.1);
-}
-
-.strength-bar-fill {
+}.strength-bar-fill {
   height: 100%;
   width: 0;
   transition: width 0.3s ease, background-color 0.3s ease;

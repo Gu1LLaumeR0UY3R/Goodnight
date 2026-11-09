@@ -13,6 +13,7 @@
          Visitez cette page pour débloquer les cadres de profils spéciaux :
          /profile/cadre
          🎨 Profitez de cette découverte exclusive ! -->
+    <link rel="stylesheet" href="/css/theme.css">
 </head>
 <body class="profile-page">
     <?php include __DIR__ . '/../layout/navbar.php'; ?>
@@ -61,18 +62,18 @@
                     
                     <!-- Afficher le sélecteur de cadres si débloqué -->
                     <?php if (!empty($user['frames_unlocked']) && $user['frames_unlocked']): ?>
-                        <div style="margin-top: 1.5rem; padding: 1.5rem; background: #f5f5f5; border-radius: 8px;">
+                        <div style="margin-top: 1.5rem; padding: 1.5rem; background: #F5F1E9; border-radius: 8px;">
                             <h3 style="margin-top: 0;">🎨 Votre Cadre de Profil</h3>
-                            <p style="font-size: 0.9rem; color: #666; margin-bottom: 1rem;">Sélectionnez un cadre spécial pour votre photo :</p>
+                            <p style="font-size: 0.9rem; color: #50554B; margin-bottom: 1rem;">Sélectionnez un cadre spécial pour votre photo :</p>
                             
                             <div id="framesSelector" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(100px, 1fr)); gap: 1rem; margin-bottom: 1rem;">
                                 <!-- Les cadres seront générés en JS -->
                             </div>
                             
                             <!-- Infos du cadre sélectionné -->
-                            <div id="frameInfo" style="background: white; padding: 1rem; border-radius: 6px; margin-bottom: 1rem; border-left: 4px solid #667eea;">
-                                <h4 style="margin: 0 0 0.5rem 0; color: #333;">Sélectionnez un cadre</h4>
-                                <p style="margin: 0; color: #666; font-size: 0.9rem;">Choisissez un cadre pour découvrir sa description</p>
+                            <div id="frameInfo" style="background: white; padding: 1rem; border-radius: 6px; margin-bottom: 1rem; border-left: 4px solid #55604A;">
+                                <h4 style="margin: 0 0 0.5rem 0; color: #242622;">Sélectionnez un cadre</h4>
+                                <p style="margin: 0; color: #50554B; font-size: 0.9rem;">Choisissez un cadre pour découvrir sa description</p>
                             </div>
                             
                             <button onclick="applyFrame()" class="btn-save" style="padding: 0.7rem 1.5rem; font-size: 0.95rem;">
@@ -477,14 +478,14 @@
                 if (frame.path) {
                     frameBtn.innerHTML = `<img src="${frame.path}" alt="${frame.name}">`;
                 } else {
-                    frameBtn.innerHTML = `<div style="width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; font-size: 2rem;">⭐</div>`;
+                    frameBtn.innerHTML = `<div style="width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; background: linear-gradient(#242622, #242622); color: white; font-size: 2rem;">⭐</div>`;
                 }
                 
                 frameBtn.style.cssText = `
                     width: 100px;
                     height: 100px;
                     padding: 0;
-                    border: 3px solid #ddd;
+                    border: 3px solid #DED7CA;
                     background: white;
                     border-radius: 8px;
                     cursor: pointer;
