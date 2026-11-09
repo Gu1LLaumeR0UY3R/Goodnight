@@ -3,7 +3,7 @@
 require_once __DIR__ . "/Model.php";
 
 class PhotoModel extends Model {
-    protected $table = 'Photos';
+    protected $table = 'photos';
 
     protected $primaryKey = 'id_photo';
     public function __construct() {

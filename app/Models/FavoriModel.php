@@ -73,7 +73,7 @@ class FavoriModel extends Model {
                 (SELECT lien_photo FROM photos WHERE id_biens = b.id_biens ORDER BY id_photo ASC LIMIT 1) as premiere_photo
             FROM " . $this->table . " f
             JOIN biens b ON f.id_biens = b.id_biens
-            LEFT JOIN Type_Bien tb ON b.id_TypeBien = tb.id_typebien
+            LEFT JOIN type_bien tb ON b.id_TypeBien = tb.id_typebien
             LEFT JOIN commune c ON b.id_commune = c.id_commune
             LEFT JOIN locataire l ON b.id_locataire = l.id_locataire
             WHERE f.id_locataire = :id_locataire

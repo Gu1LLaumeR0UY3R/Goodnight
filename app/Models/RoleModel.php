@@ -3,7 +3,7 @@
 require_once __DIR__ . "/Model.php";
 
 class RoleModel extends Model {
-    protected $table = 'Roles';
+    protected $table = 'roles';
     protected $primaryKey = 'id_roles';
 
     public function __construct() {

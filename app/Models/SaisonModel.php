@@ -3,7 +3,7 @@
 require_once __DIR__ . "/Model.php";
 
 class SaisonModel extends Model {
-    protected $table = 'Saison';
+    protected $table = 'saison';
 
     protected $primaryKey = 'id_saison';
 

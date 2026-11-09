@@ -88,7 +88,7 @@ class BienModel extends Model {
         $sql = "
             SELECT 
                 b.*,
-                c.ville_nom as commune_nom,
+                COALESCE(c.ville_nom_reel, c.ville_nom) as commune_nom,
                 (SELECT lien_photo FROM photos WHERE id_biens = b.id_biens ORDER BY id_photo ASC LIMIT 1) as premiere_photo,
                 CONCAT(
                     COALESCE(
@@ -128,13 +128,13 @@ class BienModel extends Model {
             SELECT 
                 b.*,
                 tb.desc_type_bien as type_bien_nom,
-                c.ville_nom as commune_nom,
+                COALESCE(c.ville_nom_reel, c.ville_nom) as commune_nom,
                 l.nom_locataire as proprietaire_nom,
                 l.prenom_locataire as proprietaire_prenom,
                 l.RaisonSociale as proprietaire_raison_sociale,
                 IFNULL((SELECT prix_semaine FROM tarifs WHERE id_biens = b.id_biens AND annee = :currentYear AND id_saison = :currentSaisonId LIMIT 1), NULL) as prix_semaine
             FROM biens b 
-            LEFT JOIN Type_Bien tb ON b.id_TypeBien = tb.id_typebien 
+            LEFT JOIN type_bien tb ON b.id_TypeBien = tb.id_typebien 
             LEFT JOIN commune c ON b.id_commune = c.id_commune
             LEFT JOIN locataire l ON b.id_locataire = l.id_locataire
             WHERE b.id_biens = :id
@@ -158,13 +158,13 @@ class BienModel extends Model {
             SELECT 
                 b.*,
                 tb.desc_type_bien as type_bien_nom,
-                c.ville_nom as commune_nom,
+                COALESCE(c.ville_nom_reel, c.ville_nom) as commune_nom,
                 c.ville_latitude_deg,
                 c.ville_longitude_deg,
                 (SELECT lien_photo FROM photos WHERE id_biens = b.id_biens ORDER BY id_photo ASC LIMIT 1) as premiere_photo,
                 IFNULL((SELECT prix_semaine FROM tarifs WHERE id_biens = b.id_biens AND annee = :currentYear AND id_saison = :currentSaisonId LIMIT 1), NULL) as prix_semaine
             FROM biens b 
-            LEFT JOIN Type_Bien tb ON b.id_TypeBien = tb.id_typebien 
+            LEFT JOIN type_bien tb ON b.id_TypeBien = tb.id_typebien 
             LEFT JOIN commune c ON b.id_commune = c.id_commune
             WHERE b.statut_validation = 'valide'
         ";
@@ -186,11 +186,11 @@ class BienModel extends Model {
             SELECT 
                 b.*,
                 tb.desc_type_bien as type_bien_nom,
-                c.ville_nom as commune_nom,
+                COALESCE(c.ville_nom_reel, c.ville_nom) as commune_nom,
                 (SELECT lien_photo FROM photos WHERE id_biens = b.id_biens ORDER BY id_photo ASC LIMIT 1) as premiere_photo,
                 IFNULL((SELECT prix_semaine FROM tarifs WHERE id_biens = b.id_biens AND annee = :currentYear AND id_saison = :currentSaisonId LIMIT 1), NULL) as prix_semaine
             FROM biens b 
-            LEFT JOIN Type_Bien tb ON b.id_TypeBien = tb.id_typebien 
+            LEFT JOIN type_bien tb ON b.id_TypeBien = tb.id_typebien 
             LEFT JOIN commune c ON b.id_commune = c.id_commune 
             WHERE b.id_TypeBien = :id_TypeBien
         ";
@@ -214,13 +214,13 @@ class BienModel extends Model {
             SELECT 
                 b.*,
                 tb.desc_type_bien as type_bien_nom,
-                c.ville_nom as commune_nom,
+                COALESCE(c.ville_nom_reel, c.ville_nom) as commune_nom,
                 c.ville_latitude_deg,
                 c.ville_longitude_deg,
                 (SELECT lien_photo FROM photos WHERE id_biens = b.id_biens ORDER BY id_photo ASC LIMIT 1) as premiere_photo,
                 IFNULL((SELECT prix_semaine FROM tarifs WHERE id_biens = b.id_biens AND annee = :currentYear AND id_saison = :currentSaisonId LIMIT 1), NULL) as prix_semaine
             FROM biens b 
-            LEFT JOIN Type_Bien tb ON b.id_TypeBien = tb.id_typebien 
+            LEFT JOIN type_bien tb ON b.id_TypeBien = tb.id_typebien 
             LEFT JOIN commune c ON b.id_commune = c.id_commune
             LEFT JOIN tarifs t ON b.id_biens = t.id_biens AND t.annee = :currentYear2 AND t.id_saison = :currentSaisonId2
             WHERE b.statut_validation = 'valide'
@@ -311,11 +311,11 @@ class BienModel extends Model {
             SELECT 
                 b.*,
                 tb.desc_type_bien as type_bien_nom,
-                c.ville_nom as commune_nom,
+                COALESCE(c.ville_nom_reel, c.ville_nom) as commune_nom,
                 (SELECT lien_photo FROM photos WHERE id_biens = b.id_biens ORDER BY id_photo ASC LIMIT 1) as premiere_photo,
                 IFNULL((SELECT prix_semaine FROM tarifs WHERE id_biens = b.id_biens AND annee = :currentYear AND id_saison = :currentSaisonId LIMIT 1), NULL) as prix_semaine
             FROM biens b 
-            LEFT JOIN Type_Bien tb ON b.id_TypeBien = tb.id_typebien 
+            LEFT JOIN type_bien tb ON b.id_TypeBien = tb.id_typebien 
             LEFT JOIN commune c ON b.id_commune = c.id_commune 
             WHERE c.ville_nom LIKE :communeNom
         ";
@@ -449,7 +449,7 @@ class BienModel extends Model {
             SELECT 
                 b.*,
                 tb.desc_type_bien as type_bien_nom,
-                c.ville_nom as commune_nom,
+                COALESCE(c.ville_nom_reel, c.ville_nom) as commune_nom,
                 CASE 
                     WHEN l.nom_locataire IS NOT NULL AND l.prenom_locataire IS NOT NULL THEN CONCAT(l.prenom_locataire, ' ', l.nom_locataire)
                     WHEN l.RaisonSociale IS NOT NULL THEN l.RaisonSociale
@@ -457,7 +457,7 @@ class BienModel extends Model {
                 END AS proprietaire,
                 l.email_locataire
             FROM biens b
-            LEFT JOIN Type_Bien tb ON b.id_TypeBien = tb.id_typebien
+            LEFT JOIN type_bien tb ON b.id_TypeBien = tb.id_typebien
             LEFT JOIN commune c ON b.id_commune = c.id_commune
             LEFT JOIN locataire l ON b.id_locataire = l.id_locataire
             WHERE b.statut_validation = 'en_attente'

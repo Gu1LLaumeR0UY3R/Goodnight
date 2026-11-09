@@ -87,8 +87,8 @@ class UserModel extends Model {
         $this->db->beginTransaction();
 
         try {
-            // Supprime les entrées de User_role
-            $stmt = $this->db->prepare("DELETE FROM User_role WHERE id_locataire = :id_locataire");
+            // Supprime les entrées de user_role
+            $stmt = $this->db->prepare("DELETE FROM user_role WHERE id_locataire = :id_locataire");
             $stmt->execute(['id_locataire' => $id]);
 
             // Supprime les réservations où l'utilisateur est locataire
@@ -100,7 +100,7 @@ class UserModel extends Model {
             $stmt->execute(['id_locataire' => $id]);
 
             // Supprime les photos des biens appartenant à cet utilisateur
-            $stmt = $this->db->prepare("DELETE FROM Photos WHERE id_biens IN (SELECT id_biens FROM biens WHERE id_locataire = :id_locataire)");
+            $stmt = $this->db->prepare("DELETE FROM photos WHERE id_biens IN (SELECT id_biens FROM biens WHERE id_locataire = :id_locataire)");
             $stmt->execute(['id_locataire' => $id]);
 
             // Supprime les tarifs des biens appartenant à cet utilisateur
@@ -132,18 +132,18 @@ class UserModel extends Model {
     }
 
     public function getUserWithRoles($userId) {
-        $stmt = $this->db->prepare("\n            SELECT \n                u.*,\n                GROUP_CONCAT(r.nom_roles) as roles\n            FROM locataire u\n            LEFT JOIN User_role ur ON u.id_locataire = ur.id_locataire\n            LEFT JOIN Roles r ON ur.id_roles = r.id_roles\n            WHERE u.id_locataire = :id_locataire\n            GROUP BY u.id_locataire\n        ");
+        $stmt = $this->db->prepare("\n            SELECT \n                u.*,\n                GROUP_CONCAT(r.nom_roles) as roles\n            FROM locataire u\n            LEFT JOIN user_role ur ON u.id_locataire = ur.id_locataire\n            LEFT JOIN roles r ON ur.id_roles = r.id_roles\n            WHERE u.id_locataire = :id_locataire\n            GROUP BY u.id_locataire\n        ");
         $stmt->execute(['id_locataire' => $userId]);
         return $stmt->fetch();
     }
 
     public function getAllUsersWithRoles() {
-        $stmt = $this->db->query("\n            SELECT \n                u.*,\n                GROUP_CONCAT(r.nom_roles SEPARATOR ', ') as roles\n            FROM locataire u\n            LEFT JOIN User_role ur ON u.id_locataire = ur.id_locataire\n            LEFT JOIN Roles r ON ur.id_roles = r.id_roles\n            GROUP BY u.id_locataire\n        ");
+        $stmt = $this->db->query("\n            SELECT \n                u.*,\n                GROUP_CONCAT(r.nom_roles SEPARATOR ', ') as roles\n            FROM locataire u\n            LEFT JOIN user_role ur ON u.id_locataire = ur.id_locataire\n            LEFT JOIN roles r ON ur.id_roles = r.id_roles\n            GROUP BY u.id_locataire\n        ");
         return $stmt->fetchAll();
     }
 
     public function assignRole($userId, $roleId) {
-        $stmt = $this->db->prepare("INSERT INTO User_role (id_locataire, id_roles) VALUES (:id_locataire, :id_roles)");
+        $stmt = $this->db->prepare("INSERT INTO user_role (id_locataire, id_roles) VALUES (:id_locataire, :id_roles)");
         $stmt->execute([
             'id_locataire' => $userId,
             'id_roles' => $roleId
@@ -152,7 +152,7 @@ class UserModel extends Model {
     }
 
     public function removeRole($userId, $roleId) {
-        $stmt = $this->db->prepare("DELETE FROM User_role WHERE id_locataire = :id_locataire AND id_roles = :id_roles");
+        $stmt = $this->db->prepare("DELETE FROM user_role WHERE id_locataire = :id_locataire AND id_roles = :id_roles");
         $stmt->execute([
             'id_locataire' => $userId,
             'id_roles' => $roleId
@@ -161,13 +161,13 @@ class UserModel extends Model {
     }
 
     public function getUserRoles($userId) {
-        $stmt = $this->db->prepare("\n            SELECT r.* \n            FROM Roles r\n            INNER JOIN User_role ur ON r.id_roles = ur.id_roles\n            WHERE ur.id_locataire = :id_locataire\n        ");
+        $stmt = $this->db->prepare("\n            SELECT r.* \n            FROM roles r\n            INNER JOIN user_role ur ON r.id_roles = ur.id_roles\n            WHERE ur.id_locataire = :id_locataire\n        ");
         $stmt->execute(['id_locataire' => $userId]);
         return $stmt->fetchAll();
     }
 
     public function searchUsersByIdRoleAndName($term, $id_roles = null) {
-        $query = "\n            SELECT DISTINCT l.id_locataire, l.nom_locataire, l.prenom_locataire, l.RaisonSociale, l.Siret, l.type_locataire\n            FROM locataire l\n            LEFT JOIN User_role ur ON l.id_locataire = ur.id_locataire\n            WHERE (l.nom_locataire LIKE :term_nom OR l.prenom_locataire LIKE :term_prenom OR l.RaisonSociale LIKE :term_raison)\n        ";
+        $query = "\n            SELECT DISTINCT l.id_locataire, l.nom_locataire, l.prenom_locataire, l.RaisonSociale, l.Siret, l.type_locataire\n            FROM locataire l\n            LEFT JOIN user_role ur ON l.id_locataire = ur.id_locataire\n            WHERE (l.nom_locataire LIKE :term_nom OR l.prenom_locataire LIKE :term_prenom OR l.RaisonSociale LIKE :term_raison)\n        ";
         $params = [
             ":term_nom" => "%" . $term . "%",
             ":term_prenom" => "%" . $term . "%",
