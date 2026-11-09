@@ -6,10 +6,10 @@
     <title>Tableau de bord Locataire - Goodnight</title>
     <link rel="stylesheet" href="/css/style.css">
     <link rel="stylesheet" href="/css/navbar.css">
-    <link rel="stylesheet" href="/css/sunset-background.css">
     <link rel="stylesheet" href="/css/locataire-dashboard.css">
+    <link rel="stylesheet" href="/css/theme.css">
 </head>
-<body class="home-sunset">
+<body>
     <?php include __DIR__ . '/../layout/navbar.php'; ?>
 
     <main class="locataire-dashboard">
@@ -204,10 +204,6 @@
     </main>
 
     <footer>
-        <div class="sunset">
-            <div class="sun"></div>
-            <div class="horizon"></div>
-        </div>
         <p>&copy; <?php echo date("Y"); ?> Goodnight. Tous droits réservés.</p>
     </footer>
 </body>

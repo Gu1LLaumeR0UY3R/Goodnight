@@ -7,11 +7,9 @@
     <link rel="stylesheet" href="/css/style.css">
     <link rel="stylesheet" href="/css/navbar.css">
     <link rel="stylesheet" href="/css/favoris.css">
-    <link rel="stylesheet" href="/css/sunset-background.css">
-    <link rel="stylesheet" href="/css/night-background.css">
+    <link rel="stylesheet" href="/css/theme.css">
 </head>
-<body class="home-sunset">
-    <div class="top-banner"></div>
+<body>
     <?php include __DIR__ . '/../layout/navbar.php'; ?>
 
     <main class="favorites-page">
@@ -91,10 +89,6 @@
     </main>
 
     <footer>
-        <div class="sunset">
-            <div class="sun"></div>
-            <div class="horizon"></div>
-        </div>
         <p>&copy; <?php echo date("Y"); ?> Goodnight. Tous droits réservés.</p>
     </footer>
 

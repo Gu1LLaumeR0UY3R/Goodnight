@@ -6,8 +6,6 @@
     <title>Mes Réservations - Locataire</title>
     <link rel="stylesheet" href="/css/style.css">
     <link rel="stylesheet" href="/css/navbar.css">
-    <link rel="stylesheet" href="/css/sunset-background.css">
-    <link rel="stylesheet" href="/css/night-background.css">
     <style>
         main {
             max-width: 1400px;
@@ -22,18 +20,12 @@
             color: var(--text-primary);
             margin-bottom: 2rem;
             text-align: center;
-            background: linear-gradient(135deg, var(--accent-primary, #ff5a5f), var(--accent-hover, #ff7f83));
+            background: linear-gradient(#242622, #242622);
             color: white;
             padding: 2rem;
             border-radius: 16px;
-            box-shadow: 0 4px 16px rgba(255, 90, 95, 0.3);
-        }
-
-        .dark-mode h2 {
-            background: linear-gradient(135deg, var(--night-stellar), var(--night-nebula));
-        }
-
-        /* Messages d'alerte */
+            box-shadow: 0 4px 16px rgba(36, 38, 34, 0.3);
+        }/* Messages d'alerte */
         .alert {
             padding: 1.25rem;
             border-radius: 12px;
@@ -72,29 +64,16 @@
         table {
             width: 100%;
             background: white;
-            border: 2px solid var(--border-color, #e0e0e0);
+            border: 2px solid var(--border-color, #DED7CA);
             border-radius: 12px;
             border-collapse: separate;
             border-spacing: 0;
             overflow: hidden;
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-        }
-
-        .dark-mode table {
-            background: var(--bg-card);
-            border-color: var(--border-color);
-        }
-
-        thead {
-            background: linear-gradient(135deg, var(--accent-primary, #ff5a5f), var(--accent-hover, #ff7f83));
+        }thead {
+            background: linear-gradient(#242622, #242622);
             color: white;
-        }
-
-        .dark-mode thead {
-            background: linear-gradient(135deg, var(--night-stellar), var(--night-nebula));
-        }
-
-        th {
+        }th {
             padding: 1.25rem 1rem;
             text-align: left;
             font-weight: 700;
@@ -104,7 +83,7 @@
         }
 
         tbody tr {
-            border-bottom: 1px solid var(--border-color, #e0e0e0);
+            border-bottom: 1px solid var(--border-color, #DED7CA);
             transition: all 0.2s;
         }
 
@@ -113,7 +92,7 @@
         }
 
         tbody tr:hover {
-            background: rgba(255, 90, 95, 0.05);
+            background: rgba(36, 38, 34, 0.05);
             transform: scale(1.002);
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
         }
@@ -131,7 +110,7 @@
             height: 60px;
             object-fit: cover;
             border-radius: 8px;
-            border: 2px solid var(--border-color, #e0e0e0);
+            border: 2px solid var(--border-color, #DED7CA);
             margin-right: 0.75rem;
             vertical-align: middle;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
@@ -140,7 +119,7 @@
         /* Bouton annuler */
         .btn-cancel {
             padding: 0.625rem 1.25rem;
-            background: linear-gradient(135deg, #f44336, #e57373);
+            background: linear-gradient(#242622, #242622);
             color: white;
             border: none;
             border-radius: 8px;
@@ -165,16 +144,10 @@
             font-size: 1.125rem;
             font-style: italic;
             background: white;
-            border: 2px dashed var(--border-color, #e0e0e0);
+            border: 2px dashed var(--border-color, #DED7CA);
             border-radius: 12px;
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-        }
-
-        .dark-mode main > p {
-            background: var(--bg-card);
-        }
-
-        /* Footer */
+        }/* Footer */
         footer {
             text-align: center;
             padding: 2rem;
@@ -225,17 +198,11 @@
 
             tr {
                 margin-bottom: 1.5rem;
-                border: 2px solid var(--border-color, #e0e0e0);
+                border: 2px solid var(--border-color, #DED7CA);
                 border-radius: 12px;
                 background: white;
                 box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-            }
-
-            .dark-mode tr {
-                background: var(--bg-card);
-            }
-
-            tr:hover {
+            }tr:hover {
                 transform: none;
             }
 
@@ -255,7 +222,7 @@
                 white-space: nowrap;
                 font-weight: 700;
                 text-align: left;
-                color: var(--accent-primary, #ff5a5f);
+                color: var(--accent-primary, #55604A);
             }
 
             .photo-thumb {
@@ -268,8 +235,9 @@
             }
         }
     </style>
+    <link rel="stylesheet" href="/css/theme.css">
 </head>
-<body class="home-sunset">
+<body>
     <?php include __DIR__ . '/../layout/navbar.php'; ?>
 
     <main>
@@ -336,10 +304,6 @@
     </main>
 
     <footer>
-        <div class="sunset">
-            <div class="sun"></div>
-            <div class="horizon"></div>
-        </div>
         <p>&copy; <?= date("Y") ?> Goodnight. Tous droits réservés.</p>
     </footer>
 </body>
