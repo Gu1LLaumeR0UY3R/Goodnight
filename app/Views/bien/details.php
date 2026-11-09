@@ -6,16 +6,13 @@
     <title><?php echo htmlspecialchars($bien["designation_bien"]); ?> - Goodnight</title>
     <link rel="stylesheet" href="/css/style.css">
     <link rel="stylesheet" href="/css/navbar.css">
-    <link rel="stylesheet" href="/css/sunset-background.css">
-    <link rel="stylesheet" href="/css/night-background.css">
     <link rel="stylesheet" href="/css/bien-details.css">
-    <link rel="stylesheet" href="/css/animations-bien.css">
     <link rel="stylesheet" href="/css/commentaires.css">
     <!-- Modern FullCalendar & CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.css" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.js"></script>
+    <script src="/vendor/fullcalendar/index.global.min.js"></script>
+    <link rel="stylesheet" href="/css/theme.css">
 </head>
-<body class="home-sunset">
+<body>
     <?php include __DIR__ . '/../layout/navbar.php'; ?>
 
     <main class="page-shell">
@@ -97,14 +94,6 @@
                             : 'Non renseigné'; ?>
                     </p>
                     <p>
-                         <?php
-                            // DEBUG - À RETIRER après vérification
-                            echo "<!-- DEBUG SESSION -->";
-                            echo "<!-- user_id: " . ($_SESSION['user_id'] ?? 'NON DÉFINI') . " -->";
-                            echo "<!-- is_admin: " . (isset($_SESSION['is_admin']) ? 'OUI' : 'NON') . " -->";
-                            echo "<!-- user_roles: " . print_r($_SESSION['user_roles'] ?? [], true) . " -->";
-                            echo "<!-- END DEBUG -->";
-                        ?>
                     </p>
                 </div>
 
@@ -126,7 +115,7 @@
                   <span style="color: #000000; font-weight: 500;">Réservations</span>
               </div>
               <div style="display: flex; align-items: center; gap: 0.5rem;">
-                  <span style="display: inline-block; width: 20px; height: 20px; background: #ff7f50; border-radius: 4px;"></span>
+                  <span style="display: inline-block; width: 20px; height: 20px; background: #55604A; border-radius: 4px;"></span>
                   <span style="color: #000000; font-weight: 500;">Périodes bloquées</span>
               </div>
           </div>
@@ -194,7 +183,7 @@
             <!-- Connecté mais pas autorisé à réserver -->
             <div class="reservation-section-calendar glass-card" style="background: white; border: 1px solid rgba(0,0,0,0.08);">
                 <h3>Réserver ce bien</h3>
-                <p style="text-align: center; color: #666;">
+                <p style="text-align: center; color: #50554B;">
                     <?php if ($isOwner): ?>
                         Vous êtes le propriétaire de ce bien, vous ne pouvez pas le réserver.
                     <?php elseif ($isAdmin): ?>
@@ -246,7 +235,7 @@
         ?>
 
         <div class="commentaires-section glass-card" style="background: white; border: 1px solid rgba(0,0,0,0.08);">
-            <h2>⭐ Avis des voyageurs</h2>
+            <h2>Avis des voyageurs</h2>
             
             <!-- Résumé des notes -->
             <div class="commentaires-resume">
@@ -280,7 +269,7 @@
             <!-- TOP 3 des commentaires les plus likés -->
             <?php if (!empty($top3Commentaires) && count($top3Commentaires) > 0 && $top3Commentaires[0]['likes_count'] > 0): ?>
                 <div class="top3-section">
-                    <h3>🏆 Top 3 des avis les plus appréciés</h3>
+                    <h3>Top 3 des avis les plus appréciés</h3>
                     <div class="top3-container">
                         <?php foreach ($top3Commentaires as $index => $topComment): ?>
                             <?php if ($topComment['likes_count'] > 0): ?>
@@ -366,7 +355,7 @@
                     </div>
                 <?php elseif ($hasCommented && $userComment): ?>
                     <div class="commentaire-form-container">
-                        <h3>✏️ Modifier mon avis</h3>
+                        <h3>Modifier mon avis</h3>
                         <form id="commentaireEditForm" action="/commentaire/edit/<?php echo $userComment['id_commentaire']; ?>" method="POST" class="commentaire-form">
                             <div class="form-group">
                                 <label>Note <span class="required">*</span></label>
@@ -398,7 +387,7 @@
                     </div>
                 <?php elseif (!$canComment): ?>
                     <div class="info-message">
-                        <p>💡 Vous devez avoir réservé ce bien pour pouvoir laisser un avis.</p>
+                        <p>Vous devez avoir réservé ce bien pour pouvoir laisser un avis.</p>
                     </div>
                 <?php endif; ?>
             <?php elseif (!$userId): ?>
@@ -518,11 +507,8 @@
         <p>© <?php echo date("Y"); ?> Goodnight. Tous droits réservés.</p>
     </footer>
 
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="/node_modules/@fullcalendar/core/index.global.min.js"></script>
-    <script src="/node_modules/@fullcalendar/daygrid/index.global.min.js"></script>
-    <script src="/node_modules/@fullcalendar/interaction/index.global.min.js"></script>
-    <script src="/node_modules/@fullcalendar/core/locales/fr.global.min.js"></script>
+    <script src="/vendor/jquery/jquery-3.6.0.min.js"></script>
+    <script src="/vendor/fullcalendar/locales/fr.global.min.js"></script>
     <script>
         // Ton script carousel + modal (inchangé)
             
@@ -564,12 +550,6 @@
                             const month = String(endDate.getMonth() + 1).padStart(2, '0');
                             const day = String(endDate.getDate()).padStart(2, '0');
                             const endDateStr = `${year}-${month}-${day}`;
-                            
-                            console.log('Sélection:', { 
-                                start: startDate, 
-                                endOriginal: info.endStr, 
-                                endAjusté: endDateStr 
-                            });
                             
                             const dateDebutInput = document.getElementById('date_debut');
                             const dateFinInput = document.getElementById('date_fin');
@@ -755,7 +735,7 @@
                 </svg>
                 Signaler ce bien
             </h2>
-            <p style="color: #666; margin-bottom: 20px;">Aidez-nous à maintenir la qualité de la plateforme en signalant tout contenu inapproprié ou trompeur.</p>
+            <p style="color: #50554B; margin-bottom: 20px;">Aidez-nous à maintenir la qualité de la plateforme en signalant tout contenu inapproprié ou trompeur.</p>
             
             <form id="signalementForm" action="/signaler/<?php echo $bien['id_biens']; ?>" method="POST">
                 <div class="form-group">
@@ -848,18 +828,18 @@
             right: 20px;
             font-size: 28px;
             font-weight: bold;
-            color: #999;
+            color: #6a6f62;
             cursor: pointer;
             transition: color 0.3s ease;
         }
 
         .signalement-close:hover {
-            color: #333;
+            color: #242622;
         }
 
         .signalement-modal h2 {
             margin-top: 0;
-            color: #333;
+            color: #242622;
             display: flex;
             align-items: center;
             gap: 10px;
@@ -873,7 +853,7 @@
             display: block;
             margin-bottom: 8px;
             font-weight: 500;
-            color: #333;
+            color: #242622;
         }
 
         .form-group select,
@@ -881,7 +861,7 @@
         .form-group input {
             width: 100%;
             padding: 10px 12px;
-            border: 1px solid #ddd;
+            border: 1px solid #DED7CA;
             border-radius: 6px;
             font-size: 14px;
             font-family: inherit;
@@ -898,14 +878,14 @@
         .form-group small {
             display: block;
             margin-top: 5px;
-            color: #666;
+            color: #50554B;
             font-size: 12px;
         }
 
         .btn-cancel {
             flex: 1;
-            background: #e0e0e0;
-            color: #333;
+            background: #DED7CA;
+            color: #242622;
             border: none;
             padding: 12px 24px;
             border-radius: 6px;
