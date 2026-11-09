@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="/css/navbar.css">
     <link rel="stylesheet" href="/css/admin-content.css">
     <link rel="stylesheet" href="/lib/intl-tel-input/intlTelInput.min.css">
+    <link rel="stylesheet" href="/css/theme.css">
 </head>
 <body>
 

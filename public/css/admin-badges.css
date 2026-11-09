@@ -35,15 +35,7 @@
     transform: scale(1);
     opacity: 1;
   }
-}
-
-/* Dark mode override */
-.dark-mode .admin-badge {
-  background: #e11d48;
-  box-shadow: 0 2px 8px rgba(225, 29, 72, 0.6);
-}
-
-/* Dot-only variant (no number) */
+}/* Dot-only variant (no number) */
 .admin-badge.dot {
   width: 16px;
   height: 16px;

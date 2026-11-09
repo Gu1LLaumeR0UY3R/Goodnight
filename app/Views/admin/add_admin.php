@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="/css/style.css">
     <link rel="stylesheet" href="/css/navbar.css">
     <link rel="stylesheet" href="/css/admin-content.css">
+    <link rel="stylesheet" href="/css/theme.css">
 </head>
 <div class="container mt-4">
     <h2>Ajouter un Administrateur</h2>

@@ -39,7 +39,7 @@
 .admin-hero h1 {
   font-size: 2.5rem;
   font-weight: 700;
-  color: #2c3e50;
+  color: #242622;
   margin: 1rem 0 0.5rem 0;
   letter-spacing: -0.5px;
   position: relative;
@@ -48,7 +48,7 @@
 
 .admin-hero p {
   font-size: 1.1rem;
-  color: #555;
+  color: #50554B;
   margin: 0.5rem 0 0 0;
   opacity: 0.9;
   position: relative;
@@ -64,26 +64,7 @@
   margin: 0;
   position: relative;
   z-index: 1;
-}
-
-.dark-mode .admin-hero {
-  background: linear-gradient(135deg, rgba(100, 150, 255, 0.14) 0%, rgba(150, 100, 255, 0.12) 100%);
-  border-color: rgba(255, 255, 255, 0.15);
-  box-shadow: 
-    inset 0 1px 0 rgba(255, 255, 255, 0.2),
-    inset 0 -1px 0 rgba(0, 0, 0, 0.3),
-    0 8px 32px 0 rgba(0, 0, 0, 0.3);
-}
-
-.dark-mode .admin-hero h1 {
-  color: #f1f1f1;
-}
-
-.dark-mode .admin-hero p {
-  color: #ccc;
-}
-
-/* ========================================
+}/* ========================================
    ADMIN BOXES GRID
    ======================================== */
 
@@ -181,29 +162,7 @@
 
 .admin-box:active {
   transform: translateY(-5px) scale(1.01);
-}
-
-/* Dark mode */
-.dark-mode .admin-box {
-  background: linear-gradient(135deg, rgba(40, 40, 50, 0.35) 0%, rgba(42, 42, 54, 0.35) 100%);
-  border-color: rgba(100, 150, 255, 0.25);
-  color: #f1f1f1;
-  box-shadow: 
-    inset 0 1px 0 rgba(255, 255, 255, 0.15),
-    inset 0 -1px 0 rgba(0, 0, 0, 0.3),
-    0 8px 25px rgba(0, 0, 0, 0.35);
-}
-
-.dark-mode .admin-box:hover {
-  background: linear-gradient(135deg, rgba(50, 50, 62, 0.45) 0%, rgba(52, 52, 64, 0.45) 100%);
-  border-color: rgba(100, 150, 255, 0.45);
-  box-shadow: 
-    inset 0 1px 0 rgba(255, 255, 255, 0.2),
-    inset 0 -1px 0 rgba(0, 0, 0, 0.3),
-    0 16px 40px rgba(100, 150, 255, 0.2);
-}
-
-/* ========================================
+}/* ========================================
    ADMIN BOX ICON
    ======================================== */
 
@@ -223,17 +182,7 @@
 .admin-box:hover .admin-box-icon {
   background: linear-gradient(135deg, rgba(100, 150, 255, 0.25) 0%, rgba(150, 100, 255, 0.25) 100%);
   transform: scale(1.1) rotate(5deg);
-}
-
-.dark-mode .admin-box-icon {
-  background: linear-gradient(135deg, rgba(100, 150, 255, 0.1) 0%, rgba(150, 100, 255, 0.1) 100%);
-}
-
-.dark-mode .admin-box:hover .admin-box-icon {
-  background: linear-gradient(135deg, rgba(100, 150, 255, 0.2) 0%, rgba(150, 100, 255, 0.2) 100%);
-}
-
-/* ========================================
+}/* ========================================
    ADMIN BOX TEXT CONTENT
    ======================================== */
 
@@ -245,37 +194,21 @@
 .admin-box-title {
   font-size: 1.5rem;
   font-weight: 700;
-  color: #2c3e50;
+  color: #242622;
   margin: 0 0 0.5rem 0;
   letter-spacing: 0.3px;
-}
-
-.dark-mode .admin-box-title {
-  color: #f1f1f1;
-}
-
-.admin-box-description {
+}.admin-box-description {
   font-size: 0.95rem;
-  color: #666;
+  color: #50554B;
   margin: 0;
   opacity: 0.85;
   line-height: 1.4;
 }
 
 .admin-box:hover .admin-box-description {
-  color: #555;
+  color: #50554B;
   opacity: 1;
-}
-
-.dark-mode .admin-box-description {
-  color: #aaa;
-}
-
-.dark-mode .admin-box:hover .admin-box-description {
-  color: #ccc;
-}
-
-/* ========================================
+}/* ========================================
    NOTIFICATION BADGE SYSTEM
    ======================================== */
 
@@ -308,7 +241,7 @@
 /* Badge pour Validations (bleu pastel) */
 .notification-badge.validations {
   background: linear-gradient(135deg, #ADD8E6 0%, #B0E0E6 100%);
-  color: #4A5568;
+  color: #50554B;
   box-shadow: 0 6px 20px rgba(173, 216, 230, 0.4);
 }
 
@@ -363,17 +296,7 @@
 
 .admin-box.has-notification:hover {
   box-shadow: 0 16px 45px rgba(255, 182, 193, 0.4);
-}
-
-.dark-mode .admin-box.has-notification {
-  box-shadow: 0 12px 35px rgba(255, 182, 193, 0.2);
-}
-
-.dark-mode .admin-box.has-notification.validations-card {
-  box-shadow: 0 12px 35px rgba(173, 216, 230, 0.2);
-}
-
-/* Pulse ring autour du badge */
+}/* Pulse ring autour du badge */
 .notification-badge::before {
   content: '';
   position: absolute;
@@ -612,18 +535,7 @@
   background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.6), transparent);
   pointer-events: none;
   border-radius: inherit;
-}
-
-.dark-mode .glass-card {
-  background: rgba(30, 30, 40, 0.35);
-  border-color: rgba(255, 255, 255, 0.15);
-  box-shadow: 
-    inset 0 1px 0 rgba(255, 255, 255, 0.15),
-    inset 0 -1px 0 rgba(0, 0, 0, 0.3),
-    0 8px 32px 0 rgba(0, 0, 0, 0.3);
-}
-
-/* État sans notifications */
+}/* État sans notifications */
 .notification-badge.empty {
   display: none;
 }

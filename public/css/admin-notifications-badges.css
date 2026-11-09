@@ -32,7 +32,7 @@
 /* Badge pour Validations (bleu pastel) */
 .notification-badge.validations {
   background: linear-gradient(135deg, #ADD8E6 0%, #B0E0E6 100%);
-  color: #4A5568;
+  color: #50554B;
 }
 
 /* Badge pour Signalements (rose pastel) */

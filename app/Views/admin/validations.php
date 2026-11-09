@@ -6,7 +6,7 @@
     <title>Validation des Biens - Admin</title>
     <link rel="stylesheet" href="/css/style.css">
     <link rel="stylesheet" href="/css/admin-content.css">
-    <link rel="stylesheet" href="/app/Views/admin/DataTables/datatables.min.css">
+    <link rel="stylesheet" href="/vendor/datatables/css/jquery.dataTables.min.css">
     <style>
         .badge {
             padding: 5px 12px;
@@ -86,13 +86,13 @@
         }
         .modal-content h3 {
             margin-top: 0;
-            color: #333;
+            color: #242622;
         }
         .modal-content textarea {
             width: 100%;
             min-height: 100px;
             padding: 10px;
-            border: 1px solid #ddd;
+            border: 1px solid #DED7CA;
             border-radius: 4px;
             font-family: inherit;
             resize: vertical;
@@ -126,6 +126,7 @@
             background: #e53935;
         }
     </style>
+    <link rel="stylesheet" href="/css/theme.css">
 </head>
 <body>
 
@@ -203,8 +204,8 @@
         <p>&copy; <?php echo date("Y"); ?> Goodnight. Tous droits réservés.</p>
     </footer>
 
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="/app/Views/admin/DataTables/datatables.min.js"></script>
+    <script src="/vendor/jquery/jquery-3.6.0.min.js"></script>
+    <script src="/vendor/datatables/js/jquery.dataTables.min.js"></script>
     <script>
         let currentBienId = null;
 

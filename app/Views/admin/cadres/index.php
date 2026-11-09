@@ -41,7 +41,7 @@ if ($error) unset($_SESSION['error']);
                         <?php if (!$isDefault && $cadre['chemin_fichier']): ?>
                             <img src="<?php echo htmlspecialchars($cadre['chemin_fichier']); ?>" alt="<?php echo htmlspecialchars($cadre['nom']); ?>" class="frame-image">
                         <?php else: ?>
-                            <div class="frame-default" style="font-size: 2.5rem; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; width: 100%; height: 100%; display: flex; align-items: center; justify-content: center;">
+                            <div class="frame-default" style="font-size: 2.5rem; background: linear-gradient(#242622, #242622); color: white; width: 100%; height: 100%; display: flex; align-items: center; justify-content: center;">
                                 ⭐
                             </div>
                         <?php endif; ?>
@@ -83,7 +83,7 @@ if ($error) unset($_SESSION['error']);
 
 .cadre-card {
     background: white;
-    border: 1px solid #ddd;
+    border: 1px solid #DED7CA;
     border-radius: 8px;
     padding: 15px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
@@ -123,13 +123,13 @@ if ($error) unset($_SESSION['error']);
 
 .cadre-description {
     font-size: 0.85rem;
-    color: #666;
+    color: #50554B;
     margin: 8px 0;
 }
 
 .cadre-meta {
     font-size: 0.8rem;
-    color: #999;
+    color: #6a6f62;
     margin-top: 8px;
 }
 
@@ -149,7 +149,7 @@ if ($error) unset($_SESSION['error']);
     width: 100%;
     min-height: 100px;
     padding: 10px;
-    border: 1px solid #ddd;
+    border: 1px solid #DED7CA;
     border-radius: 4px;
     font-family: inherit;
 }

@@ -96,13 +96,13 @@ if ($error) unset($_SESSION['error']);
 
 .form-group label {
     font-weight: 600;
-    color: #333;
+    color: #242622;
 }
 
 .form-group input[type="text"],
 .form-group textarea {
     padding: 10px 12px;
-    border: 1px solid #ddd;
+    border: 1px solid #DED7CA;
     border-radius: 4px;
     font-family: inherit;
     font-size: 1rem;
@@ -111,18 +111,18 @@ if ($error) unset($_SESSION['error']);
 .form-group input[type="text"]:focus,
 .form-group textarea:focus {
     outline: none;
-    border-color: #667eea;
-    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    border-color: #55604A;
+    box-shadow: 0 0 0 3px rgba(36, 38, 34, 0.1);
 }
 
 .form-group small {
-    color: #999;
+    color: #6a6f62;
     font-size: 0.85rem;
 }
 
 .file-upload-area {
     position: relative;
-    border: 2px dashed #ddd;
+    border: 2px dashed #DED7CA;
     border-radius: 4px;
     padding: 30px 20px;
     text-align: center;
@@ -131,7 +131,7 @@ if ($error) unset($_SESSION['error']);
 }
 
 .file-upload-area:hover {
-    border-color: #667eea;
+    border-color: #55604A;
     background-color: #f8faff;
 }
 
@@ -140,13 +140,13 @@ if ($error) unset($_SESSION['error']);
 }
 
 .upload-hint {
-    color: #666;
+    color: #50554B;
     pointer-events: none;
 }
 
 .image-preview {
     background: #f9f9f9;
-    border: 1px solid #ddd;
+    border: 1px solid #DED7CA;
     border-radius: 4px;
     padding: 15px;
     text-align: center;

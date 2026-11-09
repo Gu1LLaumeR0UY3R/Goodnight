@@ -92,7 +92,7 @@ if (!isset($_SESSION['user_id']) || !isset($_SESSION['is_admin']) || $_SESSION['
 
 <style>
 .admin-page {
-    background: radial-gradient(circle at 20% 20%, rgba(255, 94, 98, 0.12), transparent 35%),
+    background: radial-gradient(circle at 20% 20%, rgba(36, 38, 34, 0.12), transparent 35%),
                 radial-gradient(circle at 80% 0%, rgba(255, 153, 102, 0.18), transparent 30%),
                 #0b1021;
     padding: 24px;
@@ -133,8 +133,8 @@ if (!isset($_SESSION['user_id']) || !isset($_SESSION['is_admin']) || $_SESSION['
     letter-spacing: 0.2px;
 }
 
-.tab-btn:hover { color: #ff9a7a; }
-.tab-btn.active { color: #ff9a7a; border-bottom-color: #ff9a7a; }
+.tab-btn:hover { color: #55604A; }
+.tab-btn.active { color: #55604A; border-bottom-color: #55604A; }
 
 .tab-content { display: none; }
 .tab-content.active { display: block; }
@@ -148,7 +148,7 @@ if (!isset($_SESSION['user_id']) || !isset($_SESSION['is_admin']) || $_SESSION['
 }
 
 .section-header h3 { margin: 0; color: #ffffff; }
-.text-muted { color: #aab7d3; }
+.text-muted { color: #DED7CA; }
 .small { font-size: 0.9rem; }
 
 .btn {
@@ -165,20 +165,20 @@ if (!isset($_SESSION['user_id']) || !isset($_SESSION['is_admin']) || $_SESSION['
 }
 
 .btn-primary {
-    background: linear-gradient(135deg, #ff5e62 0%, #ff9966 100%);
+    background: linear-gradient(#242622, #242622);
     color: #fff;
-    box-shadow: 0 10px 24px rgba(255, 94, 98, 0.35);
+    box-shadow: 0 10px 24px rgba(36, 38, 34, 0.35);
 }
 
-.btn-primary:hover { transform: translateY(-1px); box-shadow: 0 12px 28px rgba(255, 94, 98, 0.45); }
+.btn-primary:hover { transform: translateY(-1px); box-shadow: 0 12px 28px rgba(36, 38, 34, 0.45); }
 
 .btn-ghost {
     background: rgba(255, 255, 255, 0.04);
-    color: #ff9a7a;
+    color: #55604A;
     border: 1px solid rgba(255, 154, 122, 0.4);
 }
 
-.btn-danger { color: #ffb3a1; }
+.btn-danger { color: #55604A; }
 .btn-small { padding: 9px 12px; font-size: 0.9rem; }
 
 .cards-grid {
@@ -212,7 +212,7 @@ if (!isset($_SESSION['user_id']) || !isset($_SESSION['is_admin']) || $_SESSION['
     object-fit: contain;
 }
 
-.placeholder { color: #aab7d3; font-size: 0.95rem; }
+.placeholder { color: #DED7CA; font-size: 0.95rem; }
 
 .card-body {
     padding: 14px 16px 8px;
@@ -233,7 +233,7 @@ if (!isset($_SESSION['user_id']) || !isset($_SESSION['is_admin']) || $_SESSION['
 .empty-state {
     text-align: center;
     padding: 30px;
-    color: #aab7d3;
+    color: #DED7CA;
     grid-column: 1 / -1;
 }
 
@@ -252,11 +252,11 @@ if (!isset($_SESSION['user_id']) || !isset($_SESSION['is_admin']) || $_SESSION['
     display: inline-block;
     margin-top: 6px;
     padding: 6px 10px;
-    background: rgba(255, 94, 98, 0.15);
-    color: #ffb3a1;
+    background: rgba(36, 38, 34, 0.15);
+    color: #55604A;
     border-radius: 6px;
     font-size: 0.9rem;
-    border: 1px solid rgba(255, 94, 98, 0.35);
+    border: 1px solid rgba(36, 38, 34, 0.35);
 }
 
 @media (max-width: 700px) {

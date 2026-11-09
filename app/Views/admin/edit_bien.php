@@ -10,6 +10,7 @@
     <link rel="stylesheet" href="//code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
     <link rel="stylesheet" href="/css/photo-upload.css">
 
+    <link rel="stylesheet" href="/css/theme.css">
 </head>
 <body>
 
@@ -103,8 +104,8 @@
         
     </main>
 
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js"></script>
+    <script src="/vendor/jquery/jquery-3.6.0.min.js"></script>
+    <script src="/vendor/jquery-ui/jquery-ui.min.js"></script>
     <script src="/js/autocomplete.js"></script>
     <script src="/js/register.js"></script>
     <script src="/js/photo-upload.js"></script>

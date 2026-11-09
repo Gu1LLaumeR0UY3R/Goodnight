@@ -7,11 +7,12 @@
     <link rel="stylesheet" href="/css/style.css">
     <link rel="stylesheet" href="/css/navbar.css">
     <link rel="stylesheet" href="/css/admin-content.css">
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
-    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
-    <link rel="stylesheet" href="https://code.jquery.com/ui/1.14.1/themes/base/jquery-ui.css">
-    <script src="https://code.jquery.com/ui/1.14.1/jquery-ui.js"></script>
+    <script src="/vendor/jquery/jquery-3.6.0.min.js"></script>
+    <link rel="stylesheet" href="/vendor/datatables/css/jquery.dataTables.min.css">
+    <script src="/vendor/datatables/js/jquery.dataTables.min.js"></script>
+    <link rel="stylesheet" href="/vendor/jquery-ui/themes/base/jquery-ui.min.css">
+    <script src="/vendor/jquery-ui/jquery-ui.min.js"></script>
+    <link rel="stylesheet" href="/css/theme.css">
 </head>
 <body>
 
@@ -104,7 +105,7 @@
         <!-- Modal -->
         <div id="modal" style="display: none; position: fixed; z-index: 10000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6);">
             <div style="position: relative; margin: 5% auto; padding: 2rem; background: white; width: 80%; max-width: 600px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.3);">
-                <span onclick="fermerModal()" style="position: absolute; top: 1rem; right: 1.5rem; font-size: 2rem; cursor: pointer; color: #999;">&times;</span>
+                <span onclick="fermerModal()" style="position: absolute; top: 1rem; right: 1.5rem; font-size: 2rem; cursor: pointer; color: #6a6f62;">&times;</span>
                 <h3 style="margin-bottom: 1rem;">Commentaire complet</h3>
                 <div id="modalContent"></div>
             </div>

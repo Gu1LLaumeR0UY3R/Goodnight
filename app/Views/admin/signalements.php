@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="/css/style.css">
     <link rel="stylesheet" href="/css/navbar.css">
     <link rel="stylesheet" href="/css/admin-content.css">
-    <link rel="stylesheet" href="/app/Views/admin/DataTables/datatables.min.css">
+    <link rel="stylesheet" href="/vendor/datatables/css/jquery.dataTables.min.css">
     <style>
         .badge-motif {
             padding: 4px 10px;
@@ -40,8 +40,8 @@
             background: #4caf50;
         }
         .btn-rejeter {
-            background: #e0e0e0;
-            color: #333;
+            background: #DED7CA;
+            color: #242622;
             padding: 6px 12px;
             border: none;
             border-radius: 4px;
@@ -86,25 +86,25 @@
         }
         .modal-content h3 {
             margin-top: 0;
-            color: #333;
+            color: #242622;
         }
         .modal-content .info-group {
             margin: 15px 0;
             padding: 15px;
-            background: #f5f5f5;
+            background: #F5F1E9;
             border-radius: 6px;
         }
         .modal-content .info-group strong {
             display: block;
             margin-bottom: 5px;
-            color: #666;
+            color: #50554B;
             font-size: 13px;
         }
         .modal-content textarea {
             width: 100%;
             min-height: 80px;
             padding: 10px;
-            border: 1px solid #ddd;
+            border: 1px solid #DED7CA;
             border-radius: 4px;
             font-family: inherit;
             resize: vertical;
@@ -138,6 +138,7 @@
             background: #4caf50;
         }
     </style>
+    <link rel="stylesheet" href="/css/theme.css">
 </head>
 <body>
     <main class="admin-container">
@@ -226,8 +227,8 @@
         <p>&copy; <?php echo date("Y"); ?> Goodnight. Tous droits réservés.</p>
     </footer>
 
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="/app/Views/admin/DataTables/datatables.min.js"></script>
+    <script src="/vendor/jquery/jquery-3.6.0.min.js"></script>
+    <script src="/vendor/datatables/js/jquery.dataTables.min.js"></script>
     <script>
         $(document).ready(function() {
             $('#signalementsTable').DataTable({

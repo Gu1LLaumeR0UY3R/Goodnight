@@ -6,6 +6,7 @@
     <title>Ajouter un cadre - Easter Eggs</title>
     <link rel="stylesheet" href="/css/easter-eggs.css">
     <link rel="stylesheet" href="/css/admin-content.css">
+    <link rel="stylesheet" href="/css/theme.css">
 </head>
 <body>
 <?php
@@ -40,7 +41,7 @@ if (!isset($_SESSION['user_id']) || !isset($_SESSION['is_admin']) || $_SESSION['
 
             <form method="POST" action="/admin/cadres/store" enctype="multipart/form-data" id="addFrameForm">
                 <div class="form-group">
-                    <label for="nom">Nom du cadre <span style="color: #ff5e62;">*</span></label>
+                    <label for="nom">Nom du cadre <span style="color: #55604A;">*</span></label>
                     <input 
                         type="text" 
                         id="nom" 
@@ -65,7 +66,7 @@ if (!isset($_SESSION['user_id']) || !isset($_SESSION['is_admin']) || $_SESSION['
                 </div>
 
                 <div class="form-group">
-                    <label for="fichier">Fichier PNG du cadre <span style="color: #ff5e62;">*</span></label>
+                    <label for="fichier">Fichier PNG du cadre <span style="color: #55604A;">*</span></label>
                     <input 
                         type="file" 
                         id="fichier" 
@@ -106,9 +107,9 @@ if (!isset($_SESSION['user_id']) || !isset($_SESSION['is_admin']) || $_SESSION['
 }
 
 .alert-danger {
-    background: rgba(255, 94, 98, 0.15);
-    border-color: rgba(255, 94, 98, 0.4);
-    color: #ffb3a1;
+    background: rgba(36, 38, 34, 0.15);
+    border-color: rgba(36, 38, 34, 0.4);
+    color: #55604A;
 }
 
 .alert-success {
