@@ -11,7 +11,7 @@
 .commentaires-section h2 {
     font-size: 1.8rem;
     margin-bottom: 1.5rem;
-    color: #2c3e50;
+    color: #242622;
 }
 
 /* ================================================
@@ -22,7 +22,7 @@
     display: flex;
     gap: 3rem;
     padding: 2rem;
-    background: linear-gradient(135deg, #FF8C42 0%, #FF5A5F 100%);
+    background: linear-gradient(#242622, #242622);
     border-radius: 12px;
     color: white;
     margin-bottom: 2rem;
@@ -109,15 +109,15 @@
 .commentaire-form-container {
     margin: 2rem 0;
     padding: 2rem;
-    background: #f8f9fa;
+    background: #F5F1E9;
     border-radius: 12px;
-    border: 2px solid #e9ecef;
+    border: 2px solid #DED7CA;
 }
 
 .commentaire-form-container h3 {
     font-size: 1.4rem;
     margin-bottom: 1.5rem;
-    color: #2c3e50;
+    color: #242622;
 }
 
 .commentaire-form .form-group {
@@ -128,7 +128,7 @@
     display: block;
     font-weight: 600;
     margin-bottom: 0.5rem;
-    color: #2c3e50;
+    color: #242622;
 }
 
 .commentaire-form .required {
@@ -139,7 +139,7 @@
 .commentaire-form textarea {
     width: 100%;
     padding: 0.75rem;
-    border: 2px solid #dee2e6;
+    border: 2px solid #DED7CA;
     border-radius: 8px;
     font-size: 1rem;
     font-family: inherit;
@@ -149,8 +149,8 @@
 .commentaire-form input[type="text"]:focus,
 .commentaire-form textarea:focus {
     outline: none;
-    border-color: #FF8C42;
-    box-shadow: 0 0 0 3px rgba(255, 140, 66, 0.1);
+    border-color: #55604A;
+    box-shadow: 0 0 0 3px rgba(36, 38, 34, 0.1);
 }
 
 .commentaire-form textarea {
@@ -171,7 +171,7 @@
 
 .stars-input .star {
     font-size: 2.5rem;
-    color: #ddd;
+    color: #DED7CA;
     transition: all 0.2s ease;
     cursor: pointer;
     user-select: none;
@@ -196,7 +196,7 @@
 
 .btn-submit-commentaire {
     flex: 1;
-    background: linear-gradient(135deg, #FF8C42 0%, #FF5A5F 100%);
+    background: linear-gradient(#242622, #242622);
     color: white;
     border: none;
     padding: 0.875rem 1.5rem;
@@ -209,7 +209,7 @@
 
 .btn-submit-commentaire:hover {
     transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+    box-shadow: 0 4px 12px rgba(36, 38, 34, 0.4);
 }
 
 .btn-delete-commentaire {
@@ -259,14 +259,14 @@
     align-items: center;
     margin-bottom: 2rem;
     padding-bottom: 1rem;
-    border-bottom: 2px solid #e9ecef;
+    border-bottom: 2px solid #DED7CA;
     flex-wrap: wrap;
     gap: 1rem;
 }
 
 .commentaires-header h3 {
     font-size: 1.5rem;
-    color: #2c3e50;
+    color: #242622;
     margin: 0;
 }
 
@@ -278,17 +278,17 @@
 
 .commentaires-tri label {
     font-weight: 600;
-    color: #495057;
+    color: #50554B;
     font-size: 0.95rem;
 }
 
 .commentaires-tri select {
     padding: 0.75rem 2.5rem 0.75rem 1rem;
-    border: 2px solid #dee2e6;
+    border: 2px solid #DED7CA;
     border-radius: 10px;
     font-size: 0.95rem;
     font-weight: 500;
-    color: #495057;
+    color: #50554B;
     background: white;
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23667eea' d='M10.293 3.293L6 7.586 1.707 3.293A1 1 0 00.293 4.707l5 5a1 1 0 001.414 0l5-5a1 1 0 10-1.414-1.414z'/%3E%3C/svg%3E");
     background-repeat: no-repeat;
@@ -303,14 +303,14 @@
 }
 
 .commentaires-tri select:hover {
-    border-color: #FF8C42;
-    box-shadow: 0 4px 8px rgba(255, 140, 66, 0.15);
+    border-color: #55604A;
+    box-shadow: 0 4px 8px rgba(36, 38, 34, 0.15);
 }
 
 .commentaires-tri select:focus {
     outline: none;
-    border-color: #FF8C42;
-    box-shadow: 0 0 0 3px rgba(255, 140, 66, 0.1);
+    border-color: #55604A;
+    box-shadow: 0 0 0 3px rgba(36, 38, 34, 0.1);
     background-color: #fff5f0;
 }
 
@@ -319,14 +319,14 @@
     background: white;
     padding: 1.5rem;
     border-radius: 12px;
-    border: 1px solid #e9ecef;
+    border: 1px solid #DED7CA;
     margin-bottom: 1.5rem;
     transition: all 0.3s ease;
 }
 
 .commentaire-card:hover {
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-    border-color: #dee2e6;
+    border-color: #DED7CA;
 }
 
 .commentaire-header {
@@ -347,7 +347,7 @@
     height: 48px;
     border-radius: 50%;
     overflow: hidden;
-    background: linear-gradient(135deg, #FF8C42 0%, #FF5A5F 100%);
+    background: linear-gradient(#242622, #242622);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -374,12 +374,12 @@
 .commentaire-nom {
     font-weight: 600;
     font-size: 1.05rem;
-    color: #2c3e50;
+    color: #242622;
 }
 
 .commentaire-date {
     font-size: 0.875rem;
-    color: #6c757d;
+    color: #50554B;
 }
 
 .commentaire-note {
@@ -396,18 +396,18 @@
 }
 
 .etoile.vide {
-    color: #ddd;
+    color: #DED7CA;
 }
 
 .commentaire-titre {
     font-size: 1.15rem;
     font-weight: 600;
-    color: #2c3e50;
+    color: #242622;
     margin-bottom: 0.75rem;
 }
 
 .commentaire-contenu {
-    color: #495057;
+    color: #50554B;
     line-height: 1.6;
     margin-bottom: 0.5rem;
 }
@@ -415,7 +415,7 @@
 .commentaire-modifie {
     display: block;
     font-size: 0.8rem;
-    color: #6c757d;
+    color: #50554B;
     font-style: italic;
     margin-top: 0.5rem;
 }
@@ -423,8 +423,8 @@
 .btn-signaler-commentaire {
     margin-top: 1rem;
     background: transparent;
-    color: #6c757d;
-    border: 1px solid #dee2e6;
+    color: #50554B;
+    border: 1px solid #DED7CA;
     padding: 0.5rem 1rem;
     border-radius: 6px;
     font-size: 0.875rem;
@@ -519,7 +519,7 @@
     gap: 1rem;
     margin-top: 1rem;
     padding-top: 1rem;
-    border-top: 1px solid #e9ecef;
+    border-top: 1px solid #DED7CA;
 }
 
 .btn-like-commentaire,
@@ -535,20 +535,20 @@
 }
 
 .btn-like-commentaire {
-    background: #f8f9fa;
-    border: 2px solid #e9ecef;
-    color: #495057;
+    background: #F5F1E9;
+    border: 2px solid #DED7CA;
+    color: #50554B;
 }
 
 .btn-like-commentaire:hover:not(:disabled) {
     background: #fff0f6;
-    border-color: #ff6b9d;
+    border-color: #55604A;
     transform: translateY(-2px);
 }
 
 .btn-like-commentaire.liked {
-    background: linear-gradient(135deg, #ff6b9d 0%, #c471ed 100%);
-    border-color: #ff6b9d;
+    background: linear-gradient(#242622, #242622);
+    border-color: #55604A;
     color: white;
 }
 
@@ -583,7 +583,7 @@
     background: transparent;
     border: none;
     padding: 0.5rem 0;
-    color: #6c757d;
+    color: #50554B;
     cursor: default;
 }
 
@@ -606,7 +606,7 @@
 
 .top3-section h3 {
     font-size: 1.5rem;
-    color: #2c3e50;
+    color: #242622;
     margin-bottom: 1.5rem;
     text-align: center;
 }
@@ -665,7 +665,7 @@
     display: flex;
     align-items: center;
     gap: 0.5rem;
-    background: linear-gradient(135deg, #ff6b9d 0%, #c471ed 100%);
+    background: linear-gradient(#242622, #242622);
     color: white;
     padding: 0.5rem 1rem;
     border-radius: 20px;
@@ -685,12 +685,12 @@
 .top3-titre {
     font-size: 1.1rem;
     font-weight: 600;
-    color: #2c3e50;
+    color: #242622;
     margin-bottom: 0.75rem;
 }
 
 .top3-contenu {
-    color: #495057;
+    color: #50554B;
     line-height: 1.6;
     font-size: 0.95rem;
 }
@@ -712,7 +712,7 @@
 
 /* Bouton "Voir tous les avis" */
 .btn-voir-avis {
-    background: linear-gradient(135deg, #FF8C42 0%, #FF5A5F 100%);
+    background: linear-gradient(#242622, #242622);
     color: white;
     border: none;
     padding: 1rem 2rem;
@@ -721,12 +721,12 @@
     font-weight: 600;
     cursor: pointer;
     transition: all 0.3s ease;
-    box-shadow: 0 4px 12px rgba(255, 140, 66, 0.3);
+    box-shadow: 0 4px 12px rgba(36, 38, 34, 0.3);
 }
 
 .btn-voir-avis:hover {
     transform: translateY(-3px);
-    box-shadow: 0 6px 20px rgba(102, 126, 234, 0.5);
+    box-shadow: 0 6px 20px rgba(36, 38, 34, 0.5);
 }
 
 .btn-voir-avis span {
@@ -742,3 +742,32 @@
         transform: translateY(-5px);
     }
 }
+
+
+/* ==========================================================================
+   REFONTE : avis et notes
+   ========================================================================== */
+.commentaires-section { background: #fff !important; border: 1px solid var(--sand) !important; border-radius: var(--radius-lg); box-shadow: none; padding: 1.75rem; margin: 0 0 2rem; }
+.commentaires-section h2 { font-size: 1.6rem; margin: 0 0 1.5rem; }
+.commentaires-resume { background: var(--sand-soft); color: var(--charcoal); border: 1px solid var(--sand); border-radius: var(--radius-lg); box-shadow: none; }
+.note-chiffre { font-family: var(--font-heading); color: var(--charcoal); }
+.note-count, .repartition-label, .repartition-count { color: var(--muted); }
+.repartition-barre { background: var(--sand); }
+.repartition-fill { background: var(--olive); }
+.etoile.pleine, .stars-input .star.active, .stars-input .star.hover { color: #B8872B; }
+.etoile.vide, .stars-input .star { color: #CFC8B8; }
+.top3-section { background: var(--sand-soft); border: 1px solid var(--sand); border-radius: var(--radius-lg); box-shadow: none; }
+.top3-card { background: #fff; border: 1px solid var(--sand); border-radius: 16px; box-shadow: none; }
+.top3-likes { background: var(--sand-soft); color: var(--charcoal); }
+.commentaire-form-container { background: var(--sand-soft); border: 1px solid var(--sand); border-radius: var(--radius-lg); box-shadow: none; }
+.commentaire-form-container h3 { font-size: 1.3rem; }
+.btn-submit-commentaire { background: var(--charcoal); color: var(--cream); border: 1px solid var(--charcoal); border-radius: 999px; }
+.btn-submit-commentaire:hover { background: var(--olive); border-color: var(--olive); }
+.btn-delete-commentaire { background: transparent; color: #8F3A2B; border: 1px solid #D9B8AF; border-radius: 999px; }
+.btn-delete-commentaire:hover { background: #8F3A2B; color: #fff; }
+.commentaire-card { background: #fff; border: 1px solid var(--sand); border-radius: 16px; box-shadow: none; }
+.commentaire-avatar, .avatar-initials { background: var(--charcoal); color: var(--cream); }
+.btn-like-commentaire, .btn-signaler-commentaire { background: transparent; border: 1px solid var(--sand); border-radius: 999px; color: var(--muted); }
+.btn-like-commentaire:hover, .btn-signaler-commentaire:hover { border-color: var(--charcoal); color: var(--charcoal); background: #fff; }
+.btn-like-commentaire.liked { background: var(--sand-soft); color: var(--charcoal); border-color: var(--olive); }
+.commentaires-tri select { border-radius: 999px; }
