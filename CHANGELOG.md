@@ -1,5 +1,12 @@
 # Changelog
 
+## 2026-11-10
+
+### Correctifs
+- Champ téléphone : en tapant `0612345678`, le champ affichait `+61234567833`. Cause : `utils.js` (règles de numérotation) n'était pas de la même version que `intlTelInput.min.js` (v21.1.1) ; la bibliothèque plantait à chaque frappe. Les deux fichiers sont remplacés par la v21.1.1 d'origine.
+- Trois formulaires (inscription, ajout et édition d'utilisateur admin) contenaient chacun une copie du même script, qui se battait avec la bibliothèque (ajout manuel d'un « 0 », nettoyage des touches). Ils utilisent maintenant un seul module, `public/js/phone-input.js` : l'utilisateur saisit son numéro national, l'indicatif vient du sélecteur de pays, le numéro est formaté (`06 12 34 56 78`), les erreurs apparaissent à la sortie du champ.
+- Côté serveur, `PhoneHelper` normalise tous les numéros en E.164 (`+33612345678`) pour l'inscription, l'administration et le profil ; le profil affiche le numéro mis en forme.
+
 ## 2026-11-06
 
 ### Refonte graphique (en cours)

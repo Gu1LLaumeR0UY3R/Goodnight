@@ -247,7 +247,8 @@ class ProfileController extends BaseController {
         }
 
         // Validation du téléphone (optionnel)
-        if (!empty($data['tel_locataire']) && !preg_match('/^[0-9\s\+\-\(\)]+$/', $data['tel_locataire'])) {
+        $normalizedTel = PhoneHelper::normalize($data['tel_locataire'] ?? '');
+        if (PhoneHelper::isProvided($data['tel_locataire'] ?? '') && $normalizedTel === null) {
             $errors['tel'] = 'Numéro de téléphone invalide';
         }
 
@@ -261,7 +262,7 @@ class ProfileController extends BaseController {
         // Préparer les données pour la mise à jour
         $updateData = [
             'email_locataire' => trim($data['email_locataire']),
-            'tel_locataire' => !empty($data['tel_locataire']) ? trim($data['tel_locataire']) : null,
+            'tel_locataire' => $normalizedTel,
             'rue_locataire' => !empty($data['rue_locataire']) ? trim($data['rue_locataire']) : null,
             'complement_locataire' => !empty($data['complement_locataire']) ? trim($data['complement_locataire']) : null,
             'id_commune' => $user['id_commune'] ?? null

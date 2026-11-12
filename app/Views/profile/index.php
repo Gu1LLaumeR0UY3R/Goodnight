@@ -147,7 +147,7 @@
                     </div>
                     <div class="info-row">
                         <span class="info-label">Téléphone:</span>
-                        <span class="info-value" data-field="tel_locataire"><?php echo htmlspecialchars($user['tel_locataire'] ?? 'Non renseigné'); ?></span>
+                        <span class="info-value" data-field="tel_locataire"><?php echo htmlspecialchars(!empty($user['tel_locataire']) ? PhoneHelper::format($user['tel_locataire']) : 'Non renseigné'); ?></span>
                         <input type="tel" class="info-input" data-field="tel_locataire" value="<?php echo htmlspecialchars($user['tel_locataire'] ?? ''); ?>" placeholder="+33 6 12 34 56 78" style="display: none;">
                     </div>
                     <div class="info-row">

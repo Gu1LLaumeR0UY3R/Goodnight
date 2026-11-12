@@ -191,3 +191,8 @@ form .form-group, .form-section .form-group { background: transparent !important
 @media (max-width: 768px) {
   main table:not(.dataTable), .dataTables_wrapper { display: block; max-width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; }
 }
+
+/* champ téléphone international */
+.iti { width: 100%; display: block; }
+.iti input.error { border-color: #B3412F; }
+.tel-error { margin: .35rem 0 0; color: #8F3A2B; font-size: .85rem; }

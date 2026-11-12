@@ -418,11 +418,12 @@ class AdminController extends BaseController {
         if ($_SERVER["REQUEST_METHOD"] === "POST") {
             // Validation des champs Siret et RaisonSociale
             $siret = $_POST["Siret"] ?? "";
-            $fullTel = $_POST["full_tel_locataire"] ?? "";
+            $rawTel = trim($_POST["full_tel_locataire"] ?? "") ?: trim($_POST["tel_locataire"] ?? "");
+            $fullTel = PhoneHelper::normalize($rawTel);
 
             // Validation du numéro de téléphone (si fourni)
-            if (!empty($fullTel) && !preg_match("/^\\+[1-9]\\d{1,14}$/", $fullTel)) {
-                $_SESSION["error"] = "Le numéro de téléphone n'est pas valide (format E.164 requis).";
+            if (PhoneHelper::isProvided($rawTel) && $fullTel === null) {
+                $_SESSION["error"] = "Le numéro de téléphone n'est pas valide.";
                 $_SESSION["old_data"] = $_POST;
                 $this->redirect("/admin/add_user");
                 return;
@@ -477,14 +478,13 @@ class AdminController extends BaseController {
 
     public function editUser($id) {
         if ($_SERVER["REQUEST_METHOD"] === "POST") {
-            $fullTel = $_POST["full_tel_locataire"] ?? "";
+            $rawTel = trim($_POST["full_tel_locataire"] ?? "") ?: trim($_POST["tel_locataire"] ?? "");
+            $fullTel = PhoneHelper::normalize($rawTel);
 
             // Validation du numéro de téléphone (si fourni)
-            if (!empty($fullTel) && !preg_match("/^\\+[1-9]\\d{1,14}$/", $fullTel)) {
-                $_SESSION["error"] = "Le numéro de téléphone n'est pas valide (format E.164 requis).";
-                // Note : Pour editUser, il faudrait idéalement rediriger vers la page d'édition avec les données postées,
-                // mais comme le code original ne le fait pas, je vais simplement rediriger vers la liste des utilisateurs.
-                $this->redirect("/admin/users");
+            if (PhoneHelper::isProvided($rawTel) && $fullTel === null) {
+                $_SESSION["error"] = "Le numéro de téléphone n'est pas valide.";
+                $this->redirect("/admin/editUser/" . (int)$id);
                 return;
             }
             $data = [
